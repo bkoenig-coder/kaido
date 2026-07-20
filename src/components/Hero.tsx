@@ -164,8 +164,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
             <div className="hero-lottie-cat-mini">
               <LottieAnimation 
                 url="https://lottie.host/6aa43497-0225-40b5-91f2-08d1dd962dfe/7DRsVryMxt.json" 
-                width="50px" 
-                height="50px" 
+                width="85px" 
+                height="85px" 
               />
             </div>
             <div className="status-badge-container">
@@ -229,18 +229,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
         }
 
         .hero-overlay {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: linear-gradient(
-            to bottom,
-            rgba(18, 15, 13, 0.7) 0%,
-            rgba(18, 15, 13, 0.85) 50%,
-            rgba(18, 15, 13, 1) 100-percent /* wait, 100% */
-          );
-          background: linear-gradient(to bottom, rgba(18, 15, 13, 0.6) 0%, rgba(18, 15, 13, 0.85) 60%, var(--bg-primary) 100%);
+          display: none;
         }
 
         .hero-container {
@@ -323,14 +312,16 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
           margin-bottom: 20px;
           font-weight: 800;
           color: #ffffff;
+          text-shadow: 0 4px 20px rgba(0, 0, 0, 0.85);
         }
 
         .hero-description {
           font-size: 1.25rem;
-          color: rgba(255, 255, 255, 0.9);
+          color: #ffffff;
           max-width: 600px;
           margin-bottom: 30px;
           line-height: 1.6;
+          text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
         }
 
         .summer-badge {
