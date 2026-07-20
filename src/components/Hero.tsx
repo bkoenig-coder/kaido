@@ -214,8 +214,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
       <style>{`
         .hero-section {
           position: relative;
-          padding: 140px 0 100px;
-          min-height: 75vh;
+          min-height: 100vh;
+          padding: 100px 0 60px;
           display: flex;
           align-items: center;
           justify-content: center;
