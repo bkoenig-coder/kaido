@@ -123,21 +123,21 @@ export const JapaneseEntranceIntro: React.FC = () => {
         }
 
         .crest-gold-ring {
-          width: 90px;
-          height: 90px;
+          width: 120px;
+          height: 120px;
           border-radius: 50%;
-          border: 2px solid var(--accent-gold);
-          box-shadow: 0 0 30px rgba(192, 57, 43, 0.4);
+          border: 2.5px solid var(--accent-gold);
+          box-shadow: 0 0 35px rgba(192, 57, 43, 0.45);
           display: flex;
           align-items: center;
           justify-content: center;
           background: rgba(12, 45, 51, 0.85);
-          margin-bottom: 14px;
+          margin-bottom: 16px;
         }
 
         .crest-logo {
-          width: 54px;
-          height: 54px;
+          width: 80px;
+          height: 80px;
           object-fit: cover;
           border-radius: 50%;
         }

@@ -153,12 +153,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
         }
 
         .logo-img {
-          width: 38px;
-          height: 38px;
+          width: 48px;
+          height: 48px;
           border-radius: 50%;
-          border: 1.5px solid var(--accent-gold);
+          border: 2px solid var(--accent-gold);
           object-fit: cover;
-          box-shadow: 0 0 10px rgba(192, 57, 43, 0.15);
+          box-shadow: 0 0 12px rgba(192, 57, 43, 0.25);
         }
 
         .logo-text {
