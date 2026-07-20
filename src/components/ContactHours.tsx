@@ -29,7 +29,14 @@ export const ContactHours: React.FC = () => {
   return (
     <section id="contact" className="contact-section section">
       <div className="container">
-        <div className="section-title animate-slide-up">
+        <div className="section-title animate-slide-up" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ marginBottom: '8px' }}>
+            <LottieAnimation
+              url="https://lottie.host/8e6862f5-71f4-4ab1-b783-2ff842ea97d8/szV4j1T5vz.json"
+              width="85px"
+              height="85px"
+            />
+          </div>
           <h2>{t.navContact}</h2>
           <p>{language === 'de' ? 'Kommen Sie vorbei oder kontaktieren Sie uns für Bestellungen und Fragen.' : 'Stop by or contact us for takeout orders and general inquiries.'}</p>
         </div>

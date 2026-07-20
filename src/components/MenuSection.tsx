@@ -112,7 +112,14 @@ export const MenuSection: React.FC = () => {
 
       <div className="container">
         {/* Title */}
-        <div className="section-title animate-slide-up">
+        <div className="section-title animate-slide-up" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ marginBottom: '8px' }}>
+            <LottieAnimation
+              url="https://lottie.host/02e5eb5c-5613-41a1-b0db-4dc732ae71e6/LVmd5JB8nz.json"
+              width="80px"
+              height="80px"
+            />
+          </div>
           <h2>{t.menuTitle}</h2>
           <p>{t.menuSubtitle}</p>
         </div>

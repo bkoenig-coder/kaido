@@ -96,15 +96,15 @@ export const Reviews: React.FC = () => {
             </div>
           </div>
 
-          {/* Cute Cat Animation next to Rating */}
+          {/* Cute Animation next to Rating */}
           <div className="reviews-lottie-badge">
             <LottieAnimation 
-              url="https://lottie.host/6aa43497-0225-40b5-91f2-08d1dd962dfe/7DRsVryMxt.json" 
+              url="https://lottie.host/7b34dc46-b0c2-4b31-ae1b-9aef57e74ea8/R4k9Jo6VVC.json" 
               width="90px" 
               height="90px" 
             />
             <span className="lottie-cat-bubble">
-              {language === 'de' ? 'Willkommen!' : 'Welcome!'}
+              {language === 'de' ? 'Danke! ❤️' : 'Thank You! ❤️'}
             </span>
           </div>
         </div>
