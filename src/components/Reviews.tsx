@@ -1,7 +1,8 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Star } from 'lucide-react';
+import { Star, Award, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { LottieAnimation } from './LottieAnimation';
+import restaurantGuruImg from '../assets/restaurant-guru.png';
 
 interface Review {
   id: number;
@@ -106,6 +107,73 @@ export const Reviews: React.FC = () => {
             <span className="lottie-cat-bubble">
               {language === 'de' ? 'Danke! ❤️' : 'Thank You! ❤️'}
             </span>
+          </div>
+        </div>
+
+        {/* Official Restaurant Guru Certificate Showcase Card */}
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(192, 57, 43, 0.06) 0%, rgba(12, 45, 51, 0.08) 100%)',
+          borderRadius: 'var(--radius-lg)',
+          border: '1.5px solid rgba(192, 57, 43, 0.3)',
+          padding: '28px 32px',
+          marginBottom: '48px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '32px',
+          boxShadow: '0 15px 40px rgba(0, 0, 0, 0.06)',
+          flexWrap: 'wrap'
+        }} className="animate-slide-up">
+          {/* Certificate Image Frame */}
+          <a
+            href="https://de.restaurantguru.com/Kaido-Sushi-Bar-Vienna?utm_source=rg_certificate9"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              position: 'relative',
+              borderRadius: 'var(--radius-md)',
+              overflow: 'hidden',
+              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.18)',
+              border: '2px solid var(--accent-gold)',
+              transition: 'transform 0.3s ease',
+              flexShrink: 0,
+              maxWidth: '210px',
+              cursor: 'pointer'
+            }}
+          >
+            <img
+              src={restaurantGuruImg}
+              alt="Recommended on Restaurant Guru 2023 - Kaido Sushi Bar"
+              style={{ width: '100%', display: 'block' }}
+            />
+          </a>
+
+          {/* Certificate Info Details */}
+          <div style={{ flex: 1, minWidth: '280px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--accent-gold)', fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>
+              <Award size={18} /> Offizielle Auszeichnung 2023
+            </div>
+
+            <h3 style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+              {language === 'de' ? 'Empfohlen auf Restaurant Guru' : 'Recommended on Restaurant Guru'}
+              <CheckCircle2 size={22} color="#2ecc71" fill="rgba(46, 204, 113, 0.15)" />
+            </h3>
+
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.02rem', lineHeight: 1.6, marginBottom: '20px', maxWidth: '620px' }}>
+              {language === 'de' 
+                ? 'Kaido wurde von Restaurant Guru offiziell als eine der besten Adressen für erstklassiges Sushi & japanische Spezialitäten in Wien ausgezeichnet.' 
+                : 'Kaido has been officially recognized by Restaurant Guru as one of the recommended destinations for premium sushi and Japanese dining in Vienna.'}
+            </p>
+
+            <a
+              href="https://de.restaurantguru.com/Kaido-Sushi-Bar-Vienna?utm_source=rg_certificate9"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 22px', fontSize: '0.9rem' }}
+            >
+              <span>{language === 'de' ? 'Zertifikat auf Restaurant Guru ansehen' : 'View Award on Restaurant Guru'}</span>
+              <ExternalLink size={16} />
+            </a>
           </div>
         </div>
 

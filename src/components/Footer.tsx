@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { X, ArrowUp } from 'lucide-react';
+import { X, ArrowUp, ExternalLink } from 'lucide-react';
 import logoImg from '../assets/logo.png';
+import restaurantGuruImg from '../assets/restaurant-guru.png';
 
 export const Footer: React.FC = () => {
   const { t, language } = useLanguage();
@@ -31,7 +32,7 @@ export const Footer: React.FC = () => {
                 ? 'Traditionelle japanische Kunst trifft auf moderne Gemütlichkeit im Herzen Wiens.' 
                 : 'Traditional Japanese art meets modern coziness in the heart of Vienna.'}
             </p>
-            <div className="social-links">
+            <div className="social-links" style={{ marginBottom: '16px' }}>
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
               </a>
@@ -39,6 +40,30 @@ export const Footer: React.FC = () => {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0 -5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
               </a>
             </div>
+
+            {/* Restaurant Guru Badge */}
+            <a
+              href="https://de.restaurantguru.com/Kaido-Sushi-Bar-Vienna?utm_source=rg_certificate9"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '6px 14px',
+                borderRadius: 'var(--radius-full)',
+                background: 'rgba(192, 57, 43, 0.1)',
+                border: '1px solid rgba(192, 57, 43, 0.3)',
+                color: 'var(--accent-gold)',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                transition: 'var(--transition-fast)'
+              }}
+            >
+              <img src={restaurantGuruImg} alt="Restaurant Guru 2023" style={{ height: '24px', borderRadius: '3px' }} />
+              <span>Recommended on Restaurant Guru 2023</span>
+              <ExternalLink size={14} />
+            </a>
           </div>
 
           {/* Contact Summary Col */}
