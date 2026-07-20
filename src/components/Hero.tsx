@@ -170,11 +170,11 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
 
       <div className="hero-container container">
         <div className="hero-content animate-slide-up">
-          {/* Status Row: Fish Animation and Open Status Badge side-by-side */}
+          {/* Status Row: Cute Animation and Open Status Badge side-by-side */}
           <div className="hero-status-row animate-fade-in">
             <div className="hero-lottie-cat-mini">
               <LottieAnimation 
-                url="https://lottie.host/02e5eb5c-5613-41a1-b0db-4dc732ae71e6/LVmd5JB8nz.json" 
+                url="https://lottie.host/7b34dc46-b0c2-4b31-ae1b-9aef57e74ea8/R4k9Jo6VVC.json" 
                 width="85px" 
                 height="85px" 
               />
