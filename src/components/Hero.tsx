@@ -392,6 +392,16 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
         }
 
         @media (max-width: 768px) {
+          .status-badge-container {
+            height: auto;
+            padding: 6px 12px;
+            max-width: 90vw;
+          }
+          .status-text {
+            font-size: 0.72rem !important;
+            letter-spacing: 0.02em;
+            line-height: 1.35;
+          }
           .hero-title {
             font-size: 1.8rem;
           }
