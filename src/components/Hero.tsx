@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { CalendarDays, UtensilsCrossed, Clock } from 'lucide-react';
 import { LottieAnimation } from './LottieAnimation';
@@ -9,10 +9,19 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
   const { t, language } = useLanguage();
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [openStatus, setOpenStatus] = useState<{ status: 'open' | 'closed' | 'closing', text: string }>({
     status: 'closed',
     text: ''
   });
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(e => console.log('Autoplay handled:', e));
+    }
+  }, []);
 
   useEffect(() => {
     const checkOpenStatus = () => {
@@ -110,6 +119,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
     <section id="hero" className="hero-section">
       <div className="hero-bg">
         <video
+          ref={videoRef}
           className="hero-video-bg"
           autoPlay
           loop
