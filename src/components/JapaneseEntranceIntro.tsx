@@ -39,14 +39,13 @@ export const JapaneseEntranceIntro: React.FC = () => {
         <div className="shoji-lattice" />
       </div>
 
-      {/* Center Gold Japanese Crest Monogram */}
+      {/* Center Gold Crest Monogram */}
       <div className={`intro-crest ${isOpen ? 'fade-out' : ''}`}>
-        <div className="crest-gold-ring">
+        <span className="crest-text" style={{ marginBottom: '14px' }}>KAIDO SUSHI BAR</span>
+        <div className="crest-gold-ring" style={{ marginBottom: '14px' }}>
           <img src={logoImg} alt="Kaido Monogram" className="crest-logo" />
         </div>
-        <span className="crest-kanji">海道</span>
-        <span className="crest-text">KAIDO SUSHI BAR</span>
-        <span className="crest-sub">ようこそ • WELCOME</span>
+        <span className="crest-sub">HERZLICH WILLKOMMEN</span>
       </div>
 
       <style>{`
