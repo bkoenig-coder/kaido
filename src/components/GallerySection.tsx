@@ -8,6 +8,7 @@ import gallery3 from '../assets/gallery/gallery3.jpg';
 import gallery4 from '../assets/gallery/gallery4.jpg';
 import gallery5 from '../assets/gallery/gallery5.jpg';
 import gallery6 from '../assets/gallery/gallery6.jpg';
+import certImg from '../assets/gallery/Certificate.jpeg';
 
 interface GalleryItem {
   id: number;
@@ -60,6 +61,13 @@ const galleryData: GalleryItem[] = [
     titleEn: 'Kaido Artwork & Interior Showcase',
     tag: '06 / GALLERY',
   },
+  {
+    id: 7,
+    src: certImg,
+    titleDe: 'Empfohlen auf Restaurant Guru 2023',
+    titleEn: 'Recommended on Restaurant Guru 2023',
+    tag: '07 / AWARD',
+  },
 ];
 
 export const GallerySection: React.FC = () => {
@@ -81,7 +89,7 @@ export const GallerySection: React.FC = () => {
     <section id="gallery" className="gallery-section section" style={{ background: 'var(--bg-secondary)', padding: '80px 0', position: 'relative' }}>
       <div className="container" style={{ maxWidth: '1140px' }}>
         
-        {/* Minimal Luxury Section Header (No description text) */}
+        {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '36px' }}>
           <span style={{
             fontSize: '0.8rem',
@@ -120,7 +128,8 @@ export const GallerySection: React.FC = () => {
               style={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover',
+                objectFit: currentItem.id === 7 ? 'contain' : 'cover',
+                background: currentItem.id === 7 ? '#ffffff' : 'transparent',
                 transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
               }}
             />
@@ -129,7 +138,9 @@ export const GallerySection: React.FC = () => {
             <div style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(to top, rgba(12, 12, 16, 0.85) 0%, rgba(12, 12, 16, 0.15) 50%, rgba(12, 12, 16, 0.35) 100%)'
+              background: currentItem.id === 7 
+                ? 'transparent' 
+                : 'linear-gradient(to top, rgba(12, 12, 16, 0.85) 0%, rgba(12, 12, 16, 0.15) 50%, rgba(12, 12, 16, 0.35) 100%)'
             }} />
 
             {/* Top Bar Tag & Fullscreen Button */}
@@ -228,7 +239,7 @@ export const GallerySection: React.FC = () => {
               <ChevronRight size={24} />
             </button>
 
-            {/* Bottom Clean Overlay Title (No description) */}
+            {/* Bottom Overlay Title */}
             <div className="gallery-stage-caption" style={{
               position: 'absolute',
               bottom: '24px',
@@ -237,17 +248,27 @@ export const GallerySection: React.FC = () => {
               zIndex: 3,
               color: '#ffffff'
             }}>
-              <h3 className="gallery-stage-title" style={{ fontSize: '1.6rem', fontWeight: 700, color: '#ffffff', margin: 0, letterSpacing: '-0.01em' }}>
+              <h3 className="gallery-stage-title" style={{
+                fontSize: '1.6rem',
+                fontWeight: 700,
+                color: currentItem.id === 7 ? 'var(--text-primary)' : '#ffffff',
+                background: currentItem.id === 7 ? 'rgba(255, 255, 255, 0.9)' : 'transparent',
+                padding: currentItem.id === 7 ? '6px 16px' : '0',
+                borderRadius: currentItem.id === 7 ? 'var(--radius-md)' : '0',
+                display: 'inline-block',
+                margin: 0,
+                letterSpacing: '-0.01em'
+              }}>
                 {language === 'de' ? currentItem.titleDe : currentItem.titleEn}
               </h3>
             </div>
           </div>
         </div>
 
-        {/* Horizontal Luxury Thumbnail Strip for 6 items */}
+        {/* Horizontal Luxury Thumbnail Strip for 7 items */}
         <div className="gallery-thumb-strip" style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(6, 1fr)',
+          gridTemplateColumns: 'repeat(7, 1fr)',
           gap: '12px'
         }}>
           {galleryData.map((item, idx) => {
@@ -267,7 +288,7 @@ export const GallerySection: React.FC = () => {
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
                   padding: 0,
-                  background: '#000000',
+                  background: '#ffffff',
                   boxShadow: isActive ? '0 8px 20px rgba(192, 57, 43, 0.3)' : 'none'
                 }}
               >
@@ -277,7 +298,7 @@ export const GallerySection: React.FC = () => {
                   style={{
                     width: '100%',
                     height: '100%',
-                    objectFit: 'cover',
+                    objectFit: item.id === 7 ? 'contain' : 'cover',
                     transform: isActive ? 'scale(1.08)' : 'scale(1)',
                     transition: 'transform 0.4s ease'
                   }}
@@ -285,7 +306,7 @@ export const GallerySection: React.FC = () => {
                 <div style={{
                   position: 'absolute',
                   inset: 0,
-                  background: isActive ? 'transparent' : 'rgba(0, 0, 0, 0.3)',
+                  background: isActive ? 'transparent' : 'rgba(0, 0, 0, 0.2)',
                   transition: 'background 0.3s ease'
                 }} />
               </button>
@@ -334,10 +355,11 @@ export const GallerySection: React.FC = () => {
             onClick={e => e.stopPropagation()}
             style={{
               maxWidth: '92vw',
-              maxHeight: '85vh',
+              maxHeight: '88vh',
               borderRadius: 'var(--radius-md)',
               objectFit: 'contain',
-              boxShadow: '0 30px 80px rgba(0, 0, 0, 0.7)'
+              boxShadow: '0 30px 80px rgba(0, 0, 0, 0.7)',
+              background: currentItem.id === 7 ? '#ffffff' : 'transparent'
             }}
           />
         </div>
@@ -353,10 +375,10 @@ export const GallerySection: React.FC = () => {
             height: 320px !important;
           }
           .gallery-stage-title {
-            font-size: 1.2rem !important;
+            font-size: 1.1rem !important;
           }
           .gallery-thumb-strip {
-            grid-template-columns: repeat(3, 1fr) !important;
+            grid-template-columns: repeat(4, 1fr) !important;
             gap: 8px !important;
           }
           .gallery-thumb-btn {
