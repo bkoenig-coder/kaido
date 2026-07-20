@@ -59,6 +59,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
           {/* Desktop Navigation */}
           <nav className="desktop-nav">
             <a href="#hero" onClick={(e) => handleNavLinkClick(e, 'hero')}>{t.navHome}</a>
+            <a href="#gallery" onClick={(e) => handleNavLinkClick(e, 'gallery')}>{language === 'de' ? 'Galerie' : 'Gallery'}</a>
             <a href="#menu" onClick={(e) => handleNavLinkClick(e, 'menu')}>{t.navMenu}</a>
             <a href="#contact" onClick={(e) => handleNavLinkClick(e, 'contact')}>{t.navContact}</a>
           </nav>

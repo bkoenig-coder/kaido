@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { LanguageProvider } from './context/LanguageContext';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
+import { GallerySection } from './components/GallerySection';
 import { MenuSection } from './components/MenuSection';
 import { Reviews } from './components/Reviews';
 import { ContactHours } from './components/ContactHours';
@@ -17,6 +18,8 @@ const AppContent: React.FC = () => {
       <Header onOpenReservation={() => setIsReservationOpen(true)} />
       
       <Hero onOpenReservation={() => setIsReservationOpen(true)} />
+      
+      <GallerySection />
       
       <MenuSection />
       
