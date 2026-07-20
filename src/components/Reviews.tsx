@@ -113,98 +113,99 @@ export const Reviews: React.FC = () => {
 
         {/* Official Restaurant Guru Certificate Showcase Card */}
         <div style={{
-          background: 'linear-gradient(135deg, rgba(192, 57, 43, 0.06) 0%, rgba(12, 45, 51, 0.08) 100%)',
+          background: 'linear-gradient(135deg, rgba(192, 57, 43, 0.08) 0%, rgba(12, 45, 51, 0.1) 100%)',
           borderRadius: 'var(--radius-lg)',
-          border: '1.5px solid rgba(192, 57, 43, 0.3)',
-          padding: '36px 36px',
-          marginBottom: '48px',
+          border: '1.5px solid rgba(192, 57, 43, 0.35)',
+          padding: '40px 24px',
+          marginBottom: '56px',
+          textAlign: 'center',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
-          gap: '36px',
-          boxShadow: '0 15px 40px rgba(0, 0, 0, 0.06)',
-          flexWrap: 'wrap'
+          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.08)'
         }} className="animate-slide-up">
-          {/* Full-Size Certificate Frame */}
+          
+          {/* Badge Tag */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--accent-gold)', fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '12px', background: 'rgba(192, 57, 43, 0.1)', padding: '6px 16px', borderRadius: 'var(--radius-full)' }}>
+            <Award size={18} /> Offizielle Auszeichnung 2023
+          </div>
+
+          <h3 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
+            {language === 'de' ? 'Empfohlen auf Restaurant Guru' : 'Recommended on Restaurant Guru'}
+            <CheckCircle2 size={24} color="#2ecc71" fill="rgba(46, 204, 113, 0.15)" />
+          </h3>
+
+          <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', maxWidth: '640px', margin: '0 auto 28px', lineHeight: 1.6 }}>
+            {language === 'de' 
+              ? 'Kaido wurde von Restaurant Guru offiziell mit dem Auszeichnungs-Zertifikat 2023 geehrt. Hier finden Sie das Original-Zertifikat in voller Länge.' 
+              : 'Kaido has been officially honored with the Recommended 2023 Award Certificate by Restaurant Guru. Below is our official full certificate.'}
+          </p>
+
+          {/* Full Standalone Certificate Frame */}
           <div
             onClick={() => setIsCertModalOpen(true)}
             style={{
               position: 'relative',
               borderRadius: 'var(--radius-md)',
               overflow: 'hidden',
-              boxShadow: '0 15px 35px rgba(0, 0, 0, 0.22)',
+              boxShadow: '0 20px 45px rgba(0, 0, 0, 0.22)',
               border: '3px solid var(--accent-gold)',
-              transition: 'all 0.3s ease',
-              flexShrink: 0,
+              transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
               width: '100%',
-              maxWidth: '340px',
+              maxWidth: '460px',
               cursor: 'pointer',
-              background: '#ffffff'
+              background: '#ffffff',
+              marginBottom: '28px'
             }}
-            title={language === 'de' ? 'Klicken für Vollbild' : 'Click for full size'}
+            title={language === 'de' ? 'Klicken für Vollbild' : 'Click to enlarge'}
           >
             <img
               src={restaurantGuruImg}
-              alt="Recommended on Restaurant Guru 2023 - Kaido Sushi Bar (Full Diploma)"
-              style={{ width: '100%', display: 'block' }}
+              alt="Official Recommended on Restaurant Guru 2023 Certificate - Kaido Sushi Bar Vienna"
+              style={{ width: '100%', height: 'auto', display: 'block' }}
             />
             <div style={{
               position: 'absolute',
-              bottom: '12px',
-              right: '12px',
-              background: 'rgba(18, 15, 13, 0.85)',
-              backdropFilter: 'blur(6px)',
+              bottom: '14px',
+              right: '14px',
+              background: 'rgba(18, 15, 13, 0.88)',
+              backdropFilter: 'blur(8px)',
               color: '#ffffff',
-              padding: '6px 12px',
+              padding: '7px 14px',
               borderRadius: 'var(--radius-full)',
-              fontSize: '0.75rem',
+              fontSize: '0.78rem',
               fontWeight: 700,
               display: 'flex',
               alignItems: 'center',
-              gap: '6px'
+              gap: '6px',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)'
             }}>
-              <Maximize2 size={13} />
-              <span>{language === 'de' ? 'Vollbild' : 'Full Size'}</span>
+              <Maximize2 size={14} />
+              <span>{language === 'de' ? 'Vollbild anzeigen' : 'Enlarge View'}</span>
             </div>
           </div>
 
-          {/* Certificate Info Details */}
-          <div style={{ flex: 1, minWidth: '280px' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--accent-gold)', fontWeight: 700, fontSize: '0.88rem', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '10px' }}>
-              <Award size={20} /> Offizielle Auszeichnung 2023
-            </div>
+          {/* Action Buttons */}
+          <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => setIsCertModalOpen(true)}
+              className="btn btn-primary"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 26px', fontSize: '0.92rem' }}
+            >
+              <Maximize2 size={16} />
+              <span>{language === 'de' ? 'Im Vollbildmodus ansehen' : 'Open Fullscreen Certificate'}</span>
+            </button>
 
-            <h3 style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-              {language === 'de' ? 'Empfohlen auf Restaurant Guru' : 'Recommended on Restaurant Guru'}
-              <CheckCircle2 size={24} color="#2ecc71" fill="rgba(46, 204, 113, 0.15)" />
-            </h3>
-
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '24px', maxWidth: '640px' }}>
-              {language === 'de' 
-                ? 'Kaido wurde von Restaurant Guru offiziell mit dem Empfehlungs-Zertifikat 2023 ausgezeichnet. Wir bedanken uns herzlich bei unseren treuen Gästen für die erstklassigen Bewertungen!' 
-                : 'Kaido has been officially awarded the Recommended Certificate 2023 by Restaurant Guru. We sincerely thank our guests for your wonderful reviews!'}
-            </p>
-
-            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
-              <button
-                onClick={() => setIsCertModalOpen(true)}
-                className="btn btn-primary"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '11px 24px', fontSize: '0.92rem' }}
-              >
-                <Maximize2 size={16} />
-                <span>{language === 'de' ? 'Zertifikat im Vollbild öffnen' : 'View Full Certificate'}</span>
-              </button>
-
-              <a
-                href="https://de.restaurantguru.com/Kaido-Sushi-Bar-Vienna?utm_source=rg_certificate9"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-secondary"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '11px 24px', fontSize: '0.92rem' }}
-              >
-                <span>{language === 'de' ? 'Auf Restaurant Guru ansehen' : 'View on Restaurant Guru'}</span>
-                <ExternalLink size={16} />
-              </a>
-            </div>
+            <a
+              href="https://de.restaurantguru.com/Kaido-Sushi-Bar-Vienna?utm_source=rg_certificate9"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-secondary"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 26px', fontSize: '0.92rem' }}
+            >
+              <span>{language === 'de' ? 'Auf Restaurant Guru verifizieren' : 'Verify on Restaurant Guru'}</span>
+              <ExternalLink size={16} />
+            </a>
           </div>
         </div>
 
