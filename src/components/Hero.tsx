@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { CalendarDays, UtensilsCrossed, Clock } from 'lucide-react';
 import { LottieAnimation } from './LottieAnimation';
-import interiorImg from '../assets/interior.png';
 
 interface HeroProps {
   onOpenReservation: () => void;
@@ -116,7 +115,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
           loop
           muted
           playsInline
-          poster={interiorImg}
         >
           <source src="https://res.cloudinary.com/b08mrui7/video/upload/v1784550002/0720_czj7fj.mp4" type="video/mp4" />
         </video>
