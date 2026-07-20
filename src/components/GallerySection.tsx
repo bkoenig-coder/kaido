@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Sparkles, Maximize2, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Maximize2, X, Sparkles } from 'lucide-react';
 
 import gallery1 from '../assets/gallery/gallery1.jpg';
 import gallery2 from '../assets/gallery/gallery2.jpg';
@@ -13,311 +13,339 @@ interface GalleryItem {
   src: string;
   titleDe: string;
   titleEn: string;
-  titleJa: string;
-  category: 'art' | 'interior' | 'ambiance';
+  subtitleDe: string;
+  subtitleEn: string;
+  tag: string;
 }
 
 const galleryData: GalleryItem[] = [
   {
     id: 1,
     src: gallery1,
-    titleDe: 'Große Welle von Kanagawa Wandgemälde & Bar',
-    titleEn: 'The Great Wave Mural & Wooden Sushi Bar',
-    titleJa: '神奈川沖浪裏の壁画とカウンター席',
-    category: 'art',
+    titleDe: 'Die Große Welle & die Sushi Bar',
+    titleEn: 'The Great Wave & Handcrafted Wooden Bar',
+    subtitleDe: 'Eindrucksvolles Hokusai-Wandgemälde gepaart mit traditioneller Holzkunst.',
+    subtitleEn: 'Iconic Hokusai mural paired with traditional Japanese sushi counter craftsmanship.',
+    tag: '01 / ATMOSPHERE',
   },
   {
     id: 2,
     src: gallery2,
-    titleDe: 'Tranquil Buddha Statur & Ausleuchtung',
-    titleEn: 'Serene Buddha Statue & Warm Atmosphere Lighting',
-    titleJa: '静寂な仏像と温もりあるライティング',
-    category: 'ambiance',
+    titleDe: 'Erhabene Buddha-Skulptur & Stimmung',
+    titleEn: 'Serene Buddha Statue & Ambient Illumination',
+    subtitleDe: 'Stimmungsvolle Beleuchtung und meditative Akzente für Ihre Entspannung.',
+    subtitleEn: 'Warm lighting and zen spiritual accents creating a tranquil dining ambiance.',
+    tag: '02 / AMBIANCE',
   },
   {
     id: 3,
     src: gallery3,
-    titleDe: 'Geisha & Rote Sonne Handbemalte Wand',
-    titleEn: 'Hand-painted Geisha & Rising Sun Mural',
-    titleJa: '手描きの芸者と日輪のモダンアート',
-    category: 'art',
+    titleDe: 'Moderne Geisha Wandkunst',
+    titleEn: 'Contemporary Geisha & Crimson Sun Mural',
+    subtitleDe: 'Handgemalte Kunstwerke, die Tradition und modernen Spirit verbinden.',
+    subtitleEn: 'Hand-painted artwork blending timeless Japanese elegance with modern design.',
+    tag: '03 / ARTISTRY',
   },
   {
     id: 4,
     src: gallery4,
-    titleDe: 'Japanisches Wandgemälde & Esstische',
-    titleEn: 'Authentic Japanese Dining Table View',
-    titleJa: '伝統美あふれるダイニングスペース',
-    category: 'interior',
+    titleDe: 'Traditionelles Ukiyo-e Ambiente',
+    titleEn: 'Traditional Ukiyo-e Dining Hall',
+    subtitleDe: 'Gemütliche Tische umrahmt von meisterhafter japanischer Malerei.',
+    subtitleEn: 'Spacious dining layout framed by vibrant Japanese sea waves and warm lamps.',
+    tag: '04 / INTERIOR',
   },
   {
     id: 5,
     src: gallery5,
-    titleDe: 'Gemütlicher Nook & Ukiyo-e Kunst',
-    titleEn: 'Intimate Dining Nook featuring Ukiyo-e Wave Art',
-    titleJa: '浮世絵アートに包まれたテーブル席',
-    category: 'interior',
+    titleDe: 'Intime Tisch-Nische',
+    titleEn: 'Intimate Dining Table Nook',
+    subtitleDe: 'Der perfekte Ort für ungestörte Abende und exklusive Genussmomente.',
+    subtitleEn: 'The ideal setting for private dinners and memorable culinary moments.',
+    tag: '05 / DINING',
   },
 ];
 
 export const GallerySection: React.FC = () => {
   const { language } = useLanguage();
-  const [activeFilter, setActiveFilter] = useState<'all' | 'art' | 'interior' | 'ambiance'>('all');
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
-  const filteredItems = galleryData.filter(
-    item => activeFilter === 'all' || item.category === activeFilter
-  );
+  const currentItem = galleryData[activeIndex];
 
-  const handleOpenLightbox = (index: number) => {
-    setLightboxIndex(index);
+  const handlePrev = () => {
+    setActiveIndex(prev => (prev - 1 + galleryData.length) % galleryData.length);
   };
 
-  const handlePrev = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (lightboxIndex !== null) {
-      setLightboxIndex((lightboxIndex - 1 + filteredItems.length) % filteredItems.length);
-    }
-  };
-
-  const handleNext = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (lightboxIndex !== null) {
-      setLightboxIndex((lightboxIndex + 1) % filteredItems.length);
-    }
-  };
-
-  const getTitle = (item: GalleryItem) => {
-    if (language === 'de') return item.titleDe;
-    return item.titleEn;
+  const handleNext = () => {
+    setActiveIndex(prev => (prev + 1) % galleryData.length);
   };
 
   return (
-    <section id="gallery" className="gallery-section section" style={{ background: 'var(--bg-secondary)', position: 'relative' }}>
-      <div className="container">
-        {/* Header */}
-        <div className="section-title animate-slide-up" style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', borderRadius: 'var(--radius-full)', background: 'var(--accent-gold-glow)', color: 'var(--accent-gold)', fontSize: '0.85rem', fontWeight: 700, marginBottom: '12px' }}>
-            <Sparkles size={16} /> Kaido Atmosphere & Design
-          </div>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
-            {language === 'de' ? 'Atmosphäre & Kunst handgefertigt' : 'Atmosphere & Artistic Design'}
-          </h2>
-          <p style={{ color: 'var(--text-secondary)', maxWidth: '640px', margin: '12px auto 0', fontSize: '1.05rem', lineHeight: 1.6 }}>
-            {language === 'de' 
-              ? 'Tauchen Sie ein in unser stilvolles japanisches Ambiente mit handbemalten Hokusai-Wandgemälden, fernöstlichen Akzenten und gemütlichen Holztischen.' 
-              : 'Immerse yourself in our stylish Japanese dining space featuring hand-painted Great Wave murals, tranquil accents, and warm wooden counter craftsmanship.'}
-          </p>
-        </div>
-
-        {/* Filter Pills */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '36px' }}>
-          {[
-            { id: 'all', labelDe: 'Alle Fotos', labelEn: 'All Photos' },
-            { id: 'art', labelDe: 'Wandgemälde & Kunst', labelEn: 'Murals & Art' },
-            { id: 'interior', labelDe: 'Gastraum & Tische', labelEn: 'Dining & Tables' },
-            { id: 'ambiance', labelDe: 'Stimmung & Beleuchtung', labelEn: 'Ambiance' },
-          ].map(f => (
-            <button
-              key={f.id}
-              onClick={() => setActiveFilter(f.id as any)}
-              style={{
-                padding: '8px 20px',
-                borderRadius: 'var(--radius-full)',
-                border: '1.5px solid var(--border-color)',
-                background: activeFilter === f.id ? 'var(--accent-gold)' : 'var(--bg-primary)',
-                color: activeFilter === f.id ? '#ffffff' : 'var(--text-primary)',
-                fontWeight: 600,
-                fontSize: '0.88rem',
-                cursor: 'pointer',
-                transition: 'var(--transition-fast)',
-                boxShadow: activeFilter === f.id ? '0 4px 15px var(--accent-gold-glow)' : 'none',
-              }}
-            >
-              {language === 'de' ? f.labelDe : f.labelEn}
-            </button>
-          ))}
-        </div>
-
-        {/* Gallery Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '24px',
-        }}>
-          {filteredItems.map((item, index) => (
-            <div
-              key={item.id}
-              onClick={() => handleOpenLightbox(index)}
-              style={{
-                position: 'relative',
-                borderRadius: 'var(--radius-lg)',
-                overflow: 'hidden',
-                cursor: 'pointer',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.12)',
-                border: '1px solid var(--border-color)',
-                transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease',
-                height: index === 0 || index === 2 ? '380px' : '320px',
-              }}
-              className="gallery-card-hover"
-            >
-              <img
-                src={item.src}
-                alt={getTitle(item)}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  transition: 'transform 0.6s ease',
-                }}
-                className="gallery-img"
-              />
-              
-              {/* Dark Gradient Overlay & Caption */}
-              <div style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'linear-gradient(to top, rgba(10, 10, 12, 0.88) 0%, rgba(10, 10, 12, 0.2) 60%, transparent 100%)',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'flex-end',
-                padding: '20px',
-                color: '#ffffff',
-                transition: 'opacity 0.3s ease',
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div>
-                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--accent-gold)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-                      Kaido Gallery
-                    </span>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ffffff', marginTop: '2px' }}>
-                      {getTitle(item)}
-                    </h3>
-                  </div>
-                  <div style={{ padding: '8px', borderRadius: '50%', background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)' }}>
-                    <Maximize2 size={16} color="#ffffff" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Lightbox Modal */}
-      {lightboxIndex !== null && filteredItems[lightboxIndex] && (
-        <div
-          onClick={() => setLightboxIndex(null)}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(5, 5, 8, 0.94)',
-            backdropFilter: 'blur(12px)',
-            zIndex: 1500,
-            display: 'flex',
+    <section id="gallery" className="gallery-section section" style={{ background: 'var(--bg-secondary)', padding: '90px 0', position: 'relative' }}>
+      <div className="container" style={{ maxWidth: '1140px' }}>
+        
+        {/* Section Header */}
+        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+          <span style={{
+            fontSize: '0.8rem',
+            fontWeight: 700,
+            letterSpacing: '0.25em',
+            textTransform: 'uppercase',
+            color: 'var(--accent-gold)',
+            display: 'inline-flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-            animation: 'fadeIn 0.25s ease',
-          }}
-        >
-          {/* Close Button */}
-          <button
-            onClick={() => setLightboxIndex(null)}
-            style={{
-              position: 'absolute',
-              top: '24px',
-              right: '24px',
-              padding: '10px',
-              borderRadius: '50%',
-              background: 'rgba(255,255,255,0.15)',
-              color: '#ffffff',
-              border: 'none',
-              cursor: 'pointer',
-              zIndex: 1510,
-            }}
-          >
-            <X size={24} />
-          </button>
+            gap: '8px',
+            marginBottom: '10px'
+          }}>
+            <Sparkles size={14} /> Atmosphere & Interieur
+          </span>
+          <h2 style={{ fontSize: '2.6rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
+            {language === 'de' ? 'Einblicke in Kaido' : 'The Kaido Experience'}
+          </h2>
+          <div style={{ width: '50px', height: '2px', background: 'var(--accent-gold)', margin: '16px auto 0' }} />
+        </div>
 
-          {/* Navigation Controls */}
-          <button
-            onClick={handlePrev}
-            style={{
-              position: 'absolute',
-              left: '24px',
-              padding: '12px',
-              borderRadius: '50%',
-              background: 'rgba(255,255,255,0.15)',
-              color: '#ffffff',
-              border: 'none',
-              cursor: 'pointer',
-              zIndex: 1510,
-            }}
-          >
-            <ChevronLeft size={28} />
-          </button>
-
-          <button
-            onClick={handleNext}
-            style={{
-              position: 'absolute',
-              right: '24px',
-              padding: '12px',
-              borderRadius: '50%',
-              background: 'rgba(255,255,255,0.15)',
-              color: '#ffffff',
-              border: 'none',
-              cursor: 'pointer',
-              zIndex: 1510,
-            }}
-          >
-            <ChevronRight size={28} />
-          </button>
-
-          {/* Image & Title Container */}
-          <div
-            onClick={e => e.stopPropagation()}
-            style={{
-              maxWidth: '1000px',
-              maxHeight: '88vh',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
+        {/* Featured Main Cinema Stage */}
+        <div style={{
+          position: 'relative',
+          borderRadius: 'var(--radius-lg)',
+          overflow: 'hidden',
+          background: '#0a0a0c',
+          border: '1px solid var(--border-color)',
+          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.25)',
+          marginBottom: '24px'
+        }}>
+          {/* Main Image */}
+          <div style={{ position: 'relative', width: '100%', height: '540px', overflow: 'hidden' }}>
             <img
-              src={filteredItems[lightboxIndex].src}
-              alt={getTitle(filteredItems[lightboxIndex])}
+              src={currentItem.src}
+              alt={language === 'de' ? currentItem.titleDe : currentItem.titleEn}
               style={{
-                maxWidth: '100%',
-                maxHeight: '75vh',
-                borderRadius: 'var(--radius-md)',
-                objectFit: 'contain',
-                boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
               }}
             />
-            <div style={{ marginTop: '16px', textAlign: 'center', color: '#ffffff' }}>
-              <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#ffffff' }}>
-                {getTitle(filteredItems[lightboxIndex])}
+
+            {/* Dark Vignette Gradient */}
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(to top, rgba(12, 12, 16, 0.92) 0%, rgba(12, 12, 16, 0.3) 50%, rgba(12, 12, 16, 0.4) 100%)'
+            }} />
+
+            {/* Top Bar Info & Fullscreen Button */}
+            <div style={{
+              position: 'absolute',
+              top: '24px',
+              left: '28px',
+              right: '28px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              zIndex: 3
+            }}>
+              <span style={{
+                background: 'rgba(18, 15, 13, 0.75)',
+                backdropFilter: 'blur(8px)',
+                padding: '6px 16px',
+                borderRadius: 'var(--radius-full)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                color: 'var(--accent-gold)',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                letterSpacing: '0.15em'
+              }}>
+                {currentItem.tag}
+              </span>
+
+              <button
+                onClick={() => setIsLightboxOpen(true)}
+                style={{
+                  background: 'rgba(18, 15, 13, 0.75)',
+                  backdropFilter: 'blur(8px)',
+                  padding: '10px',
+                  borderRadius: '50%',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: '#ffffff',
+                  cursor: 'pointer',
+                  transition: 'var(--transition-fast)'
+                }}
+                title="Vollbild anzeigen"
+              >
+                <Maximize2 size={18} />
+              </button>
+            </div>
+
+            {/* Navigation Arrows on Stage */}
+            <button
+              onClick={handlePrev}
+              style={{
+                position: 'absolute',
+                left: '20px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'rgba(18, 15, 13, 0.65)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: '#ffffff',
+                width: '46px',
+                height: '46px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                zIndex: 3,
+                transition: 'var(--transition-fast)'
+              }}
+            >
+              <ChevronLeft size={24} />
+            </button>
+
+            <button
+              onClick={handleNext}
+              style={{
+                position: 'absolute',
+                right: '20px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'rgba(18, 15, 13, 0.65)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: '#ffffff',
+                width: '46px',
+                height: '46px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                zIndex: 3,
+                transition: 'var(--transition-fast)'
+              }}
+            >
+              <ChevronRight size={24} />
+            </button>
+
+            {/* Bottom Luxury Caption */}
+            <div style={{
+              position: 'absolute',
+              bottom: '28px',
+              left: '32px',
+              right: '32px',
+              zIndex: 3,
+              color: '#ffffff'
+            }}>
+              <h3 style={{ fontSize: '1.8rem', fontWeight: 700, color: '#ffffff', marginBottom: '6px', letterSpacing: '-0.01em' }}>
+                {language === 'de' ? currentItem.titleDe : currentItem.titleEn}
               </h3>
-              <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginTop: '4px' }}>
-                {lightboxIndex + 1} / {filteredItems.length}
+              <p style={{ color: 'rgba(255, 255, 255, 0.85)', fontSize: '1.02rem', maxWidth: '680px', lineHeight: 1.5 }}>
+                {language === 'de' ? currentItem.subtitleDe : currentItem.subtitleEn}
               </p>
             </div>
           </div>
         </div>
-      )}
 
-      <style>{`
-        .gallery-card-hover:hover .gallery-img {
-          transform: scale(1.06);
-        }
-        .gallery-card-hover:hover {
-          border-color: var(--accent-gold);
-          box-shadow: 0 16px 40px rgba(192, 57, 43, 0.2);
-        }
-      `}</style>
+        {/* Horizontal Luxury Thumbnail Strip */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(5, 1fr)',
+          gap: '14px'
+        }}>
+          {galleryData.map((item, idx) => {
+            const isActive = idx === activeIndex;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveIndex(idx)}
+                style={{
+                  position: 'relative',
+                  height: '100px',
+                  borderRadius: 'var(--radius-md)',
+                  overflow: 'hidden',
+                  border: isActive ? '2px solid var(--accent-gold)' : '1px solid var(--border-color)',
+                  opacity: isActive ? 1 : 0.65,
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  padding: 0,
+                  background: '#000000',
+                  boxShadow: isActive ? '0 8px 20px rgba(192, 57, 43, 0.3)' : 'none'
+                }}
+              >
+                <img
+                  src={item.src}
+                  alt={language === 'de' ? item.titleDe : item.titleEn}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    transform: isActive ? 'scale(1.08)' : 'scale(1)',
+                    transition: 'transform 0.4s ease'
+                  }}
+                />
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: isActive ? 'transparent' : 'rgba(0, 0, 0, 0.3)',
+                  transition: 'background 0.3s ease'
+                }} />
+              </button>
+            );
+          })}
+        </div>
+
+      </div>
+
+      {/* Fullscreen Lightbox Modal */}
+      {isLightboxOpen && (
+        <div
+          onClick={() => setIsLightboxOpen(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(5, 5, 8, 0.95)',
+            backdropFilter: 'blur(16px)',
+            zIndex: 2000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '24px'
+          }}
+        >
+          <button
+            onClick={() => setIsLightboxOpen(false)}
+            style={{
+              position: 'absolute',
+              top: '24px',
+              right: '28px',
+              padding: '12px',
+              borderRadius: '50%',
+              background: 'rgba(255, 255, 255, 0.12)',
+              color: '#ffffff',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            <X size={26} />
+          </button>
+
+          <img
+            src={currentItem.src}
+            alt={language === 'de' ? currentItem.titleDe : currentItem.titleEn}
+            onClick={e => e.stopPropagation()}
+            style={{
+              maxWidth: '92vw',
+              maxHeight: '85vh',
+              borderRadius: 'var(--radius-md)',
+              objectFit: 'contain',
+              boxShadow: '0 30px 80px rgba(0, 0, 0, 0.7)'
+            }}
+          />
+        </div>
+      )}
     </section>
   );
 };
