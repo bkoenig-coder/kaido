@@ -4,6 +4,7 @@ import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { GallerySection } from './components/GallerySection';
 import { AtmosphereEffects } from './components/AtmosphereEffects';
+import { JapaneseEntranceIntro } from './components/JapaneseEntranceIntro';
 import { MenuSection } from './components/MenuSection';
 import { Reviews } from './components/Reviews';
 import { ContactHours } from './components/ContactHours';
@@ -16,6 +17,7 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="app-wrapper">
+      <JapaneseEntranceIntro />
       <AtmosphereEffects />
 
       <Header onOpenReservation={() => setIsReservationOpen(true)} />
