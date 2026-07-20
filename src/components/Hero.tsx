@@ -109,7 +109,18 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
 
   return (
     <section id="hero" className="hero-section">
-      <div className="hero-bg" style={{ backgroundImage: `url(${interiorImg})` }}></div>
+      <div className="hero-bg">
+        <video
+          className="hero-video-bg"
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster={interiorImg}
+        >
+          <source src="https://res.cloudinary.com/b08mrui7/video/upload/v1784550002/0720_czj7fj.mp4" type="video/mp4" />
+        </video>
+      </div>
       <div className="hero-overlay"></div>
       
       {/* Decorative Floating Koi Fish Watermark */}
@@ -204,10 +215,17 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
           left: 0;
           right: 0;
           bottom: 0;
-          background-size: cover;
-          background-position: center;
-          transform: scale(1.05);
-          animation: slowZoom 20s infinite alternate ease-in-out;
+          overflow: hidden;
+        }
+
+        .hero-video-bg {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          position: absolute;
+          top: 0;
+          left: 0;
+          transform: scale(1.03);
         }
 
         .hero-overlay {
