@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Star, Award, ExternalLink, CheckCircle2 } from 'lucide-react';
+import { Star, Award, ExternalLink, CheckCircle2, Maximize2, X } from 'lucide-react';
 import { LottieAnimation } from './LottieAnimation';
 import restaurantGuruImg from '../assets/restaurant-guru.png';
 
@@ -56,6 +56,7 @@ const reviewsData: Review[] = [
 
 export const Reviews: React.FC = () => {
   const { language } = useLanguage();
+  const [isCertModalOpen, setIsCertModalOpen] = useState(false);
 
   return (
     <section id="reviews" className="reviews-section section">
@@ -115,67 +116,146 @@ export const Reviews: React.FC = () => {
           background: 'linear-gradient(135deg, rgba(192, 57, 43, 0.06) 0%, rgba(12, 45, 51, 0.08) 100%)',
           borderRadius: 'var(--radius-lg)',
           border: '1.5px solid rgba(192, 57, 43, 0.3)',
-          padding: '28px 32px',
+          padding: '36px 36px',
           marginBottom: '48px',
           display: 'flex',
           alignItems: 'center',
-          gap: '32px',
+          gap: '36px',
           boxShadow: '0 15px 40px rgba(0, 0, 0, 0.06)',
           flexWrap: 'wrap'
         }} className="animate-slide-up">
-          {/* Certificate Image Frame */}
-          <a
-            href="https://de.restaurantguru.com/Kaido-Sushi-Bar-Vienna?utm_source=rg_certificate9"
-            target="_blank"
-            rel="noopener noreferrer"
+          {/* Full-Size Certificate Frame */}
+          <div
+            onClick={() => setIsCertModalOpen(true)}
             style={{
               position: 'relative',
               borderRadius: 'var(--radius-md)',
               overflow: 'hidden',
-              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.18)',
-              border: '2px solid var(--accent-gold)',
-              transition: 'transform 0.3s ease',
+              boxShadow: '0 15px 35px rgba(0, 0, 0, 0.22)',
+              border: '3px solid var(--accent-gold)',
+              transition: 'all 0.3s ease',
               flexShrink: 0,
-              maxWidth: '210px',
-              cursor: 'pointer'
+              width: '100%',
+              maxWidth: '340px',
+              cursor: 'pointer',
+              background: '#ffffff'
             }}
+            title={language === 'de' ? 'Klicken für Vollbild' : 'Click for full size'}
           >
             <img
               src={restaurantGuruImg}
-              alt="Recommended on Restaurant Guru 2023 - Kaido Sushi Bar"
+              alt="Recommended on Restaurant Guru 2023 - Kaido Sushi Bar (Full Diploma)"
               style={{ width: '100%', display: 'block' }}
             />
-          </a>
+            <div style={{
+              position: 'absolute',
+              bottom: '12px',
+              right: '12px',
+              background: 'rgba(18, 15, 13, 0.85)',
+              backdropFilter: 'blur(6px)',
+              color: '#ffffff',
+              padding: '6px 12px',
+              borderRadius: 'var(--radius-full)',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}>
+              <Maximize2 size={13} />
+              <span>{language === 'de' ? 'Vollbild' : 'Full Size'}</span>
+            </div>
+          </div>
 
           {/* Certificate Info Details */}
           <div style={{ flex: 1, minWidth: '280px' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--accent-gold)', fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>
-              <Award size={18} /> Offizielle Auszeichnung 2023
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--accent-gold)', fontWeight: 700, fontSize: '0.88rem', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '10px' }}>
+              <Award size={20} /> Offizielle Auszeichnung 2023
             </div>
 
-            <h3 style={{ fontSize: '1.7rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+            <h3 style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
               {language === 'de' ? 'Empfohlen auf Restaurant Guru' : 'Recommended on Restaurant Guru'}
-              <CheckCircle2 size={22} color="#2ecc71" fill="rgba(46, 204, 113, 0.15)" />
+              <CheckCircle2 size={24} color="#2ecc71" fill="rgba(46, 204, 113, 0.15)" />
             </h3>
 
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.02rem', lineHeight: 1.6, marginBottom: '20px', maxWidth: '620px' }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '24px', maxWidth: '640px' }}>
               {language === 'de' 
-                ? 'Kaido wurde von Restaurant Guru offiziell als eine der besten Adressen für erstklassiges Sushi & japanische Spezialitäten in Wien ausgezeichnet.' 
-                : 'Kaido has been officially recognized by Restaurant Guru as one of the recommended destinations for premium sushi and Japanese dining in Vienna.'}
+                ? 'Kaido wurde von Restaurant Guru offiziell mit dem Empfehlungs-Zertifikat 2023 ausgezeichnet. Wir bedanken uns herzlich bei unseren treuen Gästen für die erstklassigen Bewertungen!' 
+                : 'Kaido has been officially awarded the Recommended Certificate 2023 by Restaurant Guru. We sincerely thank our guests for your wonderful reviews!'}
             </p>
 
-            <a
-              href="https://de.restaurantguru.com/Kaido-Sushi-Bar-Vienna?utm_source=rg_certificate9"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 22px', fontSize: '0.9rem' }}
-            >
-              <span>{language === 'de' ? 'Zertifikat auf Restaurant Guru ansehen' : 'View Award on Restaurant Guru'}</span>
-              <ExternalLink size={16} />
-            </a>
+            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => setIsCertModalOpen(true)}
+                className="btn btn-primary"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '11px 24px', fontSize: '0.92rem' }}
+              >
+                <Maximize2 size={16} />
+                <span>{language === 'de' ? 'Zertifikat im Vollbild öffnen' : 'View Full Certificate'}</span>
+              </button>
+
+              <a
+                href="https://de.restaurantguru.com/Kaido-Sushi-Bar-Vienna?utm_source=rg_certificate9"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-secondary"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '11px 24px', fontSize: '0.92rem' }}
+              >
+                <span>{language === 'de' ? 'Auf Restaurant Guru ansehen' : 'View on Restaurant Guru'}</span>
+                <ExternalLink size={16} />
+              </a>
+            </div>
           </div>
         </div>
+
+        {/* Certificate Full-Resolution Lightbox Modal */}
+        {isCertModalOpen && (
+          <div
+            onClick={() => setIsCertModalOpen(false)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(5, 5, 8, 0.95)',
+              backdropFilter: 'blur(16px)',
+              zIndex: 2500,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px'
+            }}
+          >
+            <button
+              onClick={() => setIsCertModalOpen(false)}
+              style={{
+                position: 'absolute',
+                top: '24px',
+                right: '28px',
+                padding: '12px',
+                borderRadius: '50%',
+                background: 'rgba(255, 255, 255, 0.15)',
+                color: '#ffffff',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              <X size={26} />
+            </button>
+
+            <img
+              src={restaurantGuruImg}
+              alt="Restaurant Guru 2023 Full Diploma Certificate - Kaido Sushi Bar"
+              onClick={e => e.stopPropagation()}
+              style={{
+                maxWidth: '92vw',
+                maxHeight: '90vh',
+                borderRadius: 'var(--radius-md)',
+                objectFit: 'contain',
+                boxShadow: '0 30px 80px rgba(0, 0, 0, 0.8)',
+                background: '#ffffff'
+              }}
+            />
+          </div>
+        )}
 
         {/* Reviews Grid */}
         <div className="reviews-grid">
