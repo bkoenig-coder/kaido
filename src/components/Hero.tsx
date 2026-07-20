@@ -320,19 +320,20 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
         }
 
         .hero-title {
-          font-size: 3.5rem;
-          line-height: 1.2;
-          margin-bottom: 20px;
+          font-size: 2.4rem;
+          line-height: 1.25;
+          margin-bottom: 16px;
           font-weight: 800;
           color: #ffffff;
+          letter-spacing: -0.01em;
           text-shadow: 0 4px 20px rgba(0, 0, 0, 0.85);
         }
 
         .hero-description {
-          font-size: 1.25rem;
-          color: #ffffff;
-          max-width: 600px;
-          margin-bottom: 30px;
+          font-size: 1.05rem;
+          color: rgba(255, 255, 255, 0.95);
+          max-width: 560px;
+          margin-bottom: 24px;
           line-height: 1.6;
           text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
         }
@@ -392,10 +393,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
 
         @media (max-width: 768px) {
           .hero-title {
-            font-size: 2.3rem;
+            font-size: 1.8rem;
           }
           .hero-description {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
           }
           .hero-actions {
             flex-direction: column;
