@@ -170,15 +170,17 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
 
       <div className="hero-container container">
         <div className="hero-content animate-slide-up">
-          {/* Status Row: Cute Animation and Open Status Badge side-by-side */}
-          <div className="hero-status-row animate-fade-in">
-            <div className="hero-lottie-cat-mini">
-              <LottieAnimation 
-                url="https://lottie.host/7b34dc46-b0c2-4b31-ae1b-9aef57e74ea8/R4k9Jo6VVC.json" 
-                width="85px" 
-                height="85px" 
-              />
-            </div>
+          {/* Centered Homepage Animation */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }} className="animate-fade-in">
+            <LottieAnimation 
+              url="https://lottie.host/7b34dc46-b0c2-4b31-ae1b-9aef57e74ea8/R4k9Jo6VVC.json" 
+              width="95px" 
+              height="95px" 
+            />
+          </div>
+
+          {/* Open Status Badge */}
+          <div className="hero-status-row animate-fade-in" style={{ justifyContent: 'center', marginBottom: '20px' }}>
             <div className="status-badge-container">
               <span className={`status-dot ${openStatus.status}`}></span>
               <span className="status-text">{openStatus.text}</span>
