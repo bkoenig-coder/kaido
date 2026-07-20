@@ -121,7 +121,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
         <video
           ref={videoRef}
           className="hero-video-bg"
-          src="https://res.cloudinary.com/b08mrui7/video/upload/v1784550002/0720_czj7fj.mp4"
+          src="https://res.cloudinary.com/b08mrui7/video/upload/v1784550485/0720_2_damyq5.mp4"
           autoPlay
           loop
           muted
@@ -129,7 +129,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
           preload="auto"
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         >
-          <source src="https://res.cloudinary.com/b08mrui7/video/upload/v1784550002/0720_czj7fj.mp4" type="video/mp4" />
+          <source src="https://res.cloudinary.com/b08mrui7/video/upload/v1784550485/0720_2_damyq5.mp4" type="video/mp4" />
         </video>
       </div>
       <div className="hero-overlay"></div>

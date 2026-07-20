@@ -84,7 +84,7 @@ export const GallerySection: React.FC = () => {
   return (
     <section id="gallery" className="gallery-section section" style={{ background: 'var(--bg-secondary)', padding: '90px 0', position: 'relative' }}>
       <div className="container" style={{ maxWidth: '1140px' }}>
-        
+
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <span style={{
@@ -346,6 +346,45 @@ export const GallerySection: React.FC = () => {
           />
         </div>
       )}
+
+      <style>{`
+        .gallery-main-stage {
+          height: 540px;
+        }
+
+        @media (max-width: 768px) {
+          .gallery-main-stage {
+            height: 340px !important;
+          }
+          .gallery-stage-title {
+            font-size: 1.25rem !important;
+          }
+          .gallery-stage-subtitle {
+            font-size: 0.85rem !important;
+          }
+          .gallery-thumb-strip {
+            gap: 8px !important;
+          }
+          .gallery-thumb-btn {
+            height: 65px !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .gallery-main-stage {
+            height: 280px !important;
+          }
+          .gallery-nav-arrow {
+            width: 36px !important;
+            height: 36px !important;
+          }
+          .gallery-stage-caption {
+            bottom: 16px !important;
+            left: 16px !important;
+            right: 16px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 };
