@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { CalendarDays, UtensilsCrossed, Clock } from 'lucide-react';
 import { LottieAnimation } from './LottieAnimation';
+import heroBgImg from '../assets/gallery/gallery3.jpg';
 
 interface HeroProps {
   onOpenReservation: () => void;
@@ -9,19 +10,11 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
   const { t, language } = useLanguage();
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [openStatus, setOpenStatus] = useState<{ status: 'open' | 'closed' | 'closing', text: string }>({
     status: 'closed',
     text: ''
   });
 
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.defaultMuted = true;
-      videoRef.current.muted = true;
-      videoRef.current.play().catch(e => console.log('Autoplay handled:', e));
-    }
-  }, []);
 
   useEffect(() => {
     const checkOpenStatus = () => {
@@ -118,21 +111,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
   return (
     <section id="hero" className="hero-section">
       <div className="hero-bg" style={{ background: '#0a0a0c' }}>
-        <video
-          ref={videoRef}
-          className="hero-video-bg"
-          src="https://res.cloudinary.com/b08mrui7/video/upload/v1784550485/0720_2_damyq5.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        >
-          <source src="https://res.cloudinary.com/b08mrui7/video/upload/v1784550485/0720_2_damyq5.mp4" type="video/mp4" />
-        </video>
+        <img
+          className="hero-image-bg"
+          src={heroBgImg}
+          alt="Kaido Sushi Bar Japanese Geisha Mural"
+        />
+        <div className="hero-overlay"></div>
       </div>
-      <div className="hero-overlay"></div>
       
       {/* Decorative Floating Koi Fish Watermark */}
       <div className="hero-koi-watermark">
@@ -231,18 +216,31 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
           overflow: hidden;
         }
 
-        .hero-video-bg {
+        .hero-image-bg {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          object-position: center 30%;
           position: absolute;
           top: 0;
           left: 0;
-          transform: scale(1.03);
+          transform: scale(1.02);
+          filter: brightness(0.85);
         }
 
         .hero-overlay {
-          display: none;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(
+            180deg,
+            rgba(10, 10, 12, 0.6) 0%,
+            rgba(10, 10, 12, 0.45) 40%,
+            rgba(10, 10, 12, 0.85) 100%
+          );
+          pointer-events: none;
         }
 
         .hero-container {
