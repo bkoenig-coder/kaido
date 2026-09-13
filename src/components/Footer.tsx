@@ -34,8 +34,8 @@ export const Footer: React.FC = () => {
 
             <p className="brand-motto">
               {language === 'de' 
-                ? 'Traditionelle japanische Schnittkunst, jahrhundertealte Omakase-Kultur und zeitlose Stille im Herzen von Wien.' 
-                : 'Master-level Japanese knife discipline, time-honored omakase culture, and quiet elegance in the heart of Vienna.'}
+                ? 'Authentisches Sushi, traditionelle Ramen und japanische Spezialitäten im 2. Bezirk in Wien — frisch zubereitet mit höchstem Qualitätsanspruch.' 
+                : 'Authentic sushi, traditional ramen, and Japanese specialties in Vienna’s 2nd district — freshly prepared with superior quality.'}
             </p>
 
             {/* Distinction Link */}
@@ -146,10 +146,11 @@ export const Footer: React.FC = () => {
 
       <style>{`
         .footer-section {
-          background: #06080a;
-          border-top: 1px solid rgba(212, 175, 55, 0.16);
+          background: var(--color-sumi-black);
+          border-top: 1px solid var(--border-color);
           padding: 80px 0 0;
           position: relative;
+          transition: background-color 0.35s ease;
         }
 
         .footer-container {
@@ -169,13 +170,30 @@ export const Footer: React.FC = () => {
         .logo-ring-footer {
           width: 44px;
           height: 44px;
+          min-width: 44px;
+          min-height: 44px;
           border-radius: 50%;
           border: 1.5px solid var(--color-gold);
           display: flex;
           align-items: center;
           justify-content: center;
           padding: 2px;
-          background: rgba(14, 17, 21, 0.9);
+          background: var(--bg-secondary);
+          box-shadow: 0 0 14px rgba(212, 175, 55, 0.25);
+          overflow: hidden;
+          flex-shrink: 0;
+        }
+
+        .logo-ring-footer .logo-img,
+        .logo-footer .logo-img,
+        .logo-img {
+          width: 36px;
+          height: 36px;
+          max-width: 100%;
+          max-height: 100%;
+          border-radius: 50%;
+          object-fit: cover;
+          display: block;
         }
 
         .logo-titles {
@@ -186,7 +204,7 @@ export const Footer: React.FC = () => {
         .logo-text {
           font-family: var(--font-serif);
           font-size: 1.6rem;
-          color: #ffffff;
+          color: var(--text-primary);
           letter-spacing: 0.22em;
           line-height: 1;
         }
@@ -242,7 +260,7 @@ export const Footer: React.FC = () => {
         .footer-address {
           font-family: var(--font-serif);
           font-size: 1.15rem;
-          color: #ffffff;
+          color: var(--text-primary);
           line-height: 1.4;
         }
 

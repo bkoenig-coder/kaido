@@ -1,30 +1,31 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { Utensils, CalendarDays, PhoneCall } from 'lucide-react';
 
 export const PhilosophySection: React.FC = () => {
   const { t, language } = useLanguage();
 
   const pillars = [
     {
-      kanji: 'おもてなし',
-      kanjiChar: '和',
-      roman: 'I',
+      kanji: '鮮',
+      kanjiChar: '鮮',
+      roman: '01',
       title: t.pillar1Title,
       subtitle: t.pillar1Subtitle,
       desc: t.pillar1Desc,
     },
     {
-      kanji: '旬',
-      kanjiChar: '旬',
-      roman: 'II',
+      kanji: '技',
+      kanjiChar: '技',
+      roman: '02',
       title: t.pillar2Title,
       subtitle: t.pillar2Subtitle,
       desc: t.pillar2Desc,
     },
     {
-      kanji: '職人',
-      kanjiChar: '匠',
-      roman: 'III',
+      kanji: '昼',
+      kanjiChar: '昼',
+      roman: '03',
       title: t.pillar3Title,
       subtitle: t.pillar3Subtitle,
       desc: t.pillar3Desc,
@@ -66,25 +67,54 @@ export const PhilosophySection: React.FC = () => {
           ))}
         </div>
 
-        {/* Haute Gastronomy Quote Banner */}
-        <div className="philosophy-quote-box glass-panel animate-fade-in">
-          <span className="quote-mark">“</span>
-          <blockquote className="quote-text">
-            {language === 'de'
-              ? 'Vollkommenheit entsteht nicht, wenn man nichts mehr hinzufügen kann, sondern wenn man nichts mehr weglassen kann.'
-              : 'Perfection is attained not when there is nothing more to add, but when there is nothing left to take away.'}
-          </blockquote>
-          <cite className="quote-author">
-            KAIDO • ATELIER WIEN
-          </cite>
+        {/* Functional Fast-Action Service Banner */}
+        <div className="service-features-banner glass-card animate-fade-in">
+          <div className="feature-item">
+            <div className="feature-icon-circle">
+              <Utensils size={20} />
+            </div>
+            <div>
+              <h4 className="feature-title">{language === 'de' ? 'Mittagsmenü 11:00 – 14:00 Uhr' : 'Lunch Specials 11:00 AM – 2:00 PM'}</h4>
+              <p className="feature-subtitle">{language === 'de' ? 'Mo–Fr serviert mit Sommerrolle & Miso-Suppe' : 'Mon–Fri served with summer roll & miso soup'}</p>
+            </div>
+          </div>
+
+          <div className="feature-divider" />
+
+          <div className="feature-item">
+            <div className="feature-icon-circle">
+              <CalendarDays size={20} />
+            </div>
+            <div>
+              <h4 className="feature-title">{language === 'de' ? 'Tisch online reservieren' : 'Online Table Booking'}</h4>
+              <p className="feature-subtitle">{language === 'de' ? 'Schnell, unkompliziert & sofort bestätigt' : 'Instant confirmation for your visit'}</p>
+            </div>
+          </div>
+
+          <div className="feature-divider" />
+
+          <div className="feature-item">
+            <div className="feature-icon-circle">
+              <PhoneCall size={20} />
+            </div>
+            <div>
+              <h4 className="feature-title">{language === 'de' ? 'Telefonische Vorbestellung' : 'Telephone Takeaway Orders'}</h4>
+              <p className="feature-subtitle">
+                <a href="tel:+4312126076" className="feature-phone-link">
+                  01 212 60 76
+                </a>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
       <style>{`
         .philosophy-section {
-          background: linear-gradient(180deg, #0e1115 0%, #12161d 50%, #0e1115 100%);
+          background: var(--bg-primary);
           position: relative;
           overflow: hidden;
+          transition: background-color 0.35s ease;
         }
 
         .philosophy-bg-glow {
@@ -184,45 +214,71 @@ export const PhilosophySection: React.FC = () => {
           font-weight: 300;
         }
 
-        .philosophy-quote-box {
-          border: 1px solid rgba(212, 175, 55, 0.22);
-          padding: 48px 40px;
+        .service-features-banner {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 24px;
+          padding: 32px 40px;
           border-radius: var(--radius-md);
-          text-align: center;
-          max-width: 880px;
           margin: 0 auto;
-          position: relative;
-          background: rgba(14, 17, 21, 0.65);
+          max-width: 1060px;
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          background: rgba(14, 18, 24, 0.65);
         }
 
-        .quote-mark {
-          font-family: var(--font-serif);
-          font-size: 3.5rem;
+        .feature-item {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          flex: 1;
+        }
+
+        .feature-icon-circle {
+          width: 46px;
+          height: 46px;
+          border-radius: 50%;
+          border: 1px solid var(--color-gold);
+          background: rgba(212, 175, 55, 0.08);
           color: var(--color-gold);
-          opacity: 0.4;
-          line-height: 1;
-          display: block;
-          margin-bottom: -10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
         }
 
-        .quote-text {
-          font-family: var(--font-serif);
-          font-size: clamp(1.2rem, 2.2vw, 1.6rem);
-          font-style: italic;
-          color: #ffffff;
-          line-height: 1.6;
-          margin-bottom: 18px;
-          font-weight: 300;
-          letter-spacing: 0.02em;
-        }
-
-        .quote-author {
+        .feature-title {
           font-family: var(--font-eyebrow);
-          font-size: 0.75rem;
-          letter-spacing: 0.3em;
-          color: var(--color-gold);
+          font-size: 0.88rem;
+          letter-spacing: 0.12em;
           text-transform: uppercase;
-          font-style: normal;
+          color: var(--text-primary);
+          margin-bottom: 3px;
+        }
+
+        .feature-subtitle {
+          font-size: 0.84rem;
+          color: var(--text-secondary);
+          margin: 0;
+        }
+
+        .feature-phone-link {
+          color: var(--color-gold);
+          font-weight: 600;
+          letter-spacing: 0.08em;
+          text-decoration: none;
+          transition: var(--transition-fast);
+        }
+
+        .feature-phone-link:hover {
+          color: var(--color-gold-light);
+          text-decoration: underline;
+        }
+
+        .feature-divider {
+          width: 1px;
+          height: 46px;
+          background: rgba(212, 175, 55, 0.2);
         }
 
         @media (max-width: 960px) {
@@ -230,8 +286,15 @@ export const PhilosophySection: React.FC = () => {
             grid-template-columns: 1fr;
             gap: 24px;
           }
-          .philosophy-quote-box {
-            padding: 36px 24px;
+          .service-features-banner {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 28px 20px;
+            gap: 20px;
+          }
+          .feature-divider {
+            width: 100%;
+            height: 1px;
           }
         }
       `}</style>

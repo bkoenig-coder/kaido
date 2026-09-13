@@ -313,9 +313,10 @@ export const GallerySection: React.FC = () => {
 
       <style>{`
         .gallery-section {
-          background: #090b0e;
+          background: var(--bg-primary);
           position: relative;
           overflow: hidden;
+          transition: background-color 0.35s ease;
         }
 
         .gallery-ambient-glow {
@@ -333,11 +334,11 @@ export const GallerySection: React.FC = () => {
           display: grid;
           grid-template-columns: 1.15fr 1.85fr;
           min-height: 640px;
-          background: rgba(14, 17, 22, 0.85);
-          border: 1px solid rgba(212, 175, 55, 0.22);
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-color);
           border-radius: var(--radius-md);
           overflow: hidden;
-          box-shadow: 0 30px 80px rgba(0, 0, 0, 0.75), 0 0 40px rgba(212, 175, 55, 0.06);
+          box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 40px rgba(212, 175, 55, 0.06);
         }
 
         /* LEFT: Editorial Panel */
@@ -346,9 +347,9 @@ export const GallerySection: React.FC = () => {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          border-right: 1px solid rgba(212, 175, 55, 0.16);
+          border-right: 1px solid var(--border-color);
           position: relative;
-          background: linear-gradient(135deg, rgba(16, 20, 26, 0.95) 0%, rgba(11, 13, 18, 0.98) 100%);
+          background: var(--bg-secondary);
         }
 
         .editorial-topbar {
@@ -454,7 +455,7 @@ export const GallerySection: React.FC = () => {
         .editorial-title {
           font-family: var(--font-serif);
           font-size: clamp(1.8rem, 2.8vw, 2.6rem);
-          color: #ffffff;
+          color: var(--text-primary);
           line-height: 1.22;
           letter-spacing: 0.02em;
           margin-bottom: 16px;
@@ -471,7 +472,7 @@ export const GallerySection: React.FC = () => {
         .editorial-description {
           font-size: 0.96rem;
           line-height: 1.75;
-          color: var(--color-washi-dim);
+          color: var(--text-secondary);
           font-weight: 300;
         }
 

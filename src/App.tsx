@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { LanguageProvider } from './context/LanguageContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { PhilosophySection } from './components/PhilosophySection';
@@ -51,9 +52,11 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <LanguageProvider>
-      <AppContent />
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <AppContent />
+      </LanguageProvider>
+    </ThemeProvider>
   );
 };
 

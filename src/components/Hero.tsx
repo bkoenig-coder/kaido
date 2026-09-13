@@ -185,7 +185,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
           align-items: center;
           justify-content: center;
           overflow: hidden;
-          background: #08090b;
+          background: var(--bg-primary);
+          transition: background-color 0.35s ease;
         }
 
         .hero-bg {
@@ -286,7 +287,25 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
           100% { transform: translateY(-16px); }
         }
 
-        @media (max-width: 1200px) {
+        @media (max-width: 1280px) and (min-width: 1025px) {
+          .hero-yingyang-left,
+          .hero-yingyang-right {
+            width: 86px;
+            height: 86px;
+            top: 20%;
+          }
+          .hero-yingyang-left {
+            left: 2%;
+          }
+          .hero-yingyang-right {
+            right: 2%;
+          }
+          .hero-yy-label {
+            font-size: 0.58rem;
+          }
+        }
+
+        @media (max-width: 1024px) {
           .hero-yingyang-left,
           .hero-yingyang-right {
             display: none;
@@ -332,14 +351,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
           line-height: 1.12;
           margin-bottom: 8px;
           font-weight: 300;
-          color: #ffffff;
+          color: var(--text-primary);
           letter-spacing: 0.03em;
-          text-shadow: 0 4px 30px rgba(0, 0, 0, 0.9);
         }
 
         .hero-description {
           font-size: clamp(1.05rem, 1.6vw, 1.25rem);
-          color: var(--color-washi-dim);
+          color: var(--text-secondary);
           max-width: 680px;
           margin-bottom: 28px;
           line-height: 1.8;
@@ -416,6 +434,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
           .hero-section {
             padding: 120px 0 60px;
           }
+
           .hero-actions {
             flex-direction: column;
             width: 100%;

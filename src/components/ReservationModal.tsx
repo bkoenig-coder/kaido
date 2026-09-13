@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { X, ExternalLink, ShieldCheck, Sparkles } from 'lucide-react';
+import { X, ExternalLink, ShieldCheck } from 'lucide-react';
 
 interface ReservationModalProps {
   isOpen: boolean;
@@ -16,37 +16,44 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content reservation-modal-content" onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
+        {/* Compact Luxury Header */}
         <div className="modal-header">
           <div className="modal-header-left">
             <span className="modal-mon-seal">席</span>
             <div className="modal-title-text">
-              <h2>{t.reserveTitle}</h2>
-              <p>{t.reserveSubtitle}</p>
+              <div className="modal-title-row">
+                <h2>{t.reserveTitle}</h2>
+                <span className="engine-pill">
+                  <ShieldCheck size={12} className="text-gold" />
+                  <span>Gastro.site</span>
+                </span>
+              </div>
+              <p className="modal-subtitle-compact">
+                {language === 'de'
+                  ? 'Echtzeit-Buchung • Pünktlichkeit sichert optimale Frische & Zubereitungsfolge'
+                  : 'Live Booking • Punctual arrival ensures optimal freshness & course progression'}
+              </p>
             </div>
           </div>
-          <button className="close-button" onClick={onClose} aria-label={t.closeBtn}>
-            <X size={24} />
-          </button>
+
+          <div className="modal-header-actions">
+            <a
+              href="https://www.gastro.site/reserve?id=BATM49A3abg1y&details=yes"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="open-tab-btn"
+              title={t.reserveOpenNewTab}
+            >
+              <ExternalLink size={14} />
+              <span className="open-tab-text">{language === 'de' ? 'Vollbild' : 'Full Screen'}</span>
+            </a>
+            <button className="close-button" onClick={onClose} aria-label={t.closeBtn}>
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
-        {/* Concierge Protocol Notice */}
-        <div className="etiquette-notice">
-          <Sparkles size={14} className="text-gold" />
-          <span>
-            {language === 'de'
-              ? 'Pünktlichkeit sichert den optimalen Ablauf der Schnitt- und Zubereitungsfolge.'
-              : 'Punctual arrival ensures the deliberate progression of each culinary course.'}
-          </span>
-        </div>
-
-        {/* Secure badge */}
-        <div className="secure-badge">
-          <ShieldCheck size={15} className="text-gold" />
-          <span>Diskrete Online-Reservierung via Gastro.site Engine</span>
-        </div>
-
-        {/* Iframe container */}
+        {/* Iframe container - maximized viewport so no scrolling is needed */}
         <div className="iframe-container">
           {isLoading && (
             <div className="iframe-loader">
@@ -61,112 +68,150 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
             allow="payment"
           />
         </div>
-
-        {/* Fallback instructions */}
-        <div className="iframe-fallback">
-          <p>{t.reserveFallback}</p>
-          <a
-            href="https://www.gastro.site/reserve?id=BATM49A3abg1y&details=yes"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-secondary btn-sm"
-          >
-            <span>{t.reserveOpenNewTab}</span>
-            <ExternalLink size={13} />
-          </a>
-        </div>
       </div>
 
       <style>{`
         .reservation-modal-content {
-          max-width: 680px;
-          height: 88vh;
+          width: 95vw;
+          max-width: 980px;
+          height: 94vh;
+          max-height: 940px;
           display: flex;
           flex-direction: column;
           overflow: hidden;
           background: #0d1015;
-          border: 1px solid rgba(212, 175, 55, 0.3);
+          border: 1px solid rgba(212, 175, 55, 0.4);
+          border-radius: 12px;
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(212, 175, 55, 0.15);
         }
 
         .modal-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 24px 28px;
-          border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+          padding: 12px 20px;
+          border-bottom: 1px solid rgba(212, 175, 55, 0.25);
           background: #090b0e;
+          flex-shrink: 0;
+          gap: 12px;
         }
 
         .modal-header-left {
           display: flex;
           align-items: center;
-          gap: 16px;
+          gap: 12px;
+          min-width: 0;
         }
 
         .modal-mon-seal {
-          width: 42px;
-          height: 42px;
+          width: 32px;
+          height: 32px;
           border-radius: var(--radius-sm);
           border: 1px solid var(--color-gold);
           display: flex;
           align-items: center;
           justify-content: center;
           font-family: var(--font-serif);
-          font-size: 1.2rem;
+          font-size: 1rem;
           color: var(--color-gold);
           background: rgba(212, 175, 55, 0.08);
           flex-shrink: 0;
         }
 
-        .modal-title-text h2 {
-          font-family: var(--font-serif);
-          font-size: 1.6rem;
-          color: #ffffff;
-          letter-spacing: 0.02em;
-          margin-bottom: 2px;
+        .modal-title-text {
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
         }
 
-        .modal-title-text p {
-          font-size: 0.88rem;
+        .modal-title-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+
+        .modal-title-row h2 {
+          font-family: var(--font-serif);
+          font-size: 1.15rem;
+          color: #ffffff;
+          letter-spacing: 0.02em;
+          line-height: 1.2;
+          margin: 0;
+        }
+
+        .engine-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          padding: 2px 8px;
+          border-radius: var(--radius-full);
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          background: rgba(212, 175, 55, 0.08);
+          color: var(--color-gold-light);
+          font-size: 0.68rem;
+          font-family: var(--font-eyebrow);
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        .modal-subtitle-compact {
+          font-size: 0.75rem;
           color: var(--color-washi-dim);
+          margin-top: 2px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .modal-header-actions {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-shrink: 0;
+        }
+
+        .open-tab-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 12px;
+          border-radius: var(--radius-full);
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          background: rgba(212, 175, 55, 0.06);
+          color: var(--color-gold-light);
+          font-size: 0.72rem;
+          font-family: var(--font-eyebrow);
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          transition: var(--transition-fast);
+        }
+
+        .open-tab-btn:hover {
+          border-color: var(--color-gold);
+          color: #ffffff;
+          background: rgba(212, 175, 55, 0.15);
         }
 
         .close-button {
           background: none;
-          border: none;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 50%;
           color: var(--color-washi-dim);
           cursor: pointer;
           transition: var(--transition-fast);
           padding: 6px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
         }
 
         .close-button:hover {
           color: #ffffff;
-        }
-
-        .etiquette-notice {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          font-family: var(--font-eyebrow);
-          font-size: 0.72rem;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          color: var(--color-gold-light);
-          background: rgba(212, 175, 55, 0.06);
-          border-bottom: 1px solid rgba(212, 175, 55, 0.15);
-          padding: 8px 28px;
-        }
-
-        .secure-badge {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 0.76rem;
-          color: var(--color-washi-dim);
-          background: rgba(14, 17, 22, 0.9);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-          padding: 8px 28px;
+          border-color: var(--color-gold);
+          background: rgba(212, 175, 55, 0.1);
         }
 
         .text-gold {
@@ -174,9 +219,11 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
         }
 
         .iframe-container {
-          flex-grow: 1;
+          flex: 1 1 0;
+          min-height: 0;
           position: relative;
           background: #ffffff;
+          display: flex;
         }
 
         .iframe-loader {
@@ -193,6 +240,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
           width: 100%;
           height: 100%;
           border: none;
+          display: block;
           transition: opacity 0.3s ease;
         }
 
@@ -200,22 +248,26 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
           opacity: 0;
         }
 
-        .iframe-fallback {
-          padding: 16px 28px 22px;
-          background: #090b0e;
-          border-top: 1px solid rgba(212, 175, 55, 0.18);
-          text-align: center;
-          font-size: 0.84rem;
-          color: var(--color-washi-dim);
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 10px;
-        }
+        @media (max-width: 600px) {
+          .reservation-modal-content {
+            width: 100vw;
+            height: 100vh;
+            max-height: 100vh;
+            border-radius: 0;
+            border: none;
+          }
 
-        .btn-sm {
-          padding: 8px 20px;
-          font-size: 0.75rem;
+          .modal-header {
+            padding: 10px 14px;
+          }
+
+          .modal-subtitle-compact {
+            display: none;
+          }
+
+          .open-tab-text {
+            display: none;
+          }
         }
       `}</style>
     </div>

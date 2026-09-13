@@ -87,7 +87,7 @@ export const Reviews: React.FC = () => {
           </div>
         </div>
 
-        {/* Official Distinction Showcase */}
+        {/* Official Distinction Showcase - Large Always-Visible Certificate */}
         <div className="distinction-card glass-card animate-slide-up">
           <div className="distinction-content">
             <div className="distinction-tag">
@@ -101,19 +101,11 @@ export const Reviews: React.FC = () => {
 
             <p>
               {language === 'de' 
-                ? 'Kaido wurde von Restaurant Guru offiziell mit der Auszeichnungs-Urkunde für herausragende kulinarische Qualität geehrt.' 
-                : 'Kaido was officially honored with the certificate of excellence by Restaurant Guru for superior culinary quality.'}
+                ? 'Kaido wurde von Restaurant Guru offiziell mit der Auszeichnungs-Urkunde für herausragende kulinarische Qualität und Gastfreundschaft geehrt.' 
+                : 'Kaido was officially honored with the certificate of excellence by Restaurant Guru for superior culinary quality and hospitality.'}
             </p>
 
             <div className="distinction-actions">
-              <button 
-                className="btn btn-secondary btn-sm"
-                onClick={() => setIsCertModalOpen(true)}
-              >
-                <Maximize2 size={14} />
-                <span>{language === 'de' ? 'Urkunde betrachten' : 'View Certificate'}</span>
-              </button>
-
               <a 
                 href="https://de.restaurantguru.com/Kaido-Sushi-Bar-Vienna?utm_source=rg_certificate9" 
                 target="_blank" 
@@ -123,16 +115,31 @@ export const Reviews: React.FC = () => {
                 <span>Restaurant Guru Profil</span>
                 <ExternalLink size={13} />
               </a>
+
+              <div className="distinction-seal-badge">
+                <img src={restaurantGuruImg} alt="Restaurant Guru Badge" className="seal-badge-img" />
+                <span className="seal-badge-text">2023 Recommended</span>
+              </div>
             </div>
           </div>
 
-          <div className="distinction-badge-wrapper" onClick={() => setIsCertModalOpen(true)}>
-            <img 
-              src={restaurantGuruImg} 
-              alt="Restaurant Guru Distinction" 
-              className="distinction-badge-img"
-            />
-            <span className="badge-hint">{language === 'de' ? 'Vergrößern' : 'Enlarge'}</span>
+          {/* Large Visible Certificate Display */}
+          <div className="distinction-cert-display">
+            <div className="cert-frame-wrapper" onClick={() => setIsCertModalOpen(true)} title={language === 'de' ? 'Klicken für Vollbild' : 'Click for fullscreen'}>
+              <img 
+                src={certImg} 
+                alt="Kaido Restaurant Guru Original Certificate" 
+                className="cert-prominent-image" 
+              />
+              <div className="cert-frame-border" />
+              <div className="cert-hover-hint">
+                <Maximize2 size={15} />
+                <span>{language === 'de' ? 'Vollbild' : 'Fullscreen'}</span>
+              </div>
+            </div>
+            <span className="cert-display-caption">
+              {language === 'de' ? 'Original-Zertifikat • Restaurant Guru 2023' : 'Original Certificate • Restaurant Guru 2023'}
+            </span>
           </div>
         </div>
 
@@ -193,8 +200,9 @@ export const Reviews: React.FC = () => {
 
       <style>{`
         .reviews-section {
-          background: #090b0e;
+          background: var(--bg-primary);
           position: relative;
+          transition: background-color 0.35s ease;
         }
 
         .reviews-header-block {
@@ -204,7 +212,7 @@ export const Reviews: React.FC = () => {
         .section-title-text {
           font-size: clamp(2rem, 3.5vw, 3rem);
           font-weight: 400;
-          color: #ffffff;
+          color: var(--text-primary);
           letter-spacing: 0.02em;
         }
 
@@ -212,13 +220,13 @@ export const Reviews: React.FC = () => {
           display: inline-flex;
           align-items: center;
           gap: 12px;
-          background: rgba(20, 23, 29, 0.6);
-          border: 1px solid rgba(212, 175, 55, 0.2);
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-color);
           padding: 8px 20px;
           border-radius: var(--radius-full);
           font-family: var(--font-eyebrow);
           font-size: 0.78rem;
-          color: var(--color-washi-dim);
+          color: var(--text-secondary);
           letter-spacing: 0.05em;
         }
 
@@ -228,7 +236,7 @@ export const Reviews: React.FC = () => {
         }
 
         .rating-value {
-          color: var(--color-gold-light);
+          color: var(--color-gold);
           font-weight: 600;
         }
 
@@ -244,8 +252,8 @@ export const Reviews: React.FC = () => {
           justify-content: space-between;
           align-items: center;
           gap: 36px;
-          border: 1px solid rgba(212, 175, 55, 0.28);
-          background: linear-gradient(135deg, rgba(20, 24, 31, 0.8) 0%, rgba(13, 16, 21, 0.9) 100%);
+          border: 1px solid var(--border-color);
+          background: var(--bg-secondary);
         }
 
         .distinction-content {
@@ -267,13 +275,13 @@ export const Reviews: React.FC = () => {
         .distinction-content h3 {
           font-family: var(--font-serif);
           font-size: 2rem;
-          color: #ffffff;
+          color: var(--text-primary);
           margin-bottom: 10px;
           letter-spacing: 0.02em;
         }
 
         .distinction-content p {
-          color: var(--color-washi-dim);
+          color: var(--text-secondary);
           font-size: 0.98rem;
           line-height: 1.7;
           margin-bottom: 24px;
@@ -303,37 +311,104 @@ export const Reviews: React.FC = () => {
           opacity: 1;
         }
 
-        .distinction-badge-wrapper {
-          flex-shrink: 0;
-          cursor: pointer;
-          display: flex;
-          flex-direction: column;
+        .distinction-seal-badge {
+          display: inline-flex;
           align-items: center;
-          gap: 8px;
-          padding: 16px;
-          background: rgba(10, 12, 16, 0.6);
+          gap: 10px;
+          background: rgba(14, 18, 24, 0.7);
           border: 1px solid rgba(212, 175, 55, 0.2);
-          border-radius: var(--radius-sm);
-          transition: var(--transition-smooth);
+          padding: 6px 14px;
+          border-radius: var(--radius-full);
         }
 
-        .distinction-badge-wrapper:hover {
-          border-color: var(--color-gold);
-          box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
-          transform: translateY(-2px);
-        }
-
-        .distinction-badge-img {
-          height: 100px;
+        .seal-badge-img {
+          height: 26px;
           object-fit: contain;
         }
 
-        .badge-hint {
+        .seal-badge-text {
+          font-family: var(--font-eyebrow);
+          font-size: 0.7rem;
+          color: var(--color-gold-light);
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+
+        /* Large Prominent Certificate Display */
+        .distinction-cert-display {
+          flex: 0 0 380px;
+          max-width: 420px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .cert-frame-wrapper {
+          position: relative;
+          width: 100%;
+          border-radius: 6px;
+          overflow: hidden;
+          box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 30px rgba(212, 175, 55, 0.15);
+          border: 2px solid rgba(212, 175, 55, 0.45);
+          cursor: pointer;
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+          background: #000000;
+        }
+
+        .cert-frame-wrapper:hover {
+          transform: translateY(-4px) scale(1.02);
+          border-color: var(--color-gold);
+          box-shadow: 0 22px 48px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.35);
+        }
+
+        .cert-prominent-image {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+
+        .cert-frame-border {
+          position: absolute;
+          inset: 6px;
+          border: 1px solid rgba(212, 175, 55, 0.3);
+          pointer-events: none;
+        }
+
+        .cert-hover-hint {
+          position: absolute;
+          bottom: 12px;
+          right: 12px;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: rgba(10, 12, 16, 0.88);
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(212, 175, 55, 0.4);
+          color: var(--color-gold-light);
+          padding: 6px 14px;
+          border-radius: var(--radius-full);
           font-family: var(--font-eyebrow);
           font-size: 0.68rem;
-          color: var(--color-gold-light);
-          letter-spacing: 0.15em;
+          letter-spacing: 0.12em;
           text-transform: uppercase;
+          opacity: 0.92;
+          transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .cert-frame-wrapper:hover .cert-hover-hint {
+          opacity: 1;
+          transform: scale(1.05);
+        }
+
+        .cert-display-caption {
+          font-family: var(--font-eyebrow);
+          font-size: 0.72rem;
+          color: var(--color-gold-muted);
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          text-align: center;
+          opacity: 0.85;
         }
 
         /* Reviews Grid */
@@ -345,11 +420,12 @@ export const Reviews: React.FC = () => {
 
         .review-card {
           padding: 36px 32px;
-          background: rgba(16, 19, 25, 0.75);
-          border: 1px solid rgba(212, 175, 55, 0.16);
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-color);
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+          border-radius: var(--radius-md);
         }
 
         .review-card-header {
@@ -376,14 +452,14 @@ export const Reviews: React.FC = () => {
           font-family: var(--font-serif);
           font-size: 1.1rem;
           color: var(--color-gold);
-          background: rgba(212, 175, 55, 0.05);
+          background: rgba(212, 175, 55, 0.08);
         }
 
         .review-author-name {
           font-family: var(--font-eyebrow);
           font-size: 0.85rem;
           letter-spacing: 0.12em;
-          color: #ffffff;
+          color: var(--text-primary);
         }
 
         .review-date {
@@ -459,10 +535,21 @@ export const Reviews: React.FC = () => {
           .distinction-card {
             flex-direction: column;
             text-align: center;
-            padding: 30px 20px;
+            padding: 36px 20px;
+            gap: 30px;
+          }
+          .distinction-content {
+            max-width: 100%;
           }
           .distinction-actions {
             justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+          }
+          .distinction-cert-display {
+            flex: 1 1 auto;
+            width: 100%;
+            max-width: 380px;
           }
           .reviews-grid {
             grid-template-columns: 1fr;

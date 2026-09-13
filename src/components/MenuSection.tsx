@@ -271,8 +271,9 @@ export const MenuSection: React.FC = () => {
 
       <style>{`
         .menu-section {
-          background: #0e1115;
+          background: var(--bg-primary);
           position: relative;
+          transition: background-color 0.35s ease;
         }
 
         .menu-toggle-container {
@@ -290,22 +291,22 @@ export const MenuSection: React.FC = () => {
           text-transform: uppercase;
           padding: 12px 32px;
           border-radius: var(--radius-sm);
-          background: rgba(20, 23, 29, 0.6);
-          border: 1px solid rgba(212, 175, 55, 0.2);
-          color: var(--color-washi-dim);
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-color);
+          color: var(--text-secondary);
           cursor: pointer;
           transition: var(--transition-smooth);
         }
 
         .menu-toggle-btn:hover {
           border-color: var(--color-gold);
-          color: #ffffff;
+          color: var(--text-primary);
         }
 
         .menu-toggle-btn.active {
-          background: linear-gradient(135deg, rgba(212, 175, 55, 0.18) 0%, rgba(191, 161, 95, 0.08) 100%);
+          background: linear-gradient(135deg, rgba(212, 175, 55, 0.22) 0%, rgba(191, 161, 95, 0.1) 100%);
           border-color: var(--color-gold);
-          color: #ffffff;
+          color: var(--text-primary);
           box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
         }
 
@@ -317,7 +318,7 @@ export const MenuSection: React.FC = () => {
           margin: 0 auto 30px;
           padding: 16px 24px;
           border: 1px solid rgba(212, 175, 55, 0.25);
-          color: var(--color-washi-dim);
+          color: var(--text-secondary);
           font-size: 0.92rem;
         }
 
@@ -332,8 +333,8 @@ export const MenuSection: React.FC = () => {
           gap: 20px;
           padding: 24px 28px;
           margin-bottom: 40px;
-          background: rgba(16, 19, 25, 0.7);
-          border: 1px solid rgba(212, 175, 55, 0.18);
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-color);
         }
 
         .search-input-wrapper {
@@ -354,9 +355,9 @@ export const MenuSection: React.FC = () => {
           width: 100%;
           padding: 14px 18px 14px 48px;
           border-radius: var(--radius-sm);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          background: rgba(10, 12, 16, 0.7);
-          color: #ffffff;
+          border: 1px solid var(--border-color);
+          background: var(--bg-primary);
+          color: var(--text-primary);
           font-size: 0.92rem;
           transition: var(--transition-smooth);
         }
@@ -378,34 +379,35 @@ export const MenuSection: React.FC = () => {
           gap: 6px;
           padding: 7px 16px;
           border-radius: var(--radius-full);
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          background: rgba(20, 23, 29, 0.5);
+          border: 1px solid var(--border-color);
+          background: var(--bg-secondary);
           font-family: var(--font-eyebrow);
           font-size: 0.72rem;
           letter-spacing: 0.15em;
           text-transform: uppercase;
-          color: var(--color-washi-dim);
+          color: var(--text-secondary);
           cursor: pointer;
           transition: var(--transition-smooth);
         }
 
         .filter-tag:hover {
           border-color: var(--color-gold);
-          color: #ffffff;
+          color: var(--text-primary);
         }
 
         .filter-tag.active-veg,
         .filter-tag.active-vegan,
         .filter-tag.active-gf {
-          background: rgba(212, 175, 55, 0.12);
+          background: rgba(212, 175, 55, 0.16);
           border-color: var(--color-gold);
-          color: var(--color-gold-light);
+          color: var(--color-gold);
+          font-weight: 600;
         }
 
         .filter-tag.active-spicy {
           background: rgba(138, 37, 37, 0.25);
           border-color: #a12f2f;
-          color: #ff9999;
+          color: #ff8888;
         }
 
         /* Category Tabs */
@@ -427,22 +429,23 @@ export const MenuSection: React.FC = () => {
           align-items: center;
           padding: 10px 20px;
           border-radius: var(--radius-sm);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          background: rgba(16, 19, 25, 0.6);
-          color: var(--color-washi-dim);
+          border: 1px solid var(--border-color);
+          background: var(--bg-secondary);
+          color: var(--text-secondary);
           cursor: pointer;
           transition: var(--transition-smooth);
         }
 
         .category-tab:hover {
-          border-color: rgba(212, 175, 55, 0.4);
-          color: #ffffff;
+          border-color: var(--color-gold);
+          color: var(--text-primary);
         }
 
         .category-tab.active {
+          background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(191, 161, 95, 0.1) 100%);
           border-color: var(--color-gold);
-          background: rgba(212, 175, 55, 0.12);
-          color: #ffffff;
+          color: var(--text-primary);
+          box-shadow: 0 4px 15px rgba(212, 175, 55, 0.12);
         }
 
         .cat-numeral {
@@ -470,11 +473,12 @@ export const MenuSection: React.FC = () => {
 
         .menu-card {
           padding: 28px 30px;
-          background: rgba(18, 21, 27, 0.75);
-          border: 1px solid rgba(212, 175, 55, 0.16);
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-color);
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+          border-radius: var(--radius-md);
         }
 
         .menu-card-header {
@@ -502,7 +506,7 @@ export const MenuSection: React.FC = () => {
         .item-title {
           font-family: var(--font-serif);
           font-size: 1.35rem;
-          color: #ffffff;
+          color: var(--text-primary);
           font-weight: 400;
           letter-spacing: 0.02em;
         }
@@ -515,7 +519,7 @@ export const MenuSection: React.FC = () => {
           font-family: var(--font-eyebrow);
           font-size: 0.95rem;
           font-weight: 600;
-          color: var(--color-gold-light);
+          color: var(--color-gold);
           letter-spacing: 0.05em;
         }
 
@@ -526,7 +530,7 @@ export const MenuSection: React.FC = () => {
 
         .item-description {
           font-size: 0.92rem;
-          color: var(--color-washi-dim);
+          color: var(--text-secondary);
           line-height: 1.6;
           margin-bottom: 14px;
           font-weight: 300;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Menu, X, Globe, CalendarDays, Sparkles, Utensils } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
+import { Menu, X, Globe, CalendarDays, Sparkles, Utensils, Sun, Moon } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 
 interface HeaderProps {
@@ -9,6 +10,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
   const { language, setLanguage, t } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeNav, setActiveNav] = useState<string>('hero');
@@ -117,6 +119,26 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
 
           {/* Right Action Suite */}
           <div className="navbar-actions">
+            {/* Day / Night Theme Switcher */}
+            <button 
+              className="navbar-theme-pill" 
+              onClick={toggleTheme} 
+              aria-label={theme === 'dark' ? 'Tag-Modus aktivieren' : 'Nacht-Modus aktivieren'}
+              title={theme === 'dark' ? (language === 'de' ? 'Heller Tag-Modus' : 'Light Day Mode') : (language === 'de' ? 'Dunkler Nacht-Modus' : 'Dark Night Mode')}
+            >
+              {theme === 'dark' ? (
+                <>
+                  <Sun size={13} className="theme-sun-icon" />
+                  <span className="theme-text">{language === 'de' ? 'TAG' : 'DAY'}</span>
+                </>
+              ) : (
+                <>
+                  <Moon size={13} className="theme-moon-icon" />
+                  <span className="theme-text">{language === 'de' ? 'NACHT' : 'NIGHT'}</span>
+                </>
+              )}
+            </button>
+
             {/* Language Switcher with Dual Pill */}
             <button 
               className="navbar-lang-pill" 
@@ -207,6 +229,15 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
           </nav>
 
           <div className="mobile-nav-actions">
+            <button className="mobile-theme-btn" onClick={toggleTheme}>
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              <span>
+                {theme === 'dark' 
+                  ? (language === 'de' ? 'Heller Modus (Tag)' : 'Day Mode (Light)') 
+                  : (language === 'de' ? 'Dunkler Modus (Nacht)' : 'Night Mode (Dark)')}
+              </span>
+            </button>
+
             <button className="mobile-lang-btn" onClick={toggleLanguage}>
               <Globe size={16} />
               <span>{language === 'de' ? 'Sprache: Deutsch (DE)' : 'Language: English (EN)'}</span>
@@ -252,23 +283,23 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
           align-items: center;
           justify-content: space-between;
           border-radius: var(--radius-full);
-          background: rgba(12, 15, 20, 0.82);
+          background: var(--bg-glass);
           backdrop-filter: blur(24px);
           -webkit-backdrop-filter: blur(24px);
-          border: 1px solid rgba(212, 175, 55, 0.26);
+          border: 1px solid var(--border-color);
           box-shadow: 
-            0 14px 40px rgba(0, 0, 0, 0.65),
-            0 0 20px rgba(212, 175, 55, 0.08),
+            0 14px 40px rgba(0, 0, 0, 0.18),
+            0 0 20px var(--color-gold-glow),
             inset 0 1px 0 rgba(255, 255, 255, 0.08);
           transition: var(--transition-smooth);
         }
 
         .floating-header-wrapper.scrolled .floating-navbar {
-          background: rgba(9, 11, 15, 0.94);
-          border-color: rgba(212, 175, 55, 0.35);
+          background: var(--bg-glass-heavy);
+          border-color: var(--border-color-hover);
           box-shadow: 
-            0 18px 45px rgba(0, 0, 0, 0.8),
-            0 0 25px rgba(212, 175, 55, 0.12);
+            0 18px 45px rgba(0, 0, 0, 0.25),
+            0 0 25px var(--color-gold-glow);
         }
 
         /* Brand Left */
@@ -288,7 +319,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
           align-items: center;
           justify-content: center;
           padding: 2px;
-          background: rgba(18, 22, 29, 0.9);
+          background: var(--bg-secondary);
           box-shadow: 0 0 14px rgba(212, 175, 55, 0.25);
           position: relative;
         }
@@ -321,7 +352,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
           font-family: var(--font-serif);
           font-size: 1.45rem;
           letter-spacing: 0.2em;
-          color: #ffffff;
+          color: var(--text-primary);
           line-height: 1;
         }
 
@@ -329,7 +360,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
           font-family: var(--font-eyebrow);
           font-size: 0.6rem;
           letter-spacing: 0.22em;
-          color: var(--color-gold-light);
+          color: var(--color-gold-muted);
           margin-top: 2px;
         }
 
@@ -338,8 +369,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
           display: flex;
           align-items: center;
           gap: 4px;
-          background: rgba(18, 22, 29, 0.5);
-          border: 1px solid rgba(255, 255, 255, 0.06);
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-color);
           padding: 5px 6px;
           border-radius: var(--radius-full);
         }
@@ -355,14 +386,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
           font-weight: 500;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: rgba(247, 245, 240, 0.75);
+          color: var(--text-secondary);
           transition: var(--transition-smooth);
           position: relative;
         }
 
         .nav-pill-item:hover {
-          color: #ffffff;
-          background: rgba(212, 175, 55, 0.1);
+          color: var(--text-primary);
+          background: rgba(212, 175, 55, 0.12);
         }
 
         .nav-pill-item.active {
@@ -414,7 +445,43 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
         .navbar-actions {
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 10px;
+        }
+
+        .navbar-theme-pill {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 7px 14px;
+          border-radius: var(--radius-full);
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          background: rgba(18, 22, 29, 0.7);
+          cursor: pointer;
+          font-family: var(--font-eyebrow);
+          font-size: 0.7rem;
+          font-weight: 600;
+          letter-spacing: 0.14em;
+          color: var(--color-gold-light);
+          transition: var(--transition-fast);
+        }
+
+        .navbar-theme-pill:hover {
+          border-color: var(--color-gold);
+          color: #ffffff;
+          transform: translateY(-1px);
+        }
+
+        .theme-sun-icon {
+          color: #f59e0b;
+        }
+
+        .theme-moon-icon {
+          color: var(--color-gold);
+        }
+
+        .theme-text {
+          font-size: 0.68rem;
+          letter-spacing: 0.14em;
         }
 
         .navbar-lang-pill {
@@ -580,6 +647,28 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
           display: flex;
           flex-direction: column;
           gap: 14px;
+        }
+
+        .mobile-theme-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          padding: 12px;
+          border-radius: var(--radius-sm);
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          background: rgba(18, 22, 29, 0.6);
+          color: var(--color-gold-light);
+          font-family: var(--font-eyebrow);
+          font-size: 0.75rem;
+          letter-spacing: 0.12em;
+          cursor: pointer;
+          transition: var(--transition-fast);
+        }
+
+        .mobile-theme-btn:hover {
+          border-color: var(--color-gold);
+          color: #ffffff;
         }
 
         .mobile-lang-btn {

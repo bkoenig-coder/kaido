@@ -34,8 +34,8 @@ export const ContactHours: React.FC = () => {
           <div className="hairline-divider" />
           <p style={{ marginTop: '16px' }}>
             {language === 'de' 
-              ? 'Für private Tischarrangements, kulinarische Rückfragen und persönliche Beratung steht Ihnen unser Concierge zur Verfügung.' 
-              : 'Our concierge is dedicated to assisting with private table reservations, dietary questions, and intimate gatherings.'}
+              ? 'Besuchen Sie uns in der Rotensterngasse 3 oder kontaktieren Sie uns direkt für Tischreservierungen und Vorbestellungen.' 
+              : 'Visit us at Rotensterngasse 3 or contact us directly for table reservations and takeaway pre-orders.'}
           </p>
         </div>
 
@@ -145,8 +145,9 @@ export const ContactHours: React.FC = () => {
 
       <style>{`
         .contact-section {
-          background: #0b0e12;
+          background: var(--bg-primary);
           position: relative;
+          transition: background-color 0.35s ease;
         }
 
         .contact-grid {
@@ -172,8 +173,8 @@ export const ContactHours: React.FC = () => {
           align-items: center;
           gap: 20px;
           padding: 22px 26px;
-          background: rgba(16, 19, 25, 0.75);
-          border: 1px solid rgba(212, 175, 55, 0.18);
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-color);
         }
 
         .info-icon-container {
@@ -206,17 +207,18 @@ export const ContactHours: React.FC = () => {
         .info-text h3 {
           font-family: var(--font-serif);
           font-size: 1.25rem;
-          color: #ffffff;
+          color: var(--text-primary);
           letter-spacing: 0.02em;
           margin-bottom: 4px;
         }
 
         .card-action-hint {
           font-family: var(--font-eyebrow);
-          font-size: 0.72rem;
-          letter-spacing: 0.12em;
+          font-size: 0.7rem;
+          letter-spacing: 0.15em;
           color: var(--color-gold-light);
-          opacity: 0.75;
+          text-transform: uppercase;
+          opacity: 0.85;
           transition: var(--transition-fast);
         }
 
@@ -226,17 +228,17 @@ export const ContactHours: React.FC = () => {
         }
 
         /* Right Side: Hours Card */
-        .contact-hours {
-          padding: 40px;
+        .contact-hours, .hours-card {
+          padding: 40px 36px;
           display: flex;
           flex-direction: column;
-          background: rgba(16, 19, 25, 0.85);
-          border: 1px solid rgba(212, 175, 55, 0.22);
+          background: var(--bg-secondary);
+          border: 1px solid var(--border-color);
         }
 
         .hours-header {
           margin-bottom: 30px;
-          border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+          border-bottom: 1px solid var(--border-color);
           padding-bottom: 20px;
         }
 
@@ -249,7 +251,7 @@ export const ContactHours: React.FC = () => {
         .hours-header-title h3 {
           font-family: var(--font-serif);
           font-size: 1.8rem;
-          color: #ffffff;
+          color: var(--text-primary);
         }
 
         .summer-alert-subtitle {
