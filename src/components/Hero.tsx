@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { CalendarDays, Compass, Clock } from 'lucide-react';
+import { CalendarDays, Compass, Clock, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import heroBgImg from '../assets/gallery/gallery3.jpg';
 
 interface HeroProps {
@@ -9,10 +9,32 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
   const { t, language } = useLanguage();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
   const [openStatus, setOpenStatus] = useState<{ status: 'open' | 'closed' | 'closing', text: string }>({
     status: 'closed',
     text: ''
   });
+
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        videoRef.current.play();
+        setIsPlaying(true);
+      }
+    }
+  };
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
 
   useEffect(() => {
     const checkOpenStatus = () => {
@@ -103,11 +125,23 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
   return (
     <section id="hero" className="hero-section">
       <div className="hero-bg">
-        <img
-          className="hero-image-bg"
-          src={heroBgImg}
-          alt="Kaido Japanese Haute Cuisine Geisha Mural"
-        />
+        <video
+          ref={videoRef}
+          className="hero-video-bg"
+          autoPlay
+          loop
+          muted={isMuted}
+          playsInline
+          preload="auto"
+          poster="https://ik.imagekit.io/9yplrekzm/MCA/0913.mp4/ik-thumbnail.jpg?updatedAt=1789330905636"
+        >
+          <source src="https://ik.imagekit.io/9yplrekzm/MCA/0913.mp4" type="video/mp4" />
+          <img
+            className="hero-image-bg"
+            src={heroBgImg}
+            alt="Kaido Japanese Haute Cuisine Geisha Mural"
+          />
+        </video>
         <div className="hero-overlay" />
       </div>
       
@@ -183,6 +217,31 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
         </div>
       </div>
 
+      {/* Subtle Ambient Video Controls */}
+      <div className="hero-media-controls">
+        <button
+          type="button"
+          onClick={togglePlay}
+          className="hero-media-btn"
+          title={isPlaying ? 'Pause background video' : 'Play background video'}
+          aria-label={isPlaying ? 'Pause video' : 'Play video'}
+        >
+          {isPlaying ? <Pause size={13} /> : <Play size={13} />}
+          <span>{isPlaying ? 'PAUSE' : 'PLAY'}</span>
+        </button>
+        <div className="hero-media-divider" />
+        <button
+          type="button"
+          onClick={toggleMute}
+          className="hero-media-btn"
+          title={isMuted ? 'Unmute video audio' : 'Mute video audio'}
+          aria-label={isMuted ? 'Unmute audio' : 'Mute audio'}
+        >
+          {isMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
+          <span>{isMuted ? 'MUTED' : 'AUDIO'}</span>
+        </button>
+      </div>
+
       <style>{`
         .hero-section {
           position: relative;
@@ -205,6 +264,19 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
           overflow: hidden;
         }
 
+        .hero-video-bg {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          position: absolute;
+          top: 0;
+          left: 0;
+          filter: brightness(0.65) contrast(1.08) saturate(1.1);
+          transform: scale(1.02);
+          transition: filter 0.4s ease;
+        }
+
         .hero-image-bg {
           width: 100%;
           height: 100%;
@@ -215,6 +287,55 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
           left: 0;
           filter: brightness(0.6) contrast(1.1);
           animation: subtleKenBurns 30s ease-in-out infinite alternate;
+        }
+
+        .hero-media-controls {
+          position: absolute;
+          bottom: 24px;
+          right: 32px;
+          z-index: 10;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(14, 17, 21, 0.75);
+          padding: 6px 14px;
+          border-radius: var(--radius-full);
+          border: 1px solid rgba(212, 175, 55, 0.28);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+          transition: all 0.3s ease;
+        }
+
+        .hero-media-controls:hover {
+          border-color: rgba(212, 175, 55, 0.55);
+          background: rgba(14, 17, 21, 0.9);
+        }
+
+        .hero-media-btn {
+          background: transparent;
+          border: none;
+          color: var(--color-washi-white);
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          cursor: pointer;
+          font-family: var(--font-eyebrow);
+          font-size: 0.65rem;
+          letter-spacing: 0.16em;
+          padding: 4px 6px;
+          border-radius: 4px;
+          transition: color 0.25s ease;
+        }
+
+        .hero-media-btn:hover {
+          color: var(--color-gold);
+        }
+
+        .hero-media-divider {
+          width: 1px;
+          height: 12px;
+          background: rgba(212, 175, 55, 0.25);
         }
 
         @keyframes subtleKenBurns {
@@ -449,6 +570,17 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
           }
           .hero-actions .btn {
             width: 100%;
+          }
+
+          .hero-media-controls {
+            bottom: 14px;
+            right: 14px;
+            padding: 5px 10px;
+            gap: 6px;
+          }
+
+          .hero-media-btn span {
+            display: none;
           }
         }
       `}</style>
