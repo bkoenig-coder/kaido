@@ -297,6 +297,41 @@ export const PhilosophySection: React.FC = () => {
             height: 1px;
           }
         }
+
+        /* Day Mode Refinements */
+        [data-theme="light"] .service-features-banner {
+          background: #ffffff;
+          border-color: rgba(160, 120, 25, 0.25);
+          box-shadow: 0 12px 35px rgba(0, 0, 0, 0.05), 0 2px 8px rgba(160, 120, 25, 0.06);
+        }
+
+        [data-theme="light"] .feature-icon-circle {
+          background: #f4f0e6;
+          border-color: var(--color-gold);
+          color: #806216;
+        }
+
+        [data-theme="light"] .feature-title {
+          color: #17181a;
+          font-weight: 600;
+        }
+
+        [data-theme="light"] .feature-subtitle {
+          color: #4a4c52;
+        }
+
+        [data-theme="light"] .feature-phone-link {
+          color: #806216;
+          font-weight: 600;
+        }
+
+        [data-theme="light"] .feature-phone-link:hover {
+          color: #17181a;
+        }
+
+        [data-theme="light"] .feature-divider {
+          background: rgba(160, 120, 25, 0.22);
+        }
       `}</style>
     </section>
   );

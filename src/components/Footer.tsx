@@ -34,8 +34,8 @@ export const Footer: React.FC = () => {
 
             <p className="brand-motto">
               {language === 'de' 
-                ? 'Authentisches Sushi, traditionelle Ramen und japanische Spezialitäten im 2. Bezirk in Wien — frisch zubereitet mit höchstem Qualitätsanspruch.' 
-                : 'Authentic sushi, traditional ramen, and Japanese specialties in Vienna’s 2nd district — freshly prepared with superior quality.'}
+                ? 'Authentisches Sushi, frische warme Gerichte und japanische Spezialitäten im 2. Bezirk in Wien — frisch zubereitet mit höchstem Qualitätsanspruch.' 
+                : 'Authentic sushi, fresh hot dishes, and Japanese specialties in Vienna’s 2nd district — freshly prepared with superior quality.'}
             </p>
 
             {/* Distinction Link */}

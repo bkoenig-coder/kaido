@@ -23,21 +23,23 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
       const minute = viennaTime.getMinutes();
       const currentMinutes = hour * 60 + minute;
 
-      const isSummer = true; 
       let isOpen = false;
       let closingSoon = false;
       let openHour = 0;
-      const closeHour = 22;
+      const closeHour = 22; // 10:00 PM
 
       if (day === 2) {
+        // Tuesday: Closed (Ruhetag)
         isOpen = false;
       } else if (day === 0 || day === 6) {
+        // Saturday & Sunday: 12:00 – 22:00
         openHour = 12;
         isOpen = currentMinutes >= (12 * 60) && currentMinutes < (closeHour * 60);
         closingSoon = isOpen && (currentMinutes >= ((closeHour - 1) * 60) + 30);
       } else {
-        openHour = isSummer ? 17 : 11;
-        isOpen = currentMinutes >= (openHour * 60) && currentMinutes < (closeHour * 60);
+        // Monday, Wednesday, Thursday, Friday: 11:00 – 22:00
+        openHour = 11;
+        isOpen = currentMinutes >= (11 * 60) && currentMinutes < (closeHour * 60);
         closingSoon = isOpen && (currentMinutes >= ((closeHour - 1) * 60) + 30);
       }
 
@@ -45,7 +47,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
         if (closingSoon) {
           setOpenStatus({
             status: 'closing',
-            text: language === 'de' ? `Letzte Runde (${closeHour}:00 Uhr)` : `Service closing soon (${closeHour - 12}:00 PM)`
+            text: language === 'de' ? `Letzte Runde (${closeHour}:00 Uhr)` : `Service closing soon (10:00 PM)`
           });
         } else {
           setOpenStatus({
@@ -56,14 +58,19 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
       } else {
         let openingInfo = '';
         if (day === 2) {
-          openingInfo = language === 'de' ? 'Morgen ab 17:00 geöffnet' : 'Seating resumes tomorrow from 5:00 PM';
+          openingInfo = language === 'de' ? 'Mittwoch ab 11:00 geöffnet' : 'Opens Wednesday at 11:00 AM';
         } else if (currentMinutes < (openHour * 60)) {
-          openingInfo = language === 'de' ? `Öffnet heute um ${openHour}:00 Uhr` : `Opens today at ${openHour}:00`;
+          openingInfo = language === 'de' ? `Öffnet heute um ${openHour}:00 Uhr` : `Opens today at ${openHour}:00 ${openHour < 12 ? 'AM' : 'PM'}`;
         } else {
-          const nextDayOpenHour = (day === 1) ? 'Ruhetag' : (day === 5 || day === 6 ? '12:00' : '17:00');
-          openingInfo = language === 'de' 
-            ? `Nächster Service um ${nextDayOpenHour}` 
-            : `Next service at ${nextDayOpenHour === 'Ruhetag' ? 'Wed 5:00 PM' : nextDayOpenHour}`;
+          const nextDay = (day + 1) % 7;
+          if (nextDay === 2) {
+            openingInfo = language === 'de' ? 'Mittwoch ab 11:00 geöffnet' : 'Opens Wednesday at 11:00 AM';
+          } else {
+            const nextOpenHour = (nextDay === 0 || nextDay === 6) ? 12 : 11;
+            openingInfo = language === 'de' 
+              ? `Morgen ab ${nextOpenHour}:00 Uhr geöffnet` 
+              : `Opens tomorrow at ${nextOpenHour}:00 ${nextOpenHour < 12 ? 'AM' : 'PM'}`;
+          }
         }
         setOpenStatus({
           status: 'closed',
@@ -156,10 +163,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
             </div>
           </div>
 
-          {/* Seasonal Concierge Note */}
+          {/* Concierge Working Hours Note */}
           <div className="summer-concierge-notice">
             <Clock size={15} className="notice-icon" />
-            <span>{language === 'de' ? 'Aktuelle Sommeröffnungszeiten: 17:00 – 22:00 Uhr' : 'Active Summer Evening Hours: 5:00 PM – 10:00 PM'}</span>
+            <span>{language === 'de' ? 'Mo, Mi–Fr: 11:00 – 22:00 | Sa–So: 12:00 – 22:00 | Di: Ruhetag' : 'Mon, Wed–Fri: 11 AM – 10 PM | Sat–Sun: 12 PM – 10 PM | Tue: Closed'}</span>
           </div>
 
           {/* CTAs */}

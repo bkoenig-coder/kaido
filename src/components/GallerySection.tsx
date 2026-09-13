@@ -28,65 +28,65 @@ const slides: GallerySlide[] = [
     kanji: '檜',
     categoryDe: '01 / Der Meistertresen',
     categoryEn: '01 / The Cypress Counter',
-    titleDe: 'Die Große Welle & Der Holztresen',
-    titleEn: 'The Great Wave & The Hinoki Counter',
-    subtitleDe: 'Echtes Zypressenholz, handgefertigte Schreinerkunst und die unmittelbare Nähe zum Messer des Meisters.',
-    subtitleEn: 'Solid cypress timber, handcrafted joinery, and intimate proximity to the master blade.',
+    titleDe: 'Der Sushi-Tresen',
+    titleEn: 'The Sushi Counter',
+    subtitleDe: 'Frisches Sushi, meisterhaft und direkt vor Ihren Augen zubereitet.',
+    subtitleEn: 'Fresh sushi, masterfully prepared right before your eyes.',
   },
   {
     id: 2,
     src: gallery2,
     kanji: '静',
-    categoryDe: '02 / Meditative Stille',
-    categoryEn: '02 / Meditative Stillness',
-    titleDe: 'Erhabene Buddha-Skulptur & Lichtinszenierung',
-    titleEn: 'Serene Buddha Statue & Chiaroscuro Light',
-    subtitleDe: 'Sanfte Lichtkegel und warme Halbschatten schaffen einen Raum der vollkommenen Entschleunigung.',
-    subtitleEn: 'Subtle light cones and warm chiaroscuro cultivate an environment of absolute tranquility.',
+    categoryDe: '02 / Gemütliches Ambiente',
+    categoryEn: '02 / Cozy Environment',
+    titleDe: 'Gemütliches Ambiente',
+    titleEn: 'Cozy Environment',
+    subtitleDe: 'Warme Beleuchtung und eine entspannte Stimmung zum Wohlfühlen.',
+    subtitleEn: 'Warm lighting and a cozy, relaxing atmosphere to unwind.',
   },
   {
     id: 3,
     src: gallery3,
     kanji: '藝',
     categoryDe: '03 / Wandkunst',
-    categoryEn: '03 / Mural Artistry',
-    titleDe: 'Zeitgenössische Geisha & Die Rote Sonne',
-    titleEn: 'Contemporary Geisha & The Crimson Sun',
-    subtitleDe: 'Faszinierende Symbiose aus klassischem Ukiyo-e und zeitgenössischer japanischer Wandmalerei.',
-    subtitleEn: 'A mesmerizing dialogue between classical Ukiyo-e heritage and contemporary Japanese muralism.',
+    categoryEn: '03 / Wall Art',
+    titleDe: 'Japanische Wandkunst',
+    titleEn: 'Japanese Wall Art',
+    subtitleDe: 'Traditionelle Kunstmotive für ein schönes, stimmungsvolles Ambiente.',
+    subtitleEn: 'Traditional art motifs creating a lovely, stylish ambiance.',
   },
   {
     id: 4,
     src: gallery4,
     kanji: '座',
-    categoryDe: '04 / Hauptsalon',
-    categoryEn: '04 / Main Dining Hall',
-    titleDe: 'Traditioneller Ukiyo-e Speisesaal',
-    titleEn: 'Traditional Ukiyo-e Dining Hall',
-    subtitleDe: 'Architektonisch abgeschirmte Nischen für ungestörte Konversation und diskreten Genuss.',
-    subtitleEn: 'Architecturally secluded booths tailored for uninterrupted conversation and private indulgence.',
+    categoryDe: '04 / Gästebereich',
+    categoryEn: '04 / Dining Area',
+    titleDe: 'Der Gästebereich',
+    titleEn: 'Dining Area',
+    subtitleDe: 'Bequeme Tische für ein genussvolles Essen mit Freunden und Familie.',
+    subtitleEn: 'Comfortable seating for delicious meals with friends and family.',
   },
   {
     id: 5,
     src: gallery5,
     kanji: '庵',
     categoryDe: '05 / Private Nische',
-    categoryEn: '05 / Private Sanctuary',
-    titleDe: 'Intime Tisch-Nische',
-    titleEn: 'Intimate Alcove Seating',
-    subtitleDe: 'Warme Holzlamellen und reduziertes Licht laden zu vertrauten kulinarischen Reisen ein.',
-    subtitleEn: 'Warm timber slats and ambient twilight welcome intimate culinary explorations.',
+    categoryEn: '05 / Private Seating',
+    titleDe: 'Ungestörter Genuss',
+    titleEn: 'Intimate Seating',
+    subtitleDe: 'Ruhige Sitzecken für entspannte Abende und köstliche Gerichte.',
+    subtitleEn: 'Quiet booths for relaxed evenings and delicious meals.',
   },
   {
     id: 6,
     src: gallery6,
     kanji: '匠',
-    categoryDe: '06 / Das Atelier',
-    categoryEn: '06 / The Atelier',
+    categoryDe: '06 / Atmosphäre',
+    categoryEn: '06 / Atmosphere',
     titleDe: 'Kaido Architektur & Atmosphäre',
     titleEn: 'Kaido Architecture & Ambiance',
-    subtitleDe: 'Jedes Detail spiegelt das lebenslange Streben nach handwerklicher Vollendung wider.',
-    subtitleEn: 'Every nuance reflects the lifelong pursuit of craftsmanship and understated balance.',
+    subtitleDe: 'Gemütliches Ambiente, köstliche Speisen und herzliche Gastfreundschaft.',
+    subtitleEn: 'Cozy environment, delicious meals, and warm hospitality.',
   },
 ];
 
@@ -151,14 +151,14 @@ export const GallerySection: React.FC = () => {
         {/* Section Header */}
         <div className="section-title animate-slide-up">
           <span className="eyebrow-text">
-            {language === 'de' ? 'Raum & Atmosphäre' : 'Atelier & Atmosphere'}
+            {language === 'de' ? 'Raum & Atmosphäre' : 'Ambiance & Atmosphere'}
           </span>
-          <h2>{language === 'de' ? 'Impressionen der Stille' : 'A Sanctuary in Stillness'}</h2>
+          <h2>{language === 'de' ? 'Architektur & Atmosphäre' : 'Architecture & Atmosphere'}</h2>
           <div className="hairline-divider" />
           <p style={{ marginTop: '16px' }}>
             {language === 'de'
-              ? 'Dunkle Holztöne, sanftes Kerzenlicht und traditionelle japanische Wandkunst schaffen einen Rahmen von unaufdringlicher Eleganz.'
-              : 'Dark timber tones, candlelit shadows, and classic Japanese murals frame an environment of quiet, understated poise.'}
+              ? 'Gemütliches Ambiente, warme Atmosphäre und köstliche japanische Küche zum Wohlfühlen.'
+              : 'Cozy environment, warm ambiance, and delicious Japanese meals to enjoy.'}
           </p>
         </div>
 
@@ -736,6 +736,149 @@ export const GallerySection: React.FC = () => {
           .next-slide-peek {
             display: none;
           }
+        }
+
+        /* =========================================
+           Day Mode (Light Theme) Gallery Refinements
+           ========================================= */
+        [data-theme="light"] .modern-slideshow-container {
+          background: #ffffff;
+          border-color: rgba(160, 120, 25, 0.22);
+          box-shadow: 0 16px 45px rgba(0, 0, 0, 0.06), 0 2px 10px rgba(160, 120, 25, 0.05);
+        }
+
+        [data-theme="light"] .slideshow-editorial-panel {
+          background: #ffffff;
+          border-color: rgba(160, 120, 25, 0.16);
+        }
+
+        @media (max-width: 1024px) {
+          [data-theme="light"] .slideshow-editorial-panel {
+            border-bottom-color: rgba(160, 120, 25, 0.18);
+          }
+        }
+
+        [data-theme="light"] .current-slide-num {
+          color: var(--color-gold);
+        }
+
+        [data-theme="light"] .slide-counter-sep,
+        [data-theme="light"] .total-slides-num {
+          color: #64676e;
+        }
+
+        [data-theme="light"] .progress-bar-track {
+          background: rgba(0, 0, 0, 0.08);
+        }
+
+        [data-theme="light"] .autoplay-toggle-btn {
+          background: #f4f0e6;
+          border-color: rgba(160, 120, 25, 0.35);
+          color: #806216;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        [data-theme="light"] .autoplay-toggle-btn:hover {
+          background: #ebe4d5;
+          border-color: var(--color-gold);
+          color: #17181a;
+          box-shadow: 0 4px 12px rgba(160, 120, 25, 0.18);
+        }
+
+        [data-theme="light"] .editorial-kanji-watermark {
+          color: var(--color-gold);
+          opacity: 0.055;
+        }
+
+        [data-theme="light"] .editorial-tag {
+          color: var(--color-gold);
+        }
+
+        [data-theme="light"] .editorial-title {
+          color: #17181a;
+        }
+
+        [data-theme="light"] .editorial-divider {
+          background: rgba(160, 120, 25, 0.35);
+        }
+
+        [data-theme="light"] .editorial-description {
+          color: #3a3c42;
+        }
+
+        /* Light Mode Chips: Warm washi parchment pill with crisp Sumi-ink typography */
+        [data-theme="light"] .selector-chip {
+          background: #f4f0e6;
+          border: 1px solid rgba(160, 120, 25, 0.24);
+          color: #2b2d32;
+          font-weight: 500;
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        [data-theme="light"] .selector-chip:hover {
+          background: #eae2d1;
+          border-color: var(--color-gold);
+          color: #17181a;
+          transform: translateY(-1px);
+        }
+
+        [data-theme="light"] .selector-chip.active {
+          background: rgba(160, 120, 25, 0.16);
+          border-color: var(--color-gold);
+          color: #806216;
+          font-weight: 600;
+          box-shadow: 0 2px 8px rgba(160, 120, 25, 0.14);
+        }
+
+        /* Light Mode Arrow Navigation: Crisp ivory background with warm gold borders */
+        [data-theme="light"] .modern-arrow-btn {
+          background: #ffffff;
+          border: 1px solid rgba(160, 120, 25, 0.35);
+          color: #17181a;
+          box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="light"] .modern-arrow-btn:hover {
+          background: #f4f0e6;
+          border-color: var(--color-gold);
+          color: #806216;
+          box-shadow: 0 4px 16px rgba(160, 120, 25, 0.2);
+          transform: translateY(-1px);
+        }
+
+        [data-theme="light"] .modern-lightbox-trigger {
+          color: #806216;
+          opacity: 0.92;
+        }
+
+        [data-theme="light"] .modern-lightbox-trigger:hover {
+          color: #17181a;
+          opacity: 1;
+        }
+
+        [data-theme="light"] .slide-floating-seal {
+          background: rgba(255, 255, 255, 0.9);
+          border-color: var(--color-gold);
+          color: var(--color-gold);
+          box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        [data-theme="light"] .lightbox-content {
+          background: #ffffff;
+          border-color: rgba(160, 120, 25, 0.3);
+          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="light"] .lightbox-info h4 {
+          color: #17181a;
+        }
+
+        [data-theme="light"] .lightbox-close {
+          color: #17181a;
+          background: rgba(255, 255, 255, 0.85);
+          border-radius: 50%;
+          padding: 6px;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
       `}</style>
     </section>

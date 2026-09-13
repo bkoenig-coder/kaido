@@ -587,6 +587,23 @@ export const MenuSection: React.FC = () => {
             padding: 18px;
           }
         }
+
+        /* Day Mode Refinements */
+        [data-theme="light"] .lunch-upgrade-notice {
+          background: #ffffff;
+          border-color: rgba(160, 120, 25, 0.25);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+        }
+
+        [data-theme="light"] .lunch-upgrade-notice p {
+          color: #3e4148;
+        }
+
+        [data-theme="light"] .badge-subtle {
+          background: #f4f0e6;
+          border-color: rgba(160, 120, 25, 0.2);
+          color: #4a4c52;
+        }
       `}</style>
     </section>
   );

@@ -555,6 +555,45 @@ export const Reviews: React.FC = () => {
             grid-template-columns: 1fr;
           }
         }
+
+        /* Day Mode Refinements for Reviews & Distinction */
+        [data-theme="light"] .distinction-seal-badge {
+          background: #f4f0e6;
+          border-color: rgba(160, 120, 25, 0.28);
+        }
+
+        [data-theme="light"] .seal-badge-text {
+          color: #806216;
+        }
+
+        [data-theme="light"] .distinction-link {
+          color: #806216;
+        }
+
+        [data-theme="light"] .distinction-link:hover {
+          color: #17181a;
+        }
+
+        [data-theme="light"] .cert-display-caption {
+          color: #806216;
+        }
+
+        [data-theme="light"] .review-date {
+          color: #64676e;
+        }
+
+        [data-theme="light"] .cert-modal-header {
+          background: #fbf9f4;
+          border-bottom-color: rgba(160, 120, 25, 0.25);
+        }
+
+        [data-theme="light"] .cert-modal-title h3 {
+          color: #17181a;
+        }
+
+        [data-theme="light"] .cert-modal-close {
+          color: #17181a;
+        }
       `}</style>
     </section>
   );

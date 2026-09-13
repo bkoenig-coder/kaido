@@ -15,13 +15,13 @@ export const ContactHours: React.FC = () => {
   }, []);
 
   const hoursList = [
-    { dayIndex: 1, labelDe: 'Montag', labelEn: 'Monday', regular: '11:00 – 22:00', summer: '17:00 – 22:00' },
-    { dayIndex: 2, labelDe: 'Dienstag', labelEn: 'Tuesday', regular: 'Geschlossen (Ruhetag)', summer: 'Geschlossen (Ruhetag)', isClosed: true },
-    { dayIndex: 3, labelDe: 'Mittwoch', labelEn: 'Wednesday', regular: '11:00 – 22:00', summer: '17:00 – 22:00' },
-    { dayIndex: 4, labelDe: 'Donnerstag', labelEn: 'Thursday', regular: '11:00 – 22:00', summer: '17:00 – 22:00' },
-    { dayIndex: 5, labelDe: 'Freitag', labelEn: 'Friday', regular: '11:00 – 22:00', summer: '17:00 – 22:00' },
-    { dayIndex: 6, labelDe: 'Samstag', labelEn: 'Saturday', regular: '12:00 – 22:00', summer: '12:00 – 22:00' },
-    { dayIndex: 0, labelDe: 'Sonntag & Feiertage', labelEn: 'Sunday & Holidays', regular: '12:00 – 22:00', summer: '12:00 – 22:00' },
+    { dayIndex: 1, labelDe: 'Montag', labelEn: 'Monday', time: '11:00 – 22:00', timeEn: '11:00 AM – 10:00 PM', isClosed: false },
+    { dayIndex: 2, labelDe: 'Dienstag', labelEn: 'Tuesday', time: 'Geschlossen (Ruhetag)', timeEn: 'Closed', isClosed: true },
+    { dayIndex: 3, labelDe: 'Mittwoch', labelEn: 'Wednesday', time: '11:00 – 22:00', timeEn: '11:00 AM – 10:00 PM', isClosed: false },
+    { dayIndex: 4, labelDe: 'Donnerstag', labelEn: 'Thursday', time: '11:00 – 22:00', timeEn: '11:00 AM – 10:00 PM', isClosed: false },
+    { dayIndex: 5, labelDe: 'Freitag', labelEn: 'Friday', time: '11:00 – 22:00', timeEn: '11:00 AM – 10:00 PM', isClosed: false },
+    { dayIndex: 6, labelDe: 'Samstag', labelEn: 'Saturday', time: '12:00 – 22:00', timeEn: '12:00 PM – 10:00 PM', isClosed: false },
+    { dayIndex: 0, labelDe: 'Sonntag & Feiertage', labelEn: 'Sunday & Holidays', time: '12:00 – 22:00', timeEn: '12:00 PM – 10:00 PM', isClosed: false },
   ];
 
   return (
@@ -108,7 +108,7 @@ export const ContactHours: React.FC = () => {
                 <div>
                   <h3>{t.hoursTitle}</h3>
                   <p className="summer-alert-subtitle">
-                    {t.hoursSummerValidity}
+                    {language === 'de' ? 'Küche durchgehend geöffnet bis 21:30 Uhr' : 'Continuous kitchen open until 9:30 PM'}
                   </p>
                 </div>
               </div>
@@ -124,7 +124,7 @@ export const ContactHours: React.FC = () => {
                       {isToday && <span className="today-pill">{t.hoursToday}</span>}
                     </div>
                     <div className="hours-time">
-                      <span className="summer-time">{h.summer}</span>
+                      <span className="summer-time">{h.isClosed ? (language === 'de' ? h.time : (h.timeEn || 'Closed')) : (language === 'de' ? h.time : (h.timeEn || h.time))}</span>
                     </div>
                   </div>
                 );
