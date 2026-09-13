@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { X, ArrowUp, ExternalLink } from 'lucide-react';
+import { X, ArrowUp, ExternalLink, Award } from 'lucide-react';
 import logoImg from '../assets/logo.png';
-import restaurantGuruImg from '../assets/restaurant-guru.png';
 
 export const Footer: React.FC = () => {
   const { t, language } = useLanguage();
@@ -23,60 +22,47 @@ export const Footer: React.FC = () => {
         <div className="footer-container container">
           {/* Brand Col */}
           <div className="footer-brand">
-            <div className="logo logo-footer">
-              <img src={logoImg} className="logo-img" alt="Kaido Logo" />
-              <span className="logo-text">KAIDO</span>
-            </div>
-            <p className="brand-motto">
-              {language === 'de' 
-                ? 'Traditionelle japanische Kunst trifft auf moderne Gemütlichkeit im Herzen Wiens.' 
-                : 'Traditional Japanese art meets modern coziness in the heart of Vienna.'}
-            </p>
-            <div className="social-links" style={{ marginBottom: '16px' }}>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-              </a>
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0 -5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-              </a>
+            <div className="logo-footer">
+              <div className="logo-ring-footer">
+                <img src={logoImg} className="logo-img" alt="Kaido Monogram" />
+              </div>
+              <div className="logo-titles">
+                <span className="logo-text">KAIDO</span>
+                <span className="logo-subtext">カイ堂 • HAUTE DINING WIEN</span>
+              </div>
             </div>
 
-            {/* Restaurant Guru Badge */}
+            <p className="brand-motto">
+              {language === 'de' 
+                ? 'Traditionelle japanische Schnittkunst, jahrhundertealte Omakase-Kultur und zeitlose Stille im Herzen von Wien.' 
+                : 'Master-level Japanese knife discipline, time-honored omakase culture, and quiet elegance in the heart of Vienna.'}
+            </p>
+
+            {/* Distinction Link */}
             <a
               href="https://de.restaurantguru.com/Kaido-Sushi-Bar-Vienna?utm_source=rg_certificate9"
               target="_blank"
               rel="noopener noreferrer"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '6px 14px',
-                borderRadius: 'var(--radius-full)',
-                background: 'rgba(192, 57, 43, 0.1)',
-                border: '1px solid rgba(192, 57, 43, 0.3)',
-                color: 'var(--accent-gold)',
-                fontSize: '0.82rem',
-                fontWeight: 700,
-                transition: 'var(--transition-fast)'
-              }}
+              className="footer-distinction-link"
             >
-              <img src={restaurantGuruImg} alt="Restaurant Guru 2023" style={{ height: '24px', borderRadius: '3px' }} />
+              <Award size={15} />
               <span>Recommended on Restaurant Guru 2023</span>
-              <ExternalLink size={14} />
+              <ExternalLink size={12} />
             </a>
           </div>
 
-          {/* Contact Summary Col */}
+          {/* Location Summary Col */}
           <div className="footer-contact">
-            <h3>{language === 'de' ? 'Adresse' : 'Location'}</h3>
-            <p>Rotensterngasse 3</p>
-            <p>A-1020 Wien</p>
-            <p className="mt-8">sushibarkaido@gmail.com</p>
+            <h4>{language === 'de' ? 'Residenz & Atelier' : 'Residence & Atelier'}</h4>
+            <p className="footer-address">Rotensterngasse 3</p>
+            <p className="footer-address">A-1020 Wien • Leopoldstadt</p>
+            <p className="footer-meta">sushibarkaido@gmail.com</p>
+            <p className="footer-meta">+43 (0) 660 910 88 18</p>
           </div>
 
-          {/* Legal / Quicklinks Col */}
+          {/* Legal / Discretion Col */}
           <div className="footer-links">
-            <h3>{language === 'de' ? 'Rechtliches' : 'Legal'}</h3>
+            <h4>{language === 'de' ? 'Rechtliches & Diskretion' : 'Legal & Discretion'}</h4>
             <button onClick={() => setActiveLegalModal('imprint')}>{t.legalImprint}</button>
             <button onClick={() => setActiveLegalModal('privacy')}>{t.legalPrivacy}</button>
             <button onClick={() => setActiveLegalModal('revocation')}>{t.legalRevocation}</button>
@@ -87,8 +73,8 @@ export const Footer: React.FC = () => {
         <div className="footer-bottom">
           <div className="container footer-bottom-container">
             <p>{t.copyright}</p>
-            <button className="scroll-to-top" onClick={handleScrollToTop} aria-label="Scroll to top">
-              <ArrowUp size={16} />
+            <button className="scroll-to-top" onClick={handleScrollToTop} aria-label="Nach oben scrollen">
+              <ArrowUp size={15} />
             </button>
           </div>
         </div>
@@ -104,76 +90,55 @@ export const Footer: React.FC = () => {
                 {activeLegalModal === 'privacy' && t.legalPrivacy}
                 {activeLegalModal === 'revocation' && t.legalRevocation}
               </h2>
-              <button className="close-button" onClick={closeModal}>
+              <button className="close-button" onClick={closeModal} aria-label={t.closeBtn}>
                 <X size={24} />
               </button>
             </div>
-            
-            <div className="legal-text-body">
-              {/* IMPRESSUM CONTENT */}
+
+            <div className="legal-body">
               {activeLegalModal === 'imprint' && (
-                <div className="legal-markdown">
-                  <h3>Kaido KG</h3>
-                  <p>Rotensterngasse 3, 1020 Wien, Österreich</p>
-                  
-                  <h4>Kontakt</h4>
-                  <p>Telefon: +43 660 910 88 18</p>
-                  <p>E-Mail: sushibarkaido@gmail.com</p>
-                  
-                  <h4>Firmenbuchdaten</h4>
-                  <p>Firmenbuchnummer: FN 583887 h</p>
-                  <p>Firmenbuchgericht: Handelsgericht Wien</p>
-                  
-                  <h4>Kammerzugehörigkeit</h4>
-                  <p>Wirtschaftskammer Wien, Fachgruppe Gastronomie</p>
-                  
-                  <h4>Aufsichtsbehörde</h4>
-                  <p>Magistrat der Stadt Wien</p>
-
-                  <h4>Gewerbe- und berufsrechtliche Vorschriften</h4>
-                  <p>Gewerbeordnung (GewO) – abrufbar unter www.ris.bka.gv.at</p>
-                  
-                  <h4>Haftungsausschluss</h4>
-                  <p>Diese Website enthält Verweise (Links) auf Websites Dritter. Für den Inhalt dieser verlinkten Seiten sind ausschließlich deren Betreiber verantwortlich.</p>
+                <div className="legal-text-block">
+                  <h3>Impressum</h3>
+                  <p><strong>Kaido KG</strong></p>
+                  <p>Rotensterngasse 3</p>
+                  <p>A-1020 Wien</p>
+                  <br />
+                  <p><strong>E-Mail:</strong> <a href="mailto:sushibarkaido@gmail.com" style={{ color: 'var(--color-gold-light)', textDecoration: 'underline' }}>sushibarkaido@gmail.com</a></p>
+                  <p><strong>FN:</strong> 583887 h, Handelsgericht Wien</p>
+                  <p><strong>Kammerzugehörigkeit:</strong> Wirtschaftskammer Wien, Fachgruppe Gastronomie</p>
+                  <p><strong>Anzuwendende Rechtsvorschriften (u.a.):</strong> Gewerbeordnung (einsehbar unter <a href="http://www.ris.bka.gv.at/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-gold-light)', textDecoration: 'underline' }}>www.ris.bka.gv.at</a>)</p>
+                  <p><strong>Zuständige Gewerbebehörde:</strong> Magistrat der Stadt Wien</p>
+                  <br />
+                  <p>
+                    Verbraucher haben die Möglichkeit, Beschwerden an die Online-Streitbeilegungsplattform der EU zu richten:{' '}
+                    <a href="http://ec.europa.eu/odr" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-gold-light)', textDecoration: 'underline' }}>
+                      http://ec.europa.eu/odr
+                    </a>
+                    . Sie können allfällige Beschwerde auch an die oben angegebene E-Mail-Adresse richten.
+                  </p>
                 </div>
               )}
 
-              {/* PRIVACY POLICY CONTENT */}
               {activeLegalModal === 'privacy' && (
-                <div className="legal-markdown">
-                  <h3>Datenschutzerklärung (GDPR)</h3>
-                  <p>Der Schutz Ihrer persönlichen Daten ist uns ein wichtiges Anliegen. Wir verarbeiten Ihre Daten ausschließlich auf Grundlage der gesetzlichen Bestimmungen (DSGVO, TKG 2003).</p>
-                  
-                  <h4>1. Datenerfassung bei Tischreservierungen</h4>
-                  <p>Wenn Sie über den auf unserer Website integrierten Gastro.site-Dienst einen Tisch reservieren, werden die von Ihnen eingegebenen Daten (Name, E-Mail-Adresse, Telefonnummer, Datum, Uhrzeit, Personenanzahl) direkt an Gastro.site übermittelt und zur Durchführung der Reservierung verarbeitet. Details zur dortigen Datenverarbeitung entnehmen Sie bitte der Datenschutzerklärung von Gastro.site.</p>
-                  
-                  <h4>2. Cookies und Webanalyse</h4>
-                  <p>Unsere Website verwendet Cookies zur Speicherung von Spracheinstellungen und Reservierungspräferenzen. Wenn Sie Ihre Zustimmung geben, nutzen wir anonymisierte Webanalyse-Cookies, um die Leistung unserer Seite zu bewerten.</p>
-                  
-                  <h4>3. Ihre Rechte</h4>
-                  <p>Ihnen stehen grundsätzlich die Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit, Widerruf und Widerspruch zu. Wenden Sie sich hierzu bitte an sushibarkaido@gmail.com.</p>
+                <div className="legal-text-block">
+                  <h3>Datenschutzerklärung (DSGVO)</h3>
+                  <p>Der Schutz Ihrer persönlichen Daten ist uns ein besonderes Anliegen. Wir verarbeiten Ihre Daten ausschließlich auf Grundlage der gesetzlichen Bestimmungen (DSGVO, TKG 2003).</p>
+                  <h4>1. Tischreservierungen</h4>
+                  <p>Zur Abwicklung Ihrer Reservierung binden wir das gesicherte Reservierungsmodul von Gastro.site ein. Daten wie Name, Personenanzahl und Kontaktnummer werden streng zweckgebunden zur Organisation Ihres Besuches erhoben.</p>
+                  <h4>2. Ihre Rechte</h4>
+                  <p>Ihnen stehen grundsätzlich die Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit, Widerruf und Widerspruch zu.</p>
                 </div>
               )}
 
-              {/* REVOCATION POLICY CONTENT */}
               {activeLegalModal === 'revocation' && (
-                <div className="legal-markdown">
+                <div className="legal-text-block">
                   <h3>Widerrufsbelehrung</h3>
-                  <p>Verbraucher haben das Recht, binnen vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen.</p>
-                  
-                  <h4>Widerrufsrecht bei Tischreservierungen</h4>
-                  <p>Bitte beachten Sie, dass eine Tischreservierung eine Dienstleistung im Zusammenhang mit Freizeitbetätigungen zu einem spezifischen Termin darstellt. Gemäß § 18 Abs. 1 Z 10 FAGG besteht für solche Dienstleistungen kein gesetzliches Widerrufsrecht.</p>
-                  
-                  <h4>Stornierungsbedingungen</h4>
-                  <p>Falls Sie Ihre Reservierung nicht wahrnehmen können, bitten wir Sie, uns mindestens 2 Stunden vorher telefonisch unter +43 660 910 88 18 zu informieren, damit wir den Tisch wieder freigeben können. Vielen Dank für Ihr Verständnis.</p>
+                  <h4>Stornierung von Tischreservierungen</h4>
+                  <p>Reservierungen können bis zu 2 Stunden vor Beginn des gebuchten Zeitfensters kostenfrei über den Bestätigungslink oder telefonisch storniert werden.</p>
+                  <h4>Speisenbestellungen</h4>
+                  <p>Gemäß § 18 Abs. 1 Z 3 FAGG besteht kein Rücktrittsrecht bei Waren, die schnell verderben können oder deren Verfallsdatum schnell überschritten würde (frische Sushi- und Küchengerichte).</p>
                 </div>
               )}
-            </div>
-            
-            <div className="modal-footer">
-              <button className="btn btn-secondary btn-sm" onClick={closeModal}>
-                {t.closeBtn}
-              </button>
             </div>
           </div>
         </div>
@@ -181,79 +146,109 @@ export const Footer: React.FC = () => {
 
       <style>{`
         .footer-section {
-          background: #0c2d33; /* Deep teal to match the logo background */
-          border-top: 1px solid var(--border-color);
-          padding: 60px 0 0;
-          color: #beb8ab; /* Light readable gray on dark background */
+          background: #06080a;
+          border-top: 1px solid rgba(212, 175, 55, 0.16);
+          padding: 80px 0 0;
+          position: relative;
         }
 
         .footer-container {
           display: grid;
-          grid-template-columns: 2fr 1fr 1fr;
-          gap: 40px;
-          margin-bottom: 40px;
-        }
-
-        .footer-brand {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
+          grid-template-columns: 1.8fr 1fr 1fr;
+          gap: 48px;
+          padding-bottom: 60px;
         }
 
         .logo-footer {
-          font-size: 1.8rem;
-        }
-
-        .logo-footer .logo-text {
-          color: #ffffff;
-        }
-
-        .brand-motto {
-          font-size: 0.9rem;
-          line-height: 1.6;
-          max-width: 320px;
-        }
-
-        .social-links {
           display: flex;
-          gap: 12px;
+          align-items: center;
+          gap: 14px;
+          margin-bottom: 18px;
         }
 
-        .social-links a {
+        .logo-ring-footer {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          border: 1.5px solid var(--color-gold);
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 38px;
-          height: 38px;
-          border-radius: 50%;
-          border: 1px solid var(--border-color);
-          color: var(--text-secondary);
-          transition: var(--transition-smooth);
+          padding: 2px;
+          background: rgba(14, 17, 21, 0.9);
         }
 
-        .social-links a:hover {
-          border-color: var(--accent-gold);
-          color: var(--accent-gold);
+        .logo-titles {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .logo-text {
+          font-family: var(--font-serif);
+          font-size: 1.6rem;
+          color: #ffffff;
+          letter-spacing: 0.22em;
+          line-height: 1;
+        }
+
+        .logo-subtext {
+          font-family: var(--font-eyebrow);
+          font-size: 0.65rem;
+          letter-spacing: 0.22em;
+          color: var(--color-gold-light);
+          margin-top: 4px;
+        }
+
+        .brand-motto {
+          color: var(--color-washi-dim);
+          font-size: 0.92rem;
+          line-height: 1.8;
+          max-width: 440px;
+          margin-bottom: 22px;
+          font-weight: 300;
+        }
+
+        .footer-distinction-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 18px;
+          border-radius: var(--radius-full);
+          border: 1px solid rgba(212, 175, 55, 0.25);
           background: rgba(212, 175, 55, 0.05);
-          box-shadow: 0 0 10px var(--accent-gold-glow);
+          color: var(--color-gold-light);
+          font-family: var(--font-eyebrow);
+          font-size: 0.72rem;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          transition: var(--transition-fast);
         }
 
-        .footer-contact h3,
-        .footer-links h3 {
-          font-family: var(--font-heading);
-          color: #faf8f5; /* Light readable headlines */
-          font-size: 1.1rem;
+        .footer-distinction-link:hover {
+          border-color: var(--color-gold);
+          color: #ffffff;
+        }
+
+        .footer-contact h4,
+        .footer-links h4 {
+          font-family: var(--font-eyebrow);
+          font-size: 0.78rem;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--color-gold);
           margin-bottom: 20px;
-          font-weight: 600;
         }
 
-        .footer-contact p {
-          font-size: 0.9rem;
-          line-height: 1.7;
-          color: #beb8ab;
+        .footer-address {
+          font-family: var(--font-serif);
+          font-size: 1.15rem;
+          color: #ffffff;
+          line-height: 1.4;
         }
 
-        .mt-8 {
+        .footer-meta {
+          font-size: 0.88rem;
+          color: var(--color-washi-dim);
           margin-top: 8px;
         }
 
@@ -265,25 +260,22 @@ export const Footer: React.FC = () => {
         }
 
         .footer-links button {
+          color: var(--color-washi-dim);
           font-size: 0.9rem;
-          color: #beb8ab;
+          font-weight: 300;
           cursor: pointer;
-          background: none;
-          border: none;
-          text-align: left;
           transition: var(--transition-fast);
+          padding: 2px 0;
         }
 
         .footer-links button:hover {
-          color: var(--accent-gold);
+          color: var(--color-gold);
           padding-left: 4px;
         }
 
-        /* Bottom bar */
         .footer-bottom {
-          border-top: 1px solid rgba(255, 255, 255, 0.02);
+          border-top: 1px solid rgba(255, 255, 255, 0.06);
           padding: 24px 0;
-          font-size: 0.8rem;
         }
 
         .footer-bottom-container {
@@ -292,76 +284,73 @@ export const Footer: React.FC = () => {
           align-items: center;
         }
 
+        .footer-bottom p {
+          font-family: var(--font-eyebrow);
+          font-size: 0.72rem;
+          letter-spacing: 0.15em;
+          color: var(--color-text-muted);
+          text-transform: uppercase;
+        }
+
         .scroll-to-top {
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          color: #beb8ab;
-          width: 36px;
-          height: 36px;
+          width: 38px;
+          height: 38px;
           border-radius: 50%;
+          border: 1px solid rgba(212, 175, 55, 0.3);
+          background: rgba(16, 19, 25, 0.6);
+          color: var(--color-gold-light);
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: var(--transition-smooth);
+          transition: var(--transition-fast);
         }
 
         .scroll-to-top:hover {
-          border-color: var(--accent-gold);
+          border-color: var(--color-gold);
           color: #ffffff;
-          background: rgba(255, 255, 255, 0.08);
-          background: rgba(212, 175, 55, 0.05);
+          transform: translateY(-2px);
         }
 
         /* Legal Modal */
         .legal-modal-content {
-          max-width: 600px;
-          max-height: 80vh;
-          display: flex;
-          flex-direction: column;
+          max-width: 720px;
+          background: #0d1015;
+          border: 1px solid rgba(212, 175, 55, 0.3);
         }
 
-        .legal-text-body {
-          padding: 24px;
+        .legal-body {
+          padding: 30px;
+          max-height: 65vh;
           overflow-y: auto;
-          font-size: 0.9rem;
-          line-height: 1.6;
-          color: var(--text-secondary);
         }
 
-        .legal-markdown h3 {
-          font-size: 1.25rem;
-          margin-bottom: 8px;
-          color: var(--text-primary);
+        .legal-text-block h3 {
+          font-family: var(--font-serif);
+          font-size: 1.6rem;
+          color: #ffffff;
+          margin-bottom: 16px;
         }
 
-        .legal-markdown h4 {
-          font-size: 1rem;
-          margin: 20px 0 6px;
-          color: var(--text-primary);
+        .legal-text-block h4 {
+          font-family: var(--font-eyebrow);
+          font-size: 0.85rem;
+          letter-spacing: 0.15em;
+          color: var(--color-gold);
+          margin: 20px 0 8px;
         }
 
-        .legal-markdown p {
-          margin-bottom: 12px;
+        .legal-text-block p {
+          font-size: 0.92rem;
+          color: var(--color-washi-dim);
+          line-height: 1.7;
+          margin-bottom: 10px;
         }
 
-        .modal-footer {
-          padding: 16px 24px;
-          border-top: 1px solid var(--border-color);
-          display: flex;
-          justify-content: flex-end;
-          background: var(--bg-tertiary);
-        }
-
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
           .footer-container {
             grid-template-columns: 1fr;
-            gap: 30px;
-          }
-          .footer-bottom-container {
-            flex-direction: column;
-            gap: 16px;
-            text-align: center;
+            gap: 36px;
           }
         }
       `}</style>

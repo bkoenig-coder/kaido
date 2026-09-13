@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { LanguageProvider } from './context/LanguageContext';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
+import { PhilosophySection } from './components/PhilosophySection';
 import { GallerySection } from './components/GallerySection';
 import { AtmosphereEffects } from './components/AtmosphereEffects';
+import { ViewportCarpet } from './components/ViewportCarpet';
 import { JapaneseEntranceIntro } from './components/JapaneseEntranceIntro';
 import { MenuSection } from './components/MenuSection';
 import { Reviews } from './components/Reviews';
@@ -19,11 +21,14 @@ const AppContent: React.FC = () => {
     <div className="app-wrapper">
       <JapaneseEntranceIntro />
       <AtmosphereEffects />
+      <ViewportCarpet />
 
       <Header onOpenReservation={() => setIsReservationOpen(true)} />
       
       <Hero onOpenReservation={() => setIsReservationOpen(true)} />
       
+      <PhilosophySection />
+
       <GallerySection />
       
       <MenuSection />

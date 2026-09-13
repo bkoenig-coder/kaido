@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { ChevronLeft, ChevronRight, Maximize2, X, Sparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Maximize2, X, Pause, Play } from 'lucide-react';
 
 import gallery1 from '../assets/gallery/gallery1.jpg';
 import gallery2 from '../assets/gallery/gallery2.jpg';
@@ -8,396 +8,732 @@ import gallery3 from '../assets/gallery/gallery3.jpg';
 import gallery4 from '../assets/gallery/gallery4.jpg';
 import gallery5 from '../assets/gallery/gallery5.jpg';
 import gallery6 from '../assets/gallery/gallery6.jpg';
-import certImg from '../assets/gallery/Certificate.jpeg';
 
-interface GalleryItem {
+interface GallerySlide {
   id: number;
   src: string;
+  kanji: string;
+  categoryDe: string;
+  categoryEn: string;
   titleDe: string;
   titleEn: string;
-  tag: string;
+  subtitleDe: string;
+  subtitleEn: string;
 }
 
-const galleryData: GalleryItem[] = [
+const slides: GallerySlide[] = [
   {
     id: 1,
     src: gallery1,
-    titleDe: 'Die Große Welle & die Sushi Bar',
-    titleEn: 'The Great Wave & Handcrafted Wooden Bar',
-    tag: '01 / ATMOSPHERE',
+    kanji: '檜',
+    categoryDe: '01 / Der Meistertresen',
+    categoryEn: '01 / The Cypress Counter',
+    titleDe: 'Die Große Welle & Der Holztresen',
+    titleEn: 'The Great Wave & The Hinoki Counter',
+    subtitleDe: 'Echtes Zypressenholz, handgefertigte Schreinerkunst und die unmittelbare Nähe zum Messer des Meisters.',
+    subtitleEn: 'Solid cypress timber, handcrafted joinery, and intimate proximity to the master blade.',
   },
   {
     id: 2,
     src: gallery2,
-    titleDe: 'Erhabene Buddha-Skulptur & Stimmung',
-    titleEn: 'Serene Buddha Statue & Ambient Illumination',
-    tag: '02 / AMBIANCE',
+    kanji: '静',
+    categoryDe: '02 / Meditative Stille',
+    categoryEn: '02 / Meditative Stillness',
+    titleDe: 'Erhabene Buddha-Skulptur & Lichtinszenierung',
+    titleEn: 'Serene Buddha Statue & Chiaroscuro Light',
+    subtitleDe: 'Sanfte Lichtkegel und warme Halbschatten schaffen einen Raum der vollkommenen Entschleunigung.',
+    subtitleEn: 'Subtle light cones and warm chiaroscuro cultivate an environment of absolute tranquility.',
   },
   {
     id: 3,
     src: gallery3,
-    titleDe: 'Moderne Geisha Wandkunst',
-    titleEn: 'Contemporary Geisha & Crimson Sun Mural',
-    tag: '03 / ARTISTRY',
+    kanji: '藝',
+    categoryDe: '03 / Wandkunst',
+    categoryEn: '03 / Mural Artistry',
+    titleDe: 'Zeitgenössische Geisha & Die Rote Sonne',
+    titleEn: 'Contemporary Geisha & The Crimson Sun',
+    subtitleDe: 'Faszinierende Symbiose aus klassischem Ukiyo-e und zeitgenössischer japanischer Wandmalerei.',
+    subtitleEn: 'A mesmerizing dialogue between classical Ukiyo-e heritage and contemporary Japanese muralism.',
   },
   {
     id: 4,
     src: gallery4,
-    titleDe: 'Traditionelles Ukiyo-e Ambiente',
+    kanji: '座',
+    categoryDe: '04 / Hauptsalon',
+    categoryEn: '04 / Main Dining Hall',
+    titleDe: 'Traditioneller Ukiyo-e Speisesaal',
     titleEn: 'Traditional Ukiyo-e Dining Hall',
-    tag: '04 / INTERIOR',
+    subtitleDe: 'Architektonisch abgeschirmte Nischen für ungestörte Konversation und diskreten Genuss.',
+    subtitleEn: 'Architecturally secluded booths tailored for uninterrupted conversation and private indulgence.',
   },
   {
     id: 5,
     src: gallery5,
+    kanji: '庵',
+    categoryDe: '05 / Private Nische',
+    categoryEn: '05 / Private Sanctuary',
     titleDe: 'Intime Tisch-Nische',
-    titleEn: 'Intimate Dining Table Nook',
-    tag: '05 / DINING',
+    titleEn: 'Intimate Alcove Seating',
+    subtitleDe: 'Warme Holzlamellen und reduziertes Licht laden zu vertrauten kulinarischen Reisen ein.',
+    subtitleEn: 'Warm timber slats and ambient twilight welcome intimate culinary explorations.',
   },
   {
     id: 6,
     src: gallery6,
-    titleDe: 'Kaido Kunst & Atmosphäre',
-    titleEn: 'Kaido Artwork & Interior Showcase',
-    tag: '06 / GALLERY',
-  },
-  {
-    id: 7,
-    src: certImg,
-    titleDe: 'Empfohlen auf Restaurant Guru 2023',
-    titleEn: 'Recommended on Restaurant Guru 2023',
-    tag: '07 / AWARD',
+    kanji: '匠',
+    categoryDe: '06 / Das Atelier',
+    categoryEn: '06 / The Atelier',
+    titleDe: 'Kaido Architektur & Atmosphäre',
+    titleEn: 'Kaido Architecture & Ambiance',
+    subtitleDe: 'Jedes Detail spiegelt das lebenslange Streben nach handwerklicher Vollendung wider.',
+    subtitleEn: 'Every nuance reflects the lifelong pursuit of craftsmanship and understated balance.',
   },
 ];
 
 export const GallerySection: React.FC = () => {
   const { language } = useLanguage();
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [progress, setProgress] = useState(0);
+  const timerRef = useRef<number | null>(null);
 
-  const currentItem = galleryData[activeIndex];
+  const currentSlide = slides[currentIndex];
+  const nextSlide = slides[(currentIndex + 1) % slides.length];
+
+  // Auto-play timer with smooth progress
+  useEffect(() => {
+    if (!isPlaying) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      return;
+    }
+
+    const intervalTime = 60; // 60ms tick
+    const totalTime = 6000;  // 6 seconds per slide
+    const increment = (intervalTime / totalTime) * 100;
+
+    timerRef.current = window.setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          setCurrentIndex((oldIdx) => (oldIdx + 1) % slides.length);
+          return 0;
+        }
+        return prev + increment;
+      });
+    }, intervalTime);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [isPlaying, currentIndex]);
+
+  const goToSlide = (idx: number) => {
+    setCurrentIndex(idx);
+    setProgress(0);
+  };
 
   const handlePrev = () => {
-    setActiveIndex(prev => (prev - 1 + galleryData.length) % galleryData.length);
+    setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
+    setProgress(0);
   };
 
   const handleNext = () => {
-    setActiveIndex(prev => (prev + 1) % galleryData.length);
+    setCurrentIndex((prev) => (prev + 1) % slides.length);
+    setProgress(0);
   };
 
   return (
-    <section id="gallery" className="gallery-section section" style={{ background: 'var(--bg-secondary)', padding: '80px 0', position: 'relative' }}>
-      <div className="container" style={{ maxWidth: '1140px' }}>
-        
+    <section id="gallery" className="gallery-section section">
+      {/* Subtle background ambient aura */}
+      <div className="gallery-ambient-glow" />
+
+      <div className="container">
         {/* Section Header */}
-        <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-          <span style={{
-            fontSize: '0.8rem',
-            fontWeight: 700,
-            letterSpacing: '0.25em',
-            textTransform: 'uppercase',
-            color: 'var(--accent-gold)',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            marginBottom: '8px'
-          }}>
-            <Sparkles size={14} /> Atmosphere & Interieur
+        <div className="section-title animate-slide-up">
+          <span className="eyebrow-text">
+            {language === 'de' ? 'Raum & Atmosphäre' : 'Atelier & Atmosphere'}
           </span>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
-            {language === 'de' ? 'Einblicke in Kaido' : 'The Kaido Experience'}
-          </h2>
-          <div style={{ width: '50px', height: '2px', background: 'var(--accent-gold)', margin: '14px auto 0' }} />
+          <h2>{language === 'de' ? 'Impressionen der Stille' : 'A Sanctuary in Stillness'}</h2>
+          <div className="hairline-divider" />
+          <p style={{ marginTop: '16px' }}>
+            {language === 'de'
+              ? 'Dunkle Holztöne, sanftes Kerzenlicht und traditionelle japanische Wandkunst schaffen einen Rahmen von unaufdringlicher Eleganz.'
+              : 'Dark timber tones, candlelit shadows, and classic Japanese murals frame an environment of quiet, understated poise.'}
+          </p>
         </div>
 
-        {/* Featured Main Cinema Stage */}
-        <div className="gallery-main-stage" style={{
-          position: 'relative',
-          borderRadius: 'var(--radius-lg)',
-          overflow: 'hidden',
-          background: '#0a0a0c',
-          border: '1px solid var(--border-color)',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.25)',
-          marginBottom: '20px'
-        }}>
-          {/* Main Image */}
-          <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
-            <img
-              src={currentItem.src}
-              alt={language === 'de' ? currentItem.titleDe : currentItem.titleEn}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: currentItem.id === 7 ? 'contain' : 'cover',
-                background: currentItem.id === 7 ? '#ffffff' : 'transparent',
-                transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
-              }}
-            />
+        {/* Modern Split-Stage Slideshow */}
+        <div className="modern-slideshow-container glass-card">
+          
+          {/* LEFT: Editorial Narrative Panel */}
+          <div className="slideshow-editorial-panel">
+            {/* Top Row: Slide Counter & Auto-play control */}
+            <div className="editorial-topbar">
+              <div className="slide-counter-group">
+                <span className="current-slide-num">0{currentIndex + 1}</span>
+                <span className="slide-counter-sep">/</span>
+                <span className="total-slides-num">0{slides.length}</span>
+              </div>
 
-            {/* Dark Vignette Gradient */}
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: currentItem.id === 7 
-                ? 'transparent' 
-                : 'linear-gradient(to top, rgba(12, 12, 16, 0.85) 0%, rgba(12, 12, 16, 0.15) 50%, rgba(12, 12, 16, 0.35) 100%)'
-            }} />
-
-            {/* Top Bar Tag & Fullscreen Button */}
-            <div style={{
-              position: 'absolute',
-              top: '20px',
-              left: '24px',
-              right: '24px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              zIndex: 3
-            }}>
-              <span style={{
-                background: 'rgba(18, 15, 13, 0.75)',
-                backdropFilter: 'blur(8px)',
-                padding: '6px 16px',
-                borderRadius: 'var(--radius-full)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                color: 'var(--accent-gold)',
-                fontSize: '0.78rem',
-                fontWeight: 700,
-                letterSpacing: '0.15em'
-              }}>
-                {currentItem.tag}
-              </span>
-
-              <button
-                onClick={() => setIsLightboxOpen(true)}
-                style={{
-                  background: 'rgba(18, 15, 13, 0.75)',
-                  backdropFilter: 'blur(8px)',
-                  padding: '10px',
-                  borderRadius: '50%',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#ffffff',
-                  cursor: 'pointer',
-                  transition: 'var(--transition-fast)'
-                }}
-                title="Vollbild"
-              >
-                <Maximize2 size={18} />
-              </button>
+              <div className="autoplay-control-group">
+                <div className="progress-ring-container">
+                  <div className="progress-bar-track">
+                    <div className="progress-bar-fill" style={{ width: `${progress}%` }} />
+                  </div>
+                </div>
+                <button
+                  className="autoplay-toggle-btn"
+                  onClick={() => setIsPlaying(!isPlaying)}
+                  aria-label={isPlaying ? 'Pause' : 'Play'}
+                  title={isPlaying ? 'Pause' : 'Play'}
+                >
+                  {isPlaying ? <Pause size={13} /> : <Play size={13} />}
+                </button>
+              </div>
             </div>
 
-            {/* Navigation Arrows on Stage */}
-            <button
-              onClick={handlePrev}
-              className="gallery-nav-arrow"
-              style={{
-                position: 'absolute',
-                left: '18px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                background: 'rgba(18, 15, 13, 0.65)',
-                backdropFilter: 'blur(8px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                color: '#ffffff',
-                width: '44px',
-                height: '44px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                zIndex: 3,
-                transition: 'var(--transition-fast)'
-              }}
-            >
-              <ChevronLeft size={24} />
-            </button>
+            {/* Kanji Watermark Accent */}
+            <div className="editorial-kanji-watermark">{currentSlide.kanji}</div>
 
-            <button
-              onClick={handleNext}
-              className="gallery-nav-arrow"
-              style={{
-                position: 'absolute',
-                right: '18px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                background: 'rgba(18, 15, 13, 0.65)',
-                backdropFilter: 'blur(8px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                color: '#ffffff',
-                width: '44px',
-                height: '44px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                zIndex: 3,
-                transition: 'var(--transition-fast)'
-              }}
-            >
-              <ChevronRight size={24} />
-            </button>
-
-            {/* Bottom Overlay Title */}
-            <div className="gallery-stage-caption" style={{
-              position: 'absolute',
-              bottom: '24px',
-              left: '28px',
-              right: '28px',
-              zIndex: 3,
-              color: '#ffffff'
-            }}>
-              <h3 className="gallery-stage-title" style={{
-                fontSize: '1.6rem',
-                fontWeight: 700,
-                color: currentItem.id === 7 ? 'var(--text-primary)' : '#ffffff',
-                background: currentItem.id === 7 ? 'rgba(255, 255, 255, 0.9)' : 'transparent',
-                padding: currentItem.id === 7 ? '6px 16px' : '0',
-                borderRadius: currentItem.id === 7 ? 'var(--radius-md)' : '0',
-                display: 'inline-block',
-                margin: 0,
-                letterSpacing: '-0.01em'
-              }}>
-                {language === 'de' ? currentItem.titleDe : currentItem.titleEn}
+            {/* Slide Category & Headings */}
+            <div className="editorial-content-body">
+              <span className="editorial-tag">
+                {language === 'de' ? currentSlide.categoryDe : currentSlide.categoryEn}
+              </span>
+              
+              <h3 className="editorial-title">
+                {language === 'de' ? currentSlide.titleDe : currentSlide.titleEn}
               </h3>
+              
+              <div className="editorial-divider" />
+
+              <p className="editorial-description">
+                {language === 'de' ? currentSlide.subtitleDe : currentSlide.subtitleEn}
+              </p>
+            </div>
+
+            {/* Quick Slide Category Selectors */}
+            <div className="editorial-selectors">
+              {slides.map((s, idx) => (
+                <button
+                  key={s.id}
+                  className={`selector-chip ${idx === currentIndex ? 'active' : ''}`}
+                  onClick={() => goToSlide(idx)}
+                >
+                  <span className="chip-dot" />
+                  <span className="chip-text">
+                    {language === 'de' ? s.categoryDe.split('/')[1] : s.categoryEn.split('/')[1]}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* Modern Navigation Controls */}
+            <div className="editorial-nav-controls">
+              <div className="nav-arrows-group">
+                <button 
+                  className="modern-arrow-btn" 
+                  onClick={handlePrev} 
+                  aria-label="Vorheriges Bild"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <button 
+                  className="modern-arrow-btn" 
+                  onClick={handleNext} 
+                  aria-label="Nächstes Bild"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+
+              <button
+                className="modern-lightbox-trigger"
+                onClick={() => setIsLightboxOpen(true)}
+              >
+                <Maximize2 size={14} />
+                <span>{language === 'de' ? 'Großansicht' : 'Enlarge'}</span>
+              </button>
             </div>
           </div>
-        </div>
 
-        {/* Horizontal Luxury Thumbnail Strip for 7 items */}
-        <div className="gallery-thumb-strip" style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(7, 1fr)',
-          gap: '12px'
-        }}>
-          {galleryData.map((item, idx) => {
-            const isActive = idx === activeIndex;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveIndex(idx)}
-                className="gallery-thumb-btn"
-                style={{
-                  position: 'relative',
-                  height: '95px',
-                  borderRadius: 'var(--radius-md)',
-                  overflow: 'hidden',
-                  border: isActive ? '2px solid var(--accent-gold)' : '1px solid var(--border-color)',
-                  opacity: isActive ? 1 : 0.65,
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  padding: 0,
-                  background: '#ffffff',
-                  boxShadow: isActive ? '0 8px 20px rgba(192, 57, 43, 0.3)' : 'none'
-                }}
-              >
-                <img
-                  src={item.src}
-                  alt={language === 'de' ? item.titleDe : item.titleEn}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: item.id === 7 ? 'contain' : 'cover',
-                    transform: isActive ? 'scale(1.08)' : 'scale(1)',
-                    transition: 'transform 0.4s ease'
-                  }}
-                />
-                <div style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: isActive ? 'transparent' : 'rgba(0, 0, 0, 0.2)',
-                  transition: 'background 0.3s ease'
-                }} />
-              </button>
-            );
-          })}
-        </div>
+          {/* RIGHT: Cinema Stage with Depth Peek */}
+          <div className="slideshow-stage-panel">
+            {/* Active Main Slide */}
+            <div className="active-slide-frame" onClick={() => setIsLightboxOpen(true)}>
+              <img
+                key={currentSlide.id}
+                src={currentSlide.src}
+                alt={language === 'de' ? currentSlide.titleDe : currentSlide.titleEn}
+                className="active-slide-image animate-fade-in"
+              />
+              <div className="slide-image-vignette" />
 
+              {/* Floating Mon Seal */}
+              <div className="slide-floating-seal">
+                <span>{currentSlide.kanji}</span>
+              </div>
+            </div>
+
+            {/* Next Slide Depth Preview Card */}
+            <div className="next-slide-peek" onClick={handleNext} title={language === 'de' ? 'Nächstes Motiv' : 'Next preview'}>
+              <img
+                src={nextSlide.src}
+                alt="Next preview"
+                className="peek-image"
+              />
+              <div className="peek-overlay">
+                <span className="peek-label">{language === 'de' ? 'Weiter' : 'Next'}</span>
+                <ChevronRight size={16} />
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
 
-      {/* Fullscreen Lightbox Modal */}
+      {/* Museum Lightbox */}
       {isLightboxOpen && (
-        <div
-          onClick={() => setIsLightboxOpen(false)}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(5, 5, 8, 0.95)',
-            backdropFilter: 'blur(16px)',
-            zIndex: 2000,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '24px'
-          }}
-        >
-          <button
-            onClick={() => setIsLightboxOpen(false)}
-            style={{
-              position: 'absolute',
-              top: '24px',
-              right: '28px',
-              padding: '12px',
-              borderRadius: '50%',
-              background: 'rgba(255, 255, 255, 0.12)',
-              color: '#ffffff',
-              border: 'none',
-              cursor: 'pointer'
-            }}
-          >
+        <div className="modal-overlay lightbox-overlay" onClick={() => setIsLightboxOpen(false)}>
+          <button className="lightbox-close" onClick={() => setIsLightboxOpen(false)}>
             <X size={26} />
           </button>
-
-          <img
-            src={currentItem.src}
-            alt={language === 'de' ? currentItem.titleDe : currentItem.titleEn}
-            onClick={e => e.stopPropagation()}
-            style={{
-              maxWidth: '92vw',
-              maxHeight: '88vh',
-              borderRadius: 'var(--radius-md)',
-              objectFit: 'contain',
-              boxShadow: '0 30px 80px rgba(0, 0, 0, 0.7)',
-              background: currentItem.id === 7 ? '#ffffff' : 'transparent'
-            }}
-          />
+          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <img src={currentSlide.src} alt={currentSlide.titleDe} className="lightbox-image" />
+            <div className="lightbox-info">
+              <span className="lightbox-tag">
+                {language === 'de' ? currentSlide.categoryDe : currentSlide.categoryEn}
+              </span>
+              <h4>{language === 'de' ? currentSlide.titleDe : currentSlide.titleEn}</h4>
+              <p>{language === 'de' ? currentSlide.subtitleDe : currentSlide.subtitleEn}</p>
+            </div>
+          </div>
         </div>
       )}
 
       <style>{`
-        .gallery-main-stage {
-          height: 520px;
+        .gallery-section {
+          background: #090b0e;
+          position: relative;
+          overflow: hidden;
         }
 
-        @media (max-width: 768px) {
-          .gallery-main-stage {
-            height: 320px !important;
-          }
-          .gallery-stage-title {
-            font-size: 1.1rem !important;
-          }
-          .gallery-thumb-strip {
-            grid-template-columns: repeat(4, 1fr) !important;
-            gap: 8px !important;
-          }
-          .gallery-thumb-btn {
-            height: 75px !important;
-          }
+        .gallery-ambient-glow {
+          position: absolute;
+          top: 40%;
+          left: 60%;
+          width: 600px;
+          height: 600px;
+          background: radial-gradient(circle, rgba(212, 175, 55, 0.04) 0%, transparent 70%);
+          pointer-events: none;
         }
 
-        @media (max-width: 480px) {
-          .gallery-main-stage {
-            height: 260px !important;
+        /* Modern Container Box */
+        .modern-slideshow-container {
+          display: grid;
+          grid-template-columns: 1.15fr 1.85fr;
+          min-height: 640px;
+          background: rgba(14, 17, 22, 0.85);
+          border: 1px solid rgba(212, 175, 55, 0.22);
+          border-radius: var(--radius-md);
+          overflow: hidden;
+          box-shadow: 0 30px 80px rgba(0, 0, 0, 0.75), 0 0 40px rgba(212, 175, 55, 0.06);
+        }
+
+        /* LEFT: Editorial Panel */
+        .slideshow-editorial-panel {
+          padding: 48px 42px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          border-right: 1px solid rgba(212, 175, 55, 0.16);
+          position: relative;
+          background: linear-gradient(135deg, rgba(16, 20, 26, 0.95) 0%, rgba(11, 13, 18, 0.98) 100%);
+        }
+
+        .editorial-topbar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 24px;
+        }
+
+        .slide-counter-group {
+          display: flex;
+          align-items: baseline;
+          gap: 6px;
+        }
+
+        .current-slide-num {
+          font-family: var(--font-serif);
+          font-size: 2.2rem;
+          line-height: 1;
+          color: var(--color-gold);
+          font-weight: 400;
+        }
+
+        .slide-counter-sep {
+          color: var(--color-text-muted);
+          font-size: 1rem;
+        }
+
+        .total-slides-num {
+          font-family: var(--font-eyebrow);
+          font-size: 0.85rem;
+          color: var(--color-text-muted);
+          letter-spacing: 0.1em;
+        }
+
+        .autoplay-control-group {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .progress-bar-track {
+          width: 80px;
+          height: 2px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 2px;
+          overflow: hidden;
+        }
+
+        .progress-bar-fill {
+          height: 100%;
+          background: var(--color-gold);
+          transition: width 0.08s linear;
+        }
+
+        .autoplay-toggle-btn {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          background: rgba(20, 24, 31, 0.8);
+          color: var(--color-gold-light);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: var(--transition-fast);
+        }
+
+        .autoplay-toggle-btn:hover {
+          border-color: var(--color-gold);
+          color: #ffffff;
+        }
+
+        .editorial-kanji-watermark {
+          position: absolute;
+          right: 24px;
+          top: 80px;
+          font-family: var(--font-serif);
+          font-size: 8rem;
+          line-height: 1;
+          color: var(--color-gold);
+          opacity: 0.035;
+          pointer-events: none;
+          user-select: none;
+        }
+
+        .editorial-content-body {
+          margin: auto 0;
+          padding: 20px 0;
+        }
+
+        .editorial-tag {
+          font-family: var(--font-eyebrow);
+          font-size: 0.72rem;
+          letter-spacing: 0.25em;
+          text-transform: uppercase;
+          color: var(--color-gold);
+          display: block;
+          margin-bottom: 12px;
+        }
+
+        .editorial-title {
+          font-family: var(--font-serif);
+          font-size: clamp(1.8rem, 2.8vw, 2.6rem);
+          color: #ffffff;
+          line-height: 1.22;
+          letter-spacing: 0.02em;
+          margin-bottom: 16px;
+          font-weight: 400;
+        }
+
+        .editorial-divider {
+          width: 48px;
+          height: 1px;
+          background: rgba(212, 175, 55, 0.35);
+          margin-bottom: 18px;
+        }
+
+        .editorial-description {
+          font-size: 0.96rem;
+          line-height: 1.75;
+          color: var(--color-washi-dim);
+          font-weight: 300;
+        }
+
+        /* Quick selectors */
+        .editorial-selectors {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-bottom: 28px;
+        }
+
+        .selector-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 5px 12px;
+          border-radius: var(--radius-full);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(14, 17, 22, 0.6);
+          color: var(--color-text-muted);
+          font-family: var(--font-eyebrow);
+          font-size: 0.68rem;
+          letter-spacing: 0.1em;
+          cursor: pointer;
+          transition: var(--transition-fast);
+        }
+
+        .selector-chip:hover {
+          border-color: rgba(212, 175, 55, 0.3);
+          color: var(--color-washi-dim);
+        }
+
+        .selector-chip.active {
+          border-color: var(--color-gold);
+          background: rgba(212, 175, 55, 0.1);
+          color: var(--color-gold-light);
+        }
+
+        .chip-dot {
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          background: currentColor;
+        }
+
+        /* Nav controls */
+        .editorial-nav-controls {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .nav-arrows-group {
+          display: flex;
+          gap: 10px;
+        }
+
+        .modern-arrow-btn {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          background: rgba(20, 24, 31, 0.8);
+          color: #ffffff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: var(--transition-fast);
+        }
+
+        .modern-arrow-btn:hover {
+          border-color: var(--color-gold);
+          background: rgba(212, 175, 55, 0.15);
+          box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+          transform: translateY(-1px);
+        }
+
+        .modern-lightbox-trigger {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-family: var(--font-eyebrow);
+          font-size: 0.72rem;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: var(--color-gold-light);
+          cursor: pointer;
+          opacity: 0.8;
+          transition: var(--transition-fast);
+        }
+
+        .modern-lightbox-trigger:hover {
+          color: #ffffff;
+          opacity: 1;
+        }
+
+        /* RIGHT: Cinema Stage with Depth Peek */
+        .slideshow-stage-panel {
+          position: relative;
+          display: flex;
+          overflow: hidden;
+          background: #060709;
+        }
+
+        .active-slide-frame {
+          flex: 1;
+          position: relative;
+          height: 100%;
+          overflow: hidden;
+          cursor: pointer;
+        }
+
+        .active-slide-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .active-slide-frame:hover .active-slide-image {
+          transform: scale(1.03);
+        }
+
+        .slide-image-vignette {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to right,
+            rgba(11, 13, 18, 0.5) 0%,
+            transparent 30%,
+            transparent 70%,
+            rgba(6, 7, 9, 0.7) 100%
+          );
+          pointer-events: none;
+        }
+
+        .slide-floating-seal {
+          position: absolute;
+          bottom: 28px;
+          right: 28px;
+          width: 48px;
+          height: 48px;
+          border-radius: 4px;
+          border: 1px solid var(--color-gold);
+          background: rgba(10, 12, 16, 0.75);
+          backdrop-filter: blur(8px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: var(--font-serif);
+          font-size: 1.4rem;
+          color: var(--color-gold);
+          pointer-events: none;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Next Peek Card */
+        .next-slide-peek {
+          width: 90px;
+          position: relative;
+          cursor: pointer;
+          overflow: hidden;
+          border-left: 1px solid rgba(212, 175, 55, 0.2);
+          transition: width 0.35s ease;
+        }
+
+        .next-slide-peek:hover {
+          width: 120px;
+        }
+
+        .peek-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          filter: brightness(0.35) blur(1px);
+          transition: filter 0.3s ease;
+        }
+
+        .next-slide-peek:hover .peek-image {
+          filter: brightness(0.55);
+        }
+
+        .peek-overlay {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          color: #ffffff;
+          font-family: var(--font-eyebrow);
+          font-size: 0.68rem;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          background: rgba(8, 10, 14, 0.4);
+        }
+
+        /* Lightbox */
+        .lightbox-overlay {
+          padding: 30px;
+        }
+
+        .lightbox-close {
+          position: absolute;
+          top: 24px;
+          right: 28px;
+          color: #ffffff;
+          cursor: pointer;
+          z-index: 1010;
+        }
+
+        .lightbox-content {
+          max-width: 1100px;
+          width: 100%;
+          background: #0a0d11;
+          border: 1px solid rgba(212, 175, 55, 0.3);
+          border-radius: var(--radius-md);
+          overflow: hidden;
+        }
+
+        .lightbox-image {
+          width: 100%;
+          max-height: 70vh;
+          object-fit: cover;
+        }
+
+        .lightbox-info {
+          padding: 24px 32px;
+        }
+
+        .lightbox-tag {
+          font-family: var(--font-eyebrow);
+          font-size: 0.72rem;
+          color: var(--color-gold);
+          letter-spacing: 0.25em;
+          display: block;
+          margin-bottom: 6px;
+        }
+
+        .lightbox-info h4 {
+          font-family: var(--font-serif);
+          font-size: 1.8rem;
+          color: #ffffff;
+          margin-bottom: 6px;
+        }
+
+        @media (max-width: 1024px) {
+          .modern-slideshow-container {
+            grid-template-columns: 1fr;
           }
-          .gallery-nav-arrow {
-            width: 36px !important;
-            height: 36px !important;
+          .slideshow-editorial-panel {
+            border-right: none;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.16);
+            padding: 36px 28px;
           }
-          .gallery-stage-caption {
-            bottom: 14px !important;
-            left: 14px !important;
-            right: 14px !important;
+          .slideshow-stage-panel {
+            height: 440px;
+          }
+          .next-slide-peek {
+            display: none;
           }
         }
       `}</style>

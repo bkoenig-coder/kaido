@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Cookie, Check } from 'lucide-react';
+import { Shield, Check } from 'lucide-react';
 
 export const CookieBanner: React.FC = () => {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [showPreferences, setShowPreferences] = useState(false);
   
-  // Cookie preference states
-  const [prefNecessary] = useState(true); // always true
+  const [prefNecessary] = useState(true);
   const [prefAnalytics, setPrefAnalytics] = useState(true);
 
   useEffect(() => {
     const consent = localStorage.getItem('kaido_cookie_consent');
     if (!consent) {
-      // Trigger slide-in after 1.5 seconds
       const timer = setTimeout(() => {
         setIsVisible(true);
       }, 1500);
@@ -47,7 +45,7 @@ export const CookieBanner: React.FC = () => {
       <div className={`cookie-banner-container glass-panel animate-fade-in ${isVisible ? 'visible' : ''}`}>
         <div className="cookie-banner-content">
           <div className="cookie-header">
-            <Cookie size={20} className="text-gold" />
+            <Shield size={18} className="text-gold" />
             <h3>{t.cookieTitle}</h3>
           </div>
           
@@ -101,7 +99,7 @@ export const CookieBanner: React.FC = () => {
 
               <div className="cookie-actions mt-12">
                 <button className="btn btn-secondary btn-xs" onClick={() => setShowPreferences(false)}>
-                  {language === 'de' ? 'Zurück' : 'Back'}
+                  Zurück
                 </button>
                 <button className="btn btn-primary btn-xs" onClick={handleSavePreferences}>
                   {t.cookieSave}
@@ -115,55 +113,46 @@ export const CookieBanner: React.FC = () => {
       <style>{`
         .cookie-banner-container {
           position: fixed;
-          bottom: 30px;
-          right: 30px;
-          width: 380px;
-          max-width: calc(100vw - 60px);
-          border-radius: var(--radius-lg);
-          padding: 24px;
+          bottom: 24px;
+          right: 24px;
+          max-width: 460px;
+          width: calc(100% - 48px);
           z-index: 999;
-          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-          border: 1px solid var(--border-color);
-          opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        .cookie-banner-container.visible {
-          opacity: 1;
-          transform: translateY(0);
-        }
-
-        .cookie-banner-content {
-          display: flex;
-          flex-direction: column;
-          gap: 14px;
+          border-radius: var(--radius-md);
+          padding: 24px 28px;
+          background: rgba(10, 12, 16, 0.94);
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.1);
         }
 
         .cookie-header {
           display: flex;
           align-items: center;
           gap: 10px;
+          margin-bottom: 10px;
         }
 
         .cookie-header h3 {
-          font-size: 1.1rem;
-          font-weight: 700;
-          font-family: var(--font-heading);
+          font-family: var(--font-serif);
+          font-size: 1.25rem;
+          color: #ffffff;
+          letter-spacing: 0.02em;
         }
 
         .cookie-text {
-          font-size: 0.82rem;
-          line-height: 1.5;
-          color: var(--text-secondary);
+          font-size: 0.86rem;
+          line-height: 1.6;
+          color: var(--color-washi-dim);
+          margin-bottom: 18px;
+          font-weight: 300;
         }
 
         .cookie-actions {
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          gap: 8px;
-          margin-top: 6px;
+          justify-content: space-between;
+          gap: 12px;
+          flex-wrap: wrap;
         }
 
         .cookie-main-buttons {
@@ -172,74 +161,51 @@ export const CookieBanner: React.FC = () => {
         }
 
         .btn-xs {
-          padding: 6px 12px;
-          font-size: 0.75rem;
-          font-weight: 600;
+          padding: 8px 16px;
+          font-size: 0.72rem;
+          letter-spacing: 0.12em;
         }
 
-        .mt-12 {
-          margin-top: 12px;
-        }
-
-        /* Preference checkbox style */
         .cookie-pref-panel {
-          background: rgba(0,0,0,0.2);
-          border-radius: var(--radius-md);
-          padding: 12px;
-          border: 1px solid rgba(255,255,255,0.02);
           display: flex;
           flex-direction: column;
           gap: 12px;
+          margin-bottom: 14px;
         }
 
         .pref-item {
-          display: flex;
-          align-items: flex-start;
+          background: rgba(20, 23, 29, 0.6);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          padding: 10px 14px;
+          border-radius: var(--radius-sm);
         }
 
         .checkbox-container {
           display: flex;
           align-items: flex-start;
           gap: 10px;
-          position: relative;
-          user-select: none;
         }
 
         .checkbox-container input {
-          position: absolute;
-          opacity: 0;
-          cursor: pointer;
-          height: 0;
-          width: 0;
+          display: none;
         }
 
         .checkmark {
-          height: 18px;
           width: 18px;
-          background-color: var(--bg-tertiary);
-          border: 1px solid var(--border-color);
-          border-radius: 4px;
+          height: 18px;
+          border-radius: 3px;
+          border: 1px solid var(--color-gold);
           display: flex;
           align-items: center;
           justify-content: center;
-          color: var(--accent-gold);
           flex-shrink: 0;
           margin-top: 2px;
+          color: var(--color-gold);
         }
 
         .checkmark.disabled {
-          opacity: 0.5;
-          color: var(--text-muted);
-          background: rgba(255, 255, 255, 0.02);
-        }
-
-        .checkbox-container:hover input:not(:disabled) ~ .checkmark {
-          border-color: var(--accent-gold);
-        }
-
-        .checkbox-container input:checked ~ .checkmark {
-          background-color: rgba(212, 175, 55, 0.1);
-          border-color: var(--accent-gold);
+          background: rgba(212, 175, 55, 0.2);
+          opacity: 0.7;
         }
 
         .pref-label {
@@ -248,38 +214,36 @@ export const CookieBanner: React.FC = () => {
         }
 
         .pref-name {
-          font-size: 0.8rem;
-          font-weight: 600;
-          color: var(--text-primary);
+          font-family: var(--font-eyebrow);
+          font-size: 0.75rem;
+          color: #ffffff;
+          letter-spacing: 0.08em;
         }
 
         .pref-desc {
-          font-size: 0.72rem;
-          color: var(--text-muted);
-          line-height: 1.3;
+          font-size: 0.75rem;
+          color: var(--color-text-muted);
+          line-height: 1.4;
         }
 
-        .cursor-pointer {
-          cursor: pointer;
+        .mt-12 {
+          margin-top: 12px;
         }
 
         @media (max-width: 480px) {
           .cookie-banner-container {
-            bottom: 20px;
-            right: 20px;
-            width: calc(100vw - 40px);
-            padding: 16px;
+            bottom: 12px;
+            right: 12px;
+            left: 12px;
+            width: auto;
+            padding: 20px;
           }
           .cookie-actions {
             flex-direction: column;
             align-items: stretch;
-            gap: 10px;
           }
           .cookie-main-buttons {
-            justify-content: space-between;
-          }
-          .cookie-main-buttons .btn {
-            flex: 1;
+            flex-direction: column;
           }
         }
       `}</style>

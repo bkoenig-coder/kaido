@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { X, ExternalLink, ShieldCheck } from 'lucide-react';
-import { LottieAnimation } from './LottieAnimation';
+import { X, ExternalLink, ShieldCheck, Sparkles } from 'lucide-react';
 
 interface ReservationModalProps {
   isOpen: boolean;
@@ -9,7 +8,7 @@ interface ReservationModalProps {
 }
 
 export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onClose }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [isLoading, setIsLoading] = useState(true);
 
   if (!isOpen) return null;
@@ -20,16 +19,10 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
         {/* Header */}
         <div className="modal-header">
           <div className="modal-header-left">
+            <span className="modal-mon-seal">席</span>
             <div className="modal-title-text">
               <h2>{t.reserveTitle}</h2>
               <p>{t.reserveSubtitle}</p>
-            </div>
-            <div className="modal-lottie-container">
-              <LottieAnimation 
-                url="https://lottie.host/6aa43497-0225-40b5-91f2-08d1dd962dfe/7DRsVryMxt.json" 
-                width="48px" 
-                height="48px" 
-              />
             </div>
           </div>
           <button className="close-button" onClick={onClose} aria-label={t.closeBtn}>
@@ -37,17 +30,27 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
           </button>
         </div>
 
+        {/* Concierge Protocol Notice */}
+        <div className="etiquette-notice">
+          <Sparkles size={14} className="text-gold" />
+          <span>
+            {language === 'de'
+              ? 'Pünktlichkeit sichert den optimalen Ablauf der Schnitt- und Zubereitungsfolge.'
+              : 'Punctual arrival ensures the deliberate progression of each culinary course.'}
+          </span>
+        </div>
+
         {/* Secure badge */}
         <div className="secure-badge">
-          <ShieldCheck size={16} className="text-teal" />
-          <span>Secure reservation powered by Gastro.site</span>
+          <ShieldCheck size={15} className="text-gold" />
+          <span>Diskrete Online-Reservierung via Gastro.site Engine</span>
         </div>
 
         {/* Iframe container */}
         <div className="iframe-container">
           {isLoading && (
             <div className="iframe-loader">
-              <div className="loader"></div>
+              <div className="loader" />
             </div>
           )}
           <iframe
@@ -56,7 +59,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
             onLoad={() => setIsLoading(false)}
             className={`reservation-iframe ${isLoading ? 'loading' : ''}`}
             allow="payment"
-          ></iframe>
+          />
         </div>
 
         {/* Fallback instructions */}
@@ -69,26 +72,29 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
             className="btn btn-secondary btn-sm"
           >
             <span>{t.reserveOpenNewTab}</span>
-            <ExternalLink size={14} />
+            <ExternalLink size={13} />
           </a>
         </div>
       </div>
 
       <style>{`
         .reservation-modal-content {
-          max-width: 650px;
-          height: 85vh;
+          max-width: 680px;
+          height: 88vh;
           display: flex;
           flex-direction: column;
           overflow: hidden;
+          background: #0d1015;
+          border: 1px solid rgba(212, 175, 55, 0.3);
         }
 
         .modal-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 20px 24px;
-          border-bottom: 1px solid var(--border-color);
+          padding: 24px 28px;
+          border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+          background: #090b0e;
         }
 
         .modal-header-left {
@@ -97,72 +103,86 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
           gap: 16px;
         }
 
-        .modal-title-text {
+        .modal-mon-seal {
+          width: 42px;
+          height: 42px;
+          border-radius: var(--radius-sm);
+          border: 1px solid var(--color-gold);
           display: flex;
-          flex-direction: column;
-        }
-
-        .modal-lottie-container {
+          align-items: center;
+          justify-content: center;
+          font-family: var(--font-serif);
+          font-size: 1.2rem;
+          color: var(--color-gold);
+          background: rgba(212, 175, 55, 0.08);
           flex-shrink: 0;
-          background: var(--bg-secondary);
-          padding: 4px;
-          border-radius: 50%;
-          border: 1px solid var(--border-color);
         }
 
-        .modal-header h2 {
-          font-size: 1.5rem;
-          margin-bottom: 4px;
+        .modal-title-text h2 {
+          font-family: var(--font-serif);
+          font-size: 1.6rem;
+          color: #ffffff;
+          letter-spacing: 0.02em;
+          margin-bottom: 2px;
         }
 
-        .modal-header p {
-          font-size: 0.9rem;
-          color: var(--text-secondary);
+        .modal-title-text p {
+          font-size: 0.88rem;
+          color: var(--color-washi-dim);
         }
 
         .close-button {
           background: none;
           border: none;
-          color: var(--text-secondary);
+          color: var(--color-washi-dim);
           cursor: pointer;
           transition: var(--transition-fast);
-          padding: 4px;
-          border-radius: var(--radius-sm);
+          padding: 6px;
         }
 
         .close-button:hover {
-          color: var(--text-primary);
-          background: rgba(255,255,255,0.05);
+          color: #ffffff;
+        }
+
+        .etiquette-notice {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-family: var(--font-eyebrow);
+          font-size: 0.72rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: var(--color-gold-light);
+          background: rgba(212, 175, 55, 0.06);
+          border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+          padding: 8px 28px;
         }
 
         .secure-badge {
           display: flex;
           align-items: center;
-          gap: 6px;
-          font-size: 0.8rem;
-          color: var(--text-secondary);
-          background: rgba(46, 196, 182, 0.05);
-          border-bottom: 1px solid var(--border-color);
-          padding: 8px 24px;
+          gap: 8px;
+          font-size: 0.76rem;
+          color: var(--color-washi-dim);
+          background: rgba(14, 17, 22, 0.9);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          padding: 8px 28px;
         }
 
-        .text-teal {
-          color: var(--color-matcha);
+        .text-gold {
+          color: var(--color-gold);
         }
 
         .iframe-container {
           flex-grow: 1;
           position: relative;
-          background: #ffffff; /* White background for the gastro.site light form */
+          background: #ffffff;
         }
 
         .iframe-loader {
           position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: var(--bg-secondary);
+          inset: 0;
+          background: #0d1015;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -181,12 +201,12 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
         }
 
         .iframe-fallback {
-          padding: 16px 24px 24px;
-          background: var(--bg-secondary);
-          border-top: 1px solid var(--border-color);
+          padding: 16px 28px 22px;
+          background: #090b0e;
+          border-top: 1px solid rgba(212, 175, 55, 0.18);
           text-align: center;
-          font-size: 0.85rem;
-          color: var(--text-secondary);
+          font-size: 0.84rem;
+          color: var(--color-washi-dim);
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -194,8 +214,8 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
         }
 
         .btn-sm {
-          padding: 8px 16px;
-          font-size: 0.8rem;
+          padding: 8px 20px;
+          font-size: 0.75rem;
         }
       `}</style>
     </div>

@@ -6,15 +6,15 @@ export const JapaneseEntranceIntro: React.FC = () => {
   const [isRemoved, setIsRemoved] = useState(false);
 
   useEffect(() => {
-    // Start door opening after 800ms welcome crest display
+    // Start sliding shoji panels after brief crest contemplation
     const openTimer = setTimeout(() => {
       setIsOpen(true);
-    }, 900);
+    }, 1100);
 
-    // Completely unmount/hide overlay after doors fully part (1.8s)
+    // Unmount after smooth parting
     const removeTimer = setTimeout(() => {
       setIsRemoved(true);
-    }, 2200);
+    }, 2400);
 
     return () => {
       clearTimeout(openTimer);
@@ -29,23 +29,24 @@ export const JapaneseEntranceIntro: React.FC = () => {
       className={`japanese-intro-overlay ${isOpen ? 'open' : ''}`}
       onClick={() => { setIsOpen(true); setTimeout(() => setIsRemoved(true), 800); }}
     >
-      {/* Left Shoji Panel */}
+      {/* Left Shoji Lacquer Panel */}
       <div className="shoji-panel panel-left">
         <div className="shoji-lattice" />
       </div>
 
-      {/* Right Shoji Panel */}
+      {/* Right Shoji Lacquer Panel */}
       <div className="shoji-panel panel-right">
         <div className="shoji-lattice" />
       </div>
 
-      {/* Center Gold Crest Monogram */}
+      {/* Center Haute Monogram Crest */}
       <div className={`intro-crest ${isOpen ? 'fade-out' : ''}`}>
-        <span className="crest-text" style={{ marginBottom: '14px' }}>KAIDO SUSHI BAR</span>
-        <div className="crest-gold-ring" style={{ marginBottom: '14px' }}>
+        <span className="crest-eyebrow">HAUTE CUISINE JAPONAISE</span>
+        <div className="crest-gold-ring">
           <img src={logoImg} alt="Kaido Monogram" className="crest-logo" />
         </div>
-        <span className="crest-sub">HERZLICH WILLKOMMEN</span>
+        <h1 className="crest-brand">KAIDO</h1>
+        <span className="crest-sub">WIEN • ROTENSTERNGASSE</span>
       </div>
 
       <style>{`
@@ -64,45 +65,44 @@ export const JapaneseEntranceIntro: React.FC = () => {
           pointer-events: none;
         }
 
-        /* Panels */
+        /* Shoji Lacquer Panels */
         .shoji-panel {
           position: absolute;
           top: 0;
           bottom: 0;
           width: 50%;
-          background: #092226; /* Deep Japanese teal sumi tone */
-          box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.8);
-          transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+          background: #080a0d;
+          box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.95);
+          transition: transform 1.3s cubic-bezier(0.77, 0, 0.175, 1);
           z-index: 1;
         }
 
         .panel-left {
           left: 0;
-          border-right: 2px solid var(--accent-gold);
+          border-right: 1px solid rgba(212, 175, 55, 0.4);
         }
 
         .panel-right {
           right: 0;
-          border-left: 2px solid var(--accent-gold);
+          border-left: 1px solid rgba(212, 175, 55, 0.4);
         }
 
-        /* Shoji Door Sliding Action */
         .japanese-intro-overlay.open .panel-left {
-          transform: translateX(-102%);
+          transform: translateX(-101%);
         }
 
         .japanese-intro-overlay.open .panel-right {
-          transform: translateX(102%);
+          transform: translateX(101%);
         }
 
-        /* Lattice Pattern */
         .shoji-lattice {
           position: absolute;
           inset: 0;
-          opacity: 0.12;
-          background-image: linear-gradient(var(--accent-gold) 1px, transparent 1px),
-                            linear-gradient(90deg, var(--accent-gold) 1px, transparent 1px);
-          background-size: 60px 60px;
+          opacity: 0.07;
+          background-image: 
+            linear-gradient(var(--color-gold) 1px, transparent 1px),
+            linear-gradient(90deg, var(--color-gold) 1px, transparent 1px);
+          background-size: 70px 70px;
         }
 
         /* Center Crest */
@@ -113,62 +113,58 @@ export const JapaneseEntranceIntro: React.FC = () => {
           flex-direction: column;
           align-items: center;
           color: #ffffff;
-          transition: opacity 0.6s ease, transform 0.6s ease;
-          animation: pulseCrest 1.8s ease-in-out infinite alternate;
+          transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .intro-crest.fade-out {
           opacity: 0;
-          transform: scale(1.15);
+          transform: scale(1.08);
         }
 
-        .crest-gold-ring {
-          width: 120px;
-          height: 120px;
-          border-radius: 50%;
-          border: 2.5px solid var(--accent-gold);
-          box-shadow: 0 0 35px rgba(192, 57, 43, 0.45);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(12, 45, 51, 0.85);
+        .crest-eyebrow {
+          font-family: var(--font-eyebrow);
+          font-size: 0.7rem;
+          letter-spacing: 0.35em;
+          color: var(--color-gold);
           margin-bottom: 16px;
         }
 
+        .crest-gold-ring {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          border: 1.5px solid var(--color-gold);
+          box-shadow: 0 0 35px rgba(212, 175, 55, 0.35);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(14, 17, 21, 0.9);
+          margin-bottom: 16px;
+          padding: 8px;
+        }
+
         .crest-logo {
-          width: 80px;
-          height: 80px;
+          width: 70px;
+          height: 70px;
           object-fit: cover;
           border-radius: 50%;
         }
 
-        .crest-kanji {
+        .crest-brand {
+          font-family: var(--font-serif);
           font-size: 2.2rem;
-          font-weight: 800;
-          color: var(--accent-gold);
-          letter-spacing: 0.3em;
-          margin-bottom: 4px;
-        }
-
-        .crest-text {
-          font-family: var(--font-heading);
-          font-size: 1.1rem;
-          font-weight: 800;
-          letter-spacing: 0.25em;
+          font-weight: 400;
+          letter-spacing: 0.28em;
           color: #ffffff;
-          margin-bottom: 4px;
+          margin-bottom: 6px;
         }
 
         .crest-sub {
-          font-size: 0.75rem;
-          letter-spacing: 0.2em;
-          color: rgba(255, 255, 255, 0.7);
+          font-family: var(--font-eyebrow);
+          font-size: 0.7rem;
+          letter-spacing: 0.28em;
+          color: var(--color-washi-dim);
           text-transform: uppercase;
-        }
-
-        @keyframes pulseCrest {
-          0% { transform: scale(0.98); }
-          100% { transform: scale(1.02); }
         }
       `}</style>
     </div>

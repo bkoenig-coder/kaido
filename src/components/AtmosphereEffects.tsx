@@ -1,22 +1,21 @@
 import React, { useMemo } from 'react';
 
 export const AtmosphereEffects: React.FC = () => {
-  // Generate random floating cherry blossom (Sakura) petals
   const petals = useMemo(() => {
-    return Array.from({ length: 18 }).map((_, i) => ({
+    return Array.from({ length: 14 }).map((_, i) => ({
       id: i,
       left: Math.random() * 100,
-      size: Math.random() * 14 + 14, // 14px to 28px
-      duration: Math.random() * 10 + 12, // 12s to 22s
-      delay: Math.random() * 12,
-      swayDuration: Math.random() * 4 + 3,
-      opacity: Math.random() * 0.45 + 0.45,
+      size: Math.random() * 12 + 12, // 12px to 24px
+      duration: Math.random() * 14 + 18, // 18s to 32s (slow, tranquil drift)
+      delay: Math.random() * 15,
+      swayDuration: Math.random() * 5 + 4,
+      opacity: Math.random() * 0.3 + 0.25,
     }));
   }, []);
 
   return (
     <div className="atmosphere-overlay" aria-hidden="true">
-      {/* Floating Photorealistic Sakura Petals */}
+      {/* Floating Delicate Sakura Silk Petals */}
       {petals.map(p => (
         <div
           key={p.id}
@@ -37,20 +36,19 @@ export const AtmosphereEffects: React.FC = () => {
             <svg viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
               <defs>
                 <linearGradient id={`sakuraGrad-${p.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#ffc0cb" />
-                  <stop offset="60%" stopColor="#ff758c" />
-                  <stop offset="100%" stopColor="#e74c3c" />
+                  <stop offset="0%" stopColor="#f7e6d4" />
+                  <stop offset="50%" stopColor="#e8b4b8" />
+                  <stop offset="100%" stopColor="#bfa15f" />
                 </linearGradient>
               </defs>
               <path
                 d="M20,2 C28,10 38,18 36,32 C34,44 24,48 20,48 C16,48 6,44 4,32 C2,18 12,10 20,2 Z"
                 fill={`url(#sakuraGrad-${p.id})`}
-                opacity="0.88"
               />
               <path
                 d="M20,6 C22,14 28,20 26,30 C25,36 21,40 20,42"
-                stroke="rgba(255, 255, 255, 0.4)"
-                strokeWidth="1.5"
+                stroke="rgba(255, 255, 255, 0.35)"
+                strokeWidth="1"
                 strokeLinecap="round"
               />
             </svg>
@@ -58,7 +56,7 @@ export const AtmosphereEffects: React.FC = () => {
         </div>
       ))}
 
-      {/* Soft Ambient Light Glow Accent */}
+      {/* Subtle Warm Candlelight & Gold Mist Layer */}
       <div className="ambient-mist-layer" />
 
       <style>{`
@@ -94,21 +92,22 @@ export const AtmosphereEffects: React.FC = () => {
 
         @keyframes swaySakura {
           0% {
-            transform: rotate(-25deg) translateX(-15px) rotateY(0deg);
+            transform: rotate(-20deg) translateX(-10px) rotateY(0deg);
           }
           50% {
-            transform: rotate(15deg) translateX(20px) rotateY(90deg);
+            transform: rotate(10deg) translateX(15px) rotateY(90deg);
           }
           100% {
-            transform: rotate(35deg) translateX(-10px) rotateY(180deg);
+            transform: rotate(25deg) translateX(-8px) rotateY(180deg);
           }
         }
 
         .ambient-mist-layer {
           position: absolute;
           inset: 0;
-          background: radial-gradient(circle at 20% 20%, rgba(255, 183, 197, 0.05) 0%, transparent 50%),
-                      radial-gradient(circle at 80% 80%, rgba(192, 57, 43, 0.03) 0%, transparent 60%);
+          background: 
+            radial-gradient(circle at 15% 15%, rgba(212, 175, 55, 0.03) 0%, transparent 60%),
+            radial-gradient(circle at 85% 85%, rgba(138, 37, 37, 0.02) 0%, transparent 60%);
           pointer-events: none;
         }
       `}</style>

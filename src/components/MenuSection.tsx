@@ -1,8 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { regularMenu, lunchMenu } from '../data/menuData';
-import { Search, Flame, Leaf, Wheat, Info, Sparkles } from 'lucide-react';
-import { LottieAnimation } from './LottieAnimation';
+import { Search, Flame, Leaf, Wheat, Info } from 'lucide-react';
 
 export const MenuSection: React.FC = () => {
   const { t, language } = useLanguage();
@@ -23,7 +22,18 @@ export const MenuSection: React.FC = () => {
     setFilterGlutenFree(false);
   };
 
-  // Helper to format price
+  React.useEffect(() => {
+    const handleSwitch = (e: Event) => {
+      const customEvent = e as CustomEvent<'regular' | 'lunch'>;
+      if (customEvent.detail) {
+        setActiveMenuType(customEvent.detail);
+        resetFilters();
+      }
+    };
+    window.addEventListener('switchMenuTab', handleSwitch);
+    return () => window.removeEventListener('switchMenuTab', handleSwitch);
+  }, []);
+
   const formatPrice = (price: number) => {
     return price.toLocaleString('de-AT', { style: 'currency', currency: 'EUR' });
   };
@@ -32,7 +42,6 @@ export const MenuSection: React.FC = () => {
   const filteredRegularMenu = useMemo(() => {
     return regularMenu.map((category) => {
       const items = category.items.filter((item) => {
-        // Search query check
         const matchSearch = searchQuery.trim() === '' || 
           item.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
           item.nameDe.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -40,7 +49,6 @@ export const MenuSection: React.FC = () => {
           (item.descriptionDe && item.descriptionDe.toLowerCase().includes(searchQuery.toLowerCase())) ||
           (item.descriptionEn && item.descriptionEn.toLowerCase().includes(searchQuery.toLowerCase()));
 
-        // Dietary tags check
         const matchVeg = !filterVeg || item.isVegetarian || item.isVegan;
         const matchVegan = !filterVegan || item.isVegan;
         const matchSpicy = !filterSpicy || item.isSpicy;
@@ -70,58 +78,25 @@ export const MenuSection: React.FC = () => {
       const matchVeg = !filterVeg || isVeg;
       const matchVegan = !filterVegan || item.nameDe.toLowerCase().includes('vegan') || item.descriptionDe.toLowerCase().includes('vegan');
       const matchSpicy = !filterSpicy || item.nameDe.toLowerCase().includes('curry') || item.descriptionDe.toLowerCase().includes('curry') || item.descriptionDe.toLowerCase().includes('spicy');
-      const matchGlutenFree = !filterGlutenFree || false; // Lunch does not specify gluten free directly
+      const matchGlutenFree = !filterGlutenFree || false;
 
       return matchSearch && matchVeg && matchVegan && matchSpicy && matchGlutenFree;
     });
   }, [searchQuery, filterVeg, filterVegan, filterSpicy, filterGlutenFree]);
 
-  // Find active category index
   const activeCategoryData = useMemo(() => {
     return filteredRegularMenu.find(cat => cat.id === activeCategory) || filteredRegularMenu[0];
   }, [filteredRegularMenu, activeCategory]);
 
   return (
     <section id="menu" className="menu-section section">
-      {/* Decorative background koi */}
-      <div className="menu-koi-watermark">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path 
-            d="M160,120 C140,160 70,170 40,120 C20,90 40,50 80,35 C120,20 150,50 135,90 C130,105 115,115 95,120" 
-            stroke="var(--accent-coral)" 
-            strokeWidth="4" 
-            strokeLinecap="round"
-            opacity="0.05"
-          />
-          <path 
-            d="M80,35 C70,25 55,20 45,25 C35,30 40,45 55,50" 
-            stroke="var(--accent-coral)" 
-            strokeWidth="3" 
-            strokeLinecap="round"
-            opacity="0.05"
-          />
-          <path 
-            d="M130,150 C140,140 145,125 140,115" 
-            stroke="var(--accent-coral)" 
-            strokeWidth="3" 
-            strokeLinecap="round"
-            opacity="0.05"
-          />
-        </svg>
-      </div>
-
       <div className="container">
-        {/* Title */}
-        <div className="section-title animate-slide-up" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <div style={{ marginBottom: '8px' }}>
-            <LottieAnimation
-              url="https://lottie.host/8e6862f5-71f4-4ab1-b783-2ff842ea97d8/szV4j1T5vz.json"
-              width="90px"
-              height="90px"
-            />
-          </div>
+        {/* Haute Gastronomy Title Header */}
+        <div className="section-title animate-slide-up">
+          <span className="eyebrow-text">{t.menuEyebrow}</span>
           <h2>{t.menuTitle}</h2>
-          <p>{t.menuSubtitle}</p>
+          <div className="hairline-divider" />
+          <p style={{ marginTop: '16px' }}>{t.menuSubtitle}</p>
         </div>
 
         {/* Regular vs Lunch Menu Toggle */}
@@ -142,16 +117,16 @@ export const MenuSection: React.FC = () => {
 
         {/* Lunch Menu Note */}
         {activeMenuType === 'lunch' && (
-          <div className="lunch-note animate-fade-in">
-            <Info size={20} className="text-gold" />
+          <div className="lunch-note animate-fade-in glass-card">
+            <Info size={18} className="text-gold" />
             <p>{t.menuLunchNote}</p>
           </div>
         )}
 
         {/* Search and Filters Bar */}
-        <div className="search-filter-bar">
+        <div className="search-filter-bar glass-card">
           <div className="search-input-wrapper">
-            <Search className="search-icon" size={18} />
+            <Search className="search-icon" size={16} />
             <input 
               type="text" 
               placeholder={t.menuSearchPlaceholder}
@@ -166,28 +141,28 @@ export const MenuSection: React.FC = () => {
               className={`filter-tag ${filterVeg ? 'active-veg' : ''}`}
               onClick={() => setFilterVeg(!filterVeg)}
             >
-              <Leaf size={14} />
+              <Leaf size={13} />
               <span>{t.filterVegetarian}</span>
             </button>
             <button 
               className={`filter-tag ${filterVegan ? 'active-vegan' : ''}`}
               onClick={() => setFilterVegan(!filterVegan)}
             >
-              <Leaf size={14} />
+              <Leaf size={13} />
               <span>{t.filterVegan}</span>
             </button>
             <button 
               className={`filter-tag ${filterSpicy ? 'active-spicy' : ''}`}
               onClick={() => setFilterSpicy(!filterSpicy)}
             >
-              <Flame size={14} />
+              <Flame size={13} />
               <span>{t.filterSpicy}</span>
             </button>
             <button 
               className={`filter-tag ${filterGlutenFree ? 'active-gf' : ''}`}
               onClick={() => setFilterGlutenFree(!filterGlutenFree)}
             >
-              <Wheat size={14} />
+              <Wheat size={13} />
               <span>{t.filterGlutenFree}</span>
             </button>
           </div>
@@ -199,8 +174,9 @@ export const MenuSection: React.FC = () => {
             {/* Category Navigation Tabs */}
             <div className="category-tabs-container">
               <div className="category-tabs">
-                {regularMenu.map((cat) => {
+                {regularMenu.map((cat, idx) => {
                   const isAvailable = filteredRegularMenu.some(fCat => fCat.id === cat.id);
+                  const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
                   return (
                     <button
                       key={cat.id}
@@ -208,7 +184,8 @@ export const MenuSection: React.FC = () => {
                       onClick={() => isAvailable && setActiveCategory(cat.id)}
                       disabled={!isAvailable}
                     >
-                      {language === 'de' ? cat.titleDe : cat.titleEn}
+                      <span className="cat-numeral">{romanNumerals[idx] || (idx + 1)}</span>
+                      <span className="cat-label">{language === 'de' ? cat.titleDe : cat.titleEn}</span>
                     </button>
                   );
                 })}
@@ -245,72 +222,48 @@ export const MenuSection: React.FC = () => {
 
                     {/* Dietary Badges */}
                     <div className="item-badges">
-                      {item.isVegan && <span className="badge badge-green"><Leaf size={10} /> Vegan</span>}
-                      {!item.isVegan && item.isVegetarian && <span className="badge badge-green"><Leaf size={10} /> Veggie</span>}
-                      {item.isSpicy && <span className="badge badge-coral"><Flame size={10} /> Spicy</span>}
-                      {item.isGlutenFree && <span className="badge badge-gold"><Wheat size={10} /> Gluten-Free</span>}
+                      {item.isVegan && <span className="badge badge-subtle"><Leaf size={10} /> Vegan</span>}
+                      {!item.isVegan && item.isVegetarian && <span className="badge badge-subtle"><Leaf size={10} /> Veggie</span>}
+                      {item.isSpicy && <span className="badge badge-spice"><Flame size={10} /> Spicy</span>}
+                      {item.isGlutenFree && <span className="badge badge-subtle"><Wheat size={10} /> Gluten-Free</span>}
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="no-items-found">
-                <p>{language === 'de' ? 'Keine Gerichte gefunden. Bitte Filter anpassen.' : 'No items found. Try adjusting your filters.'}</p>
+              <div className="empty-menu glass-card">
+                <p>{language === 'de' ? 'Keine Gerichte gefunden für Ihre Suchkriterien.' : 'No creations match your selected filters.'}</p>
+                <button className="btn btn-secondary mt-16" onClick={resetFilters}>
+                  {language === 'de' ? 'Filter zurücksetzen' : 'Reset Filters'}
+                </button>
               </div>
             )}
           </div>
         ) : (
           /* Lunch Menu Grid */
           <div className="lunch-menu-layout">
-            <div className="lunch-container">
-              <div className="lunch-grid animate-fade-in">
-                {filteredLunchMenu.map((item) => {
-                  const isVeg = item.nameDe.toLowerCase().includes('vegan') || item.descriptionDe.toLowerCase().includes('tofu') || item.descriptionDe.toLowerCase().includes('vegan');
-                  const isSpicy = item.nameDe.toLowerCase().includes('curry') || item.descriptionDe.toLowerCase().includes('curry') || item.descriptionDe.toLowerCase().includes('spicy');
-                  
-                  return (
-                    <div key={item.number} className="menu-card glass-card">
-                      <div className="menu-card-header">
-                        <div className="menu-card-code-title">
-                          <span className="item-code">M{item.number}</span>
-                          <h3 className="item-title">{language === 'de' ? item.nameDe : item.nameEn}</h3>
-                        </div>
-                        <span className="item-price">{formatPrice(item.price)}</span>
-                      </div>
-                      <p className="item-description">
-                        {language === 'de' ? item.descriptionDe : item.descriptionEn}
-                      </p>
-                      <div className="item-badges">
-                        {isVeg && <span className="badge badge-green"><Leaf size={10} /> Veggie</span>}
-                        {isSpicy && <span className="badge badge-coral"><Flame size={10} /> Spicy</span>}
-                      </div>
+            <div className="lunch-selection-grid animate-fade-in">
+              {filteredLunchMenu.map((item) => (
+                <div key={item.number} className="menu-card glass-card">
+                  <div className="menu-card-header">
+                    <div className="menu-card-code-title">
+                      <span className="item-code">M{item.number}</span>
+                      <h3 className="item-title">{language === 'de' ? item.nameDe : item.nameEn}</h3>
                     </div>
-                  );
-                })}
-                {filteredLunchMenu.length === 0 && (
-                  <div className="no-items-found w-full col-span-2">
-                    <p>{language === 'de' ? 'Keine Mittagsmenüs gefunden.' : 'No lunch items found.'}</p>
+                    <div className="item-price-container">
+                      <span className="item-price">{formatPrice(item.price)}</span>
+                    </div>
                   </div>
-                )}
-              </div>
-              
-              {/* Promo Banner inside Lunch section */}
-              <div className="menu-promo-banner glass-card animate-fade-in">
-                <div className="promo-lottie-split">
-                  <div className="promo-lottie-container">
-                    <LottieAnimation 
-                      url="https://lottie.host/9e416a9a-32d7-466d-9721-a47781b0a8eb/J40xO1Hplk.json" 
-                      width="100px" 
-                      height="100px" 
-                    />
-                  </div>
-                  <div className="promo-content-split">
-                    <div className="promo-badge"><Sparkles size={14} /> Freshness</div>
-                    <h4>{language === 'de' ? 'Qualität, die man schmeckt' : 'Quality You Can Taste'}</h4>
-                    <p>{language === 'de' ? 'Unser Fisch wird täglich geliefert. Jedes Sushi wird frisch für Sie gerollt, um maximale Qualität zu garantieren.' : 'Our fish is delivered daily. Every piece of sushi is rolled fresh for you to guarantee maximum quality.'}</p>
-                  </div>
+                  <p className="item-description">
+                    {language === 'de' ? item.descriptionDe : item.descriptionEn}
+                  </p>
                 </div>
-              </div>
+              ))}
+            </div>
+            
+            <div className="lunch-upgrade-notice glass-card">
+              <span className="notice-crest">匠</span>
+              <p>{t.lunchExtraOption}</p>
             </div>
           </div>
         )}
@@ -318,63 +271,69 @@ export const MenuSection: React.FC = () => {
 
       <style>{`
         .menu-section {
-          background: var(--bg-primary);
+          background: #0e1115;
+          position: relative;
         }
 
         .menu-toggle-container {
           display: flex;
           justify-content: center;
-          background: var(--bg-secondary);
-          padding: 6px;
-          border-radius: var(--radius-full);
-          border: 1px solid var(--border-color);
-          max-width: 400px;
-          margin: 0 auto 30px;
+          gap: 12px;
+          margin-bottom: 36px;
         }
 
         .menu-toggle-btn {
-          flex: 1;
-          padding: 10px 20px;
-          border-radius: var(--radius-full);
-          font-weight: 600;
-          font-size: 0.95rem;
-          color: var(--text-secondary);
+          font-family: var(--font-eyebrow);
+          font-size: 0.8rem;
+          font-weight: 500;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          padding: 12px 32px;
+          border-radius: var(--radius-sm);
+          background: rgba(20, 23, 29, 0.6);
+          border: 1px solid rgba(212, 175, 55, 0.2);
+          color: var(--color-washi-dim);
           cursor: pointer;
           transition: var(--transition-smooth);
         }
 
+        .menu-toggle-btn:hover {
+          border-color: var(--color-gold);
+          color: #ffffff;
+        }
+
         .menu-toggle-btn.active {
-          background: var(--accent-gold);
-          color: #ffffff; /* White text for readability */
+          background: linear-gradient(135deg, rgba(212, 175, 55, 0.18) 0%, rgba(191, 161, 95, 0.08) 100%);
+          border-color: var(--color-gold);
+          color: #ffffff;
+          box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
         }
 
         .lunch-note {
           display: flex;
           align-items: center;
           gap: 12px;
-          background: rgba(212, 175, 55, 0.08);
-          border: 1px solid rgba(212, 175, 55, 0.2);
-          color: var(--text-primary);
-          padding: 16px 20px;
-          border-radius: var(--radius-md);
-          max-width: 800px;
+          max-width: 820px;
           margin: 0 auto 30px;
-          font-size: 0.95rem;
+          padding: 16px 24px;
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          color: var(--color-washi-dim);
+          font-size: 0.92rem;
         }
 
         .text-gold {
-          color: var(--accent-gold);
+          color: var(--color-gold);
+          flex-shrink: 0;
         }
 
         .search-filter-bar {
           display: flex;
           flex-direction: column;
-          gap: 16px;
-          background: var(--bg-secondary);
-          border: 1px solid var(--border-color);
-          border-radius: var(--radius-lg);
-          padding: 20px;
+          gap: 20px;
+          padding: 24px 28px;
           margin-bottom: 40px;
+          background: rgba(16, 19, 25, 0.7);
+          border: 1px solid rgba(212, 175, 55, 0.18);
         }
 
         .search-input-wrapper {
@@ -384,26 +343,27 @@ export const MenuSection: React.FC = () => {
 
         .search-icon {
           position: absolute;
-          left: 16px;
+          left: 18px;
           top: 50%;
           transform: translateY(-50%);
-          color: var(--text-muted);
+          color: var(--color-gold);
+          opacity: 0.7;
         }
 
         .search-input {
           width: 100%;
-          padding: 12px 16px 12px 48px;
-          background: var(--bg-tertiary);
-          border: 1px solid var(--border-color);
-          border-radius: var(--radius-full);
-          font-size: 0.95rem;
-          color: var(--text-primary);
+          padding: 14px 18px 14px 48px;
+          border-radius: var(--radius-sm);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: rgba(10, 12, 16, 0.7);
+          color: #ffffff;
+          font-size: 0.92rem;
           transition: var(--transition-smooth);
         }
 
         .search-input:focus {
-          border-color: var(--accent-gold);
-          box-shadow: 0 0 10px var(--accent-gold-glow);
+          border-color: var(--color-gold);
+          box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
         }
 
         .dietary-filters {
@@ -413,108 +373,108 @@ export const MenuSection: React.FC = () => {
         }
 
         .filter-tag {
-          display: flex;
+          display: inline-flex;
           align-items: center;
           gap: 6px;
-          padding: 8px 16px;
+          padding: 7px 16px;
           border-radius: var(--radius-full);
-          border: 1px solid var(--border-color);
-          background: var(--bg-tertiary);
-          color: var(--text-secondary);
-          font-size: 0.85rem;
-          font-weight: 500;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: rgba(20, 23, 29, 0.5);
+          font-family: var(--font-eyebrow);
+          font-size: 0.72rem;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          color: var(--color-washi-dim);
           cursor: pointer;
           transition: var(--transition-smooth);
         }
 
         .filter-tag:hover {
-          border-color: var(--accent-gold);
-          color: var(--text-primary);
+          border-color: var(--color-gold);
+          color: #ffffff;
         }
 
-        .filter-tag.active-veg {
-          background: rgba(85, 111, 68, 0.08);
-          color: var(--accent-coral);
-          border-color: rgba(85, 111, 68, 0.25);
-        }
-        .filter-tag.active-vegan {
-          background: rgba(85, 111, 68, 0.12);
-          color: var(--accent-coral);
-          border-color: var(--accent-coral);
-        }
-        .filter-tag.active-spicy {
-          background: rgba(224, 90, 71, 0.1);
-          color: var(--accent-coral);
-          border-color: var(--accent-coral);
-        }
+        .filter-tag.active-veg,
+        .filter-tag.active-vegan,
         .filter-tag.active-gf {
-          background: rgba(212, 175, 55, 0.1);
-          color: var(--accent-gold);
-          border-color: var(--accent-gold);
+          background: rgba(212, 175, 55, 0.12);
+          border-color: var(--color-gold);
+          color: var(--color-gold-light);
         }
 
-        /* Category tabs */
+        .filter-tag.active-spicy {
+          background: rgba(138, 37, 37, 0.25);
+          border-color: #a12f2f;
+          color: #ff9999;
+        }
+
+        /* Category Tabs */
         .category-tabs-container {
+          margin-bottom: 40px;
           overflow-x: auto;
-          margin-bottom: 35px;
-          padding-bottom: 5px;
-        }
-        
-        .category-tabs-container::-webkit-scrollbar {
-          height: 4px;
-        }
-        
-        .category-tabs-container::-webkit-scrollbar-thumb {
-          background: var(--border-color);
+          padding-bottom: 8px;
         }
 
         .category-tabs {
           display: flex;
-          gap: 8px;
-          width: max-content;
+          gap: 10px;
+          min-width: max-content;
         }
 
         .category-tab {
-          padding: 10px 18px;
-          background: var(--bg-secondary);
-          border: 1px solid var(--border-color);
-          border-radius: var(--radius-full);
-          font-size: 0.9rem;
-          font-weight: 600;
-          color: var(--text-secondary);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 10px 20px;
+          border-radius: var(--radius-sm);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(16, 19, 25, 0.6);
+          color: var(--color-washi-dim);
           cursor: pointer;
           transition: var(--transition-smooth);
         }
 
-        .category-tab:hover:not(.disabled) {
-          border-color: var(--accent-gold);
-          color: var(--text-primary);
+        .category-tab:hover {
+          border-color: rgba(212, 175, 55, 0.4);
+          color: #ffffff;
         }
 
         .category-tab.active {
-          background: var(--accent-gold);
-          color: #ffffff; /* White text for readability */
-          border-color: var(--accent-gold);
+          border-color: var(--color-gold);
+          background: rgba(212, 175, 55, 0.12);
+          color: #ffffff;
         }
 
-        .category-tab.disabled {
-          opacity: 0.4;
-          cursor: not-allowed;
+        .cat-numeral {
+          font-family: var(--font-eyebrow);
+          font-size: 0.68rem;
+          color: var(--color-gold);
+          letter-spacing: 0.2em;
+          margin-bottom: 2px;
         }
 
-        /* Grid */
-        .menu-grid {
+        .cat-label {
+          font-family: var(--font-eyebrow);
+          font-size: 0.78rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+
+        /* Menu Grid */
+        .menu-grid,
+        .lunch-selection-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
           gap: 24px;
         }
 
         .menu-card {
-          padding: 24px;
+          padding: 28px 30px;
+          background: rgba(18, 21, 27, 0.75);
+          border: 1px solid rgba(212, 175, 55, 0.16);
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          min-height: 140px;
         }
 
         .menu-card-header {
@@ -522,194 +482,105 @@ export const MenuSection: React.FC = () => {
           justify-content: space-between;
           align-items: flex-start;
           gap: 16px;
-          margin-bottom: 10px;
+          margin-bottom: 12px;
         }
 
         .menu-card-code-title {
           display: flex;
-          align-items: flex-start;
+          align-items: baseline;
           gap: 10px;
         }
 
         .item-code {
-          background: rgba(212, 175, 55, 0.08);
-          border: 1px solid var(--border-color);
-          color: var(--accent-gold);
-          font-weight: 700;
-          font-size: 0.75rem;
-          padding: 2px 6px;
-          border-radius: var(--radius-sm);
-          font-family: var(--font-heading);
+          font-family: var(--font-eyebrow);
+          font-size: 0.72rem;
+          color: var(--color-gold);
+          letter-spacing: 0.15em;
+          opacity: 0.85;
         }
 
         .item-title {
-          font-size: 1.1rem;
-          font-weight: 600;
-          line-height: 1.3;
+          font-family: var(--font-serif);
+          font-size: 1.35rem;
+          color: #ffffff;
+          font-weight: 400;
+          letter-spacing: 0.02em;
         }
 
         .item-price-container {
-          white-space: nowrap;
+          flex-shrink: 0;
         }
 
         .item-price {
-          color: var(--accent-gold);
-          font-weight: 700;
-          font-size: 1.15rem;
-          font-family: var(--font-heading);
+          font-family: var(--font-eyebrow);
+          font-size: 0.95rem;
+          font-weight: 600;
+          color: var(--color-gold-light);
+          letter-spacing: 0.05em;
         }
 
         .price-divider {
-          color: var(--text-muted);
-          font-weight: 300;
+          opacity: 0.4;
           margin: 0 4px;
         }
 
         .item-description {
-          color: var(--text-secondary);
-          font-size: 0.88rem;
-          line-height: 1.5;
-          margin-bottom: 16px;
-          flex-grow: 1;
+          font-size: 0.92rem;
+          color: var(--color-washi-dim);
+          line-height: 1.6;
+          margin-bottom: 14px;
+          font-weight: 300;
         }
 
         .item-badges {
           display: flex;
-          flex-wrap: wrap;
-          gap: 6px;
+          gap: 8px;
         }
 
-        .no-items-found {
-          grid-column: span 2;
+        .badge-subtle {
+          font-size: 0.68rem;
+          letter-spacing: 0.12em;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: var(--color-washi-dim);
+        }
+
+        .badge-spice {
+          font-size: 0.68rem;
+          letter-spacing: 0.12em;
+          background: rgba(138, 37, 37, 0.15);
+          border: 1px solid rgba(138, 37, 37, 0.3);
+          color: #ff9999;
+        }
+
+        .empty-menu {
           text-align: center;
-          padding: 60px 0;
-          color: var(--text-secondary);
-          border: 1px dashed var(--border-color);
-          border-radius: var(--radius-lg);
-          background: var(--bg-secondary);
+          padding: 60px 20px;
         }
 
-        /* Lunch menu structures */
-        .lunch-container {
-          display: grid;
-          grid-template-columns: 2fr 1fr;
-          gap: 24px;
-        }
-
-        .lunch-grid {
-          display: grid;
-          grid-template-columns: 1fr;
+        .lunch-upgrade-notice {
+          margin-top: 36px;
+          padding: 24px 30px;
+          display: flex;
+          align-items: center;
           gap: 16px;
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          background: rgba(16, 19, 25, 0.6);
         }
 
-        .menu-promo-banner {
-          position: relative;
-          padding: 30px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          min-height: 250px;
+        .notice-crest {
+          font-family: var(--font-serif);
+          font-size: 1.8rem;
+          color: var(--color-gold);
         }
 
-        .promo-lottie-split {
-          display: flex;
-          align-items: center;
-          gap: 24px;
-          width: 100%;
-        }
-
-        .promo-lottie-container {
-          flex-shrink: 0;
-          background: rgba(250, 248, 245, 0.7);
-          border-radius: 50%;
-          padding: 12px;
-          border: 1px solid var(--border-color);
-          box-shadow: 0 4px 15px rgba(85, 111, 68, 0.05);
-        }
-
-        .promo-content-split {
-          flex-grow: 1;
-        }
-
-        .promo-content-split h4 {
-          font-size: 1.3rem;
-          margin-bottom: 6px;
-          color: var(--text-primary);
-        }
-
-        .promo-content-split p {
-          font-size: 0.88rem;
-          color: var(--text-secondary);
-          line-height: 1.5;
-        }
-
-        .promo-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          background: var(--accent-gold);
-          color: #120f0d;
-          padding: 4px 10px;
-          border-radius: var(--radius-full);
-          font-size: 0.7rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          margin-bottom: 12px;
-        }
-
-        .promo-content h4 {
-          font-size: 1.5rem;
-          margin-bottom: 8px;
-        }
-
-        .promo-content p {
-          font-size: 0.9rem;
-          color: var(--text-secondary);
-          line-height: 1.5;
-        }
-
-        .menu-section {
-          position: relative;
-          overflow: hidden;
-        }
-
-        .menu-koi-watermark {
-          position: absolute;
-          left: 5%;
-          bottom: 10%;
-          width: 300px;
-          height: 300px;
-          z-index: 0;
-          pointer-events: none;
-          animation: floatSlowReverse 18s infinite alternate ease-in-out;
-        }
-
-        @keyframes floatSlowReverse {
-          0% { transform: translateY(0) rotate(0deg) scale(1.05); }
-          100% { transform: translateY(15px) rotate(-8deg) scale(0.95); }
-        }
-
-        @media (max-width: 991px) {
-          .lunch-container {
+        @media (max-width: 900px) {
+          .menu-grid,
+          .lunch-selection-grid {
             grid-template-columns: 1fr;
-          }
-          .menu-promo-banner {
-            min-height: 250px;
-            justify-content: center;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .menu-grid {
-            grid-template-columns: 1fr;
-          }
-          .no-items-found {
-            grid-column: span 1;
           }
           .search-filter-bar {
-            padding: 14px;
+            padding: 18px;
           }
         }
       `}</style>

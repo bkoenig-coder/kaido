@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Menu, X, Globe, CalendarDays } from 'lucide-react';
+import { Menu, X, Globe, CalendarDays, Sparkles, Utensils } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 
 interface HeaderProps {
@@ -11,10 +11,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
   const { language, setLanguage, t } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeNav, setActiveNav] = useState<string>('hero');
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
+      if (window.scrollY > 30) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -28,12 +29,18 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
     setLanguage(language === 'de' ? 'en' : 'de');
   };
 
-  const handleNavLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string, menuTab?: 'regular' | 'lunch') => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
+    setActiveNav(targetId + (menuTab ? `-${menuTab}` : ''));
+
+    if (menuTab) {
+      window.dispatchEvent(new CustomEvent('switchMenuTab', { detail: menuTab }));
+    }
+
     const element = document.getElementById(targetId);
     if (element) {
-      const offset = 80; // height of sticky header
+      const offset = 95;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = element.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
@@ -48,66 +55,167 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
 
   return (
     <>
-      <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
-        <div className="header-container container">
-          {/* Logo */}
-          <a href="#hero" className="logo" onClick={(e) => handleNavLinkClick(e, 'hero')}>
-            <img src={logoImg} className="logo-img" alt="Kaido Logo" />
-            <span className="logo-text">KAIDO</span>
+      <header className={`floating-header-wrapper ${isScrolled ? 'scrolled' : ''}`}>
+        <div className="floating-navbar glass-card">
+          
+          {/* Brand Monogram & Live Seal */}
+          <a 
+            href="#hero" 
+            className="navbar-brand" 
+            onClick={(e) => handleNavClick(e, 'hero')}
+          >
+            <div className="navbar-logo-ring">
+              <img src={logoImg} className="navbar-logo-img" alt="Kaido Monogram" />
+              <span className="navbar-live-dot" title="Live status active" />
+            </div>
+            <div className="navbar-title-group">
+              <span className="navbar-brand-name">KAIDO</span>
+              <span className="navbar-brand-kanji">カイ堂 • WIEN</span>
+            </div>
           </a>
 
-          {/* Desktop Navigation */}
-          <nav className="desktop-nav">
-            <a href="#hero" onClick={(e) => handleNavLinkClick(e, 'hero')}>{t.navHome}</a>
-            <a href="#gallery" onClick={(e) => handleNavLinkClick(e, 'gallery')}>{language === 'de' ? 'Galerie' : 'Gallery'}</a>
-            <a href="#menu" onClick={(e) => handleNavLinkClick(e, 'menu')}>{t.navMenu}</a>
-            <a href="#contact" onClick={(e) => handleNavLinkClick(e, 'contact')}>{t.navContact}</a>
+          {/* 4 Focused Navigation Links */}
+          <nav className="navbar-links-track">
+            {/* 1. Home */}
+            <a 
+              href="#hero" 
+              className={`nav-pill-item ${activeNav === 'hero' ? 'active' : ''}`}
+              onClick={(e) => handleNavClick(e, 'hero')}
+            >
+              <span>{t.navHome}</span>
+            </a>
+
+            {/* 2. Speisekarte */}
+            <a 
+              href="#menu" 
+              className={`nav-pill-item ${activeNav === 'menu-regular' ? 'active' : ''}`}
+              onClick={(e) => handleNavClick(e, 'menu', 'regular')}
+            >
+              <span>{t.navMenu}</span>
+            </a>
+
+            {/* 3. Mittagsmenü (with special highlight indicator) */}
+            <a 
+              href="#menu" 
+              className={`nav-pill-item nav-pill-lunch ${activeNav === 'menu-lunch' ? 'active' : ''}`}
+              onClick={(e) => handleNavClick(e, 'menu', 'lunch')}
+            >
+              <Utensils size={12} className="lunch-icon" />
+              <span>{t.navLunch}</span>
+              <span className="lunch-badge">11–14h</span>
+            </a>
+
+            {/* 4. Kontakt */}
+            <a 
+              href="#contact" 
+              className={`nav-pill-item ${activeNav === 'contact' ? 'active' : ''}`}
+              onClick={(e) => handleNavClick(e, 'contact')}
+            >
+              <span>{t.navContact}</span>
+            </a>
           </nav>
 
-          {/* Actions */}
-          <div className="header-actions">
-            {/* Language Switcher */}
-            <button className="lang-switcher" onClick={toggleLanguage} aria-label="Toggle language">
-              <Globe size={18} />
-              <span>{language.toUpperCase()}</span>
-            </button>
-
-            {/* Reservation Button */}
-            <button className="btn btn-primary btn-header" onClick={onOpenReservation}>
-              <CalendarDays size={18} />
-              <span>{t.navBook}</span>
-            </button>
-
-            {/* Hamburger Button */}
+          {/* Right Action Suite */}
+          <div className="navbar-actions">
+            {/* Language Switcher with Dual Pill */}
             <button 
-              className="hamburger" 
+              className="navbar-lang-pill" 
+              onClick={toggleLanguage} 
+              aria-label="Sprache wechseln"
+            >
+              <Globe size={13} className="lang-globe-icon" />
+              <span className={`lang-opt ${language === 'de' ? 'selected' : ''}`}>DE</span>
+              <span className="lang-slash">/</span>
+              <span className={`lang-opt ${language === 'en' ? 'selected' : ''}`}>EN</span>
+            </button>
+
+            {/* High Luxury Reservation CTA */}
+            <button 
+              className="btn btn-primary navbar-reserve-btn" 
+              onClick={onOpenReservation}
+            >
+              <CalendarDays size={14} />
+              <span>{t.navBook}</span>
+              <Sparkles size={11} className="reserve-sparkle" />
+            </button>
+
+            {/* Mobile Hamburger Menu */}
+            <button 
+              className="navbar-hamburger" 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle menu"
+              aria-label="Menü öffnen"
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
+
         </div>
       </header>
 
-      {/* Mobile Nav Drawer */}
+      {/* Mobile Drawer (4 focused items) */}
       <div className={`mobile-nav-drawer ${isMobileMenuOpen ? 'open' : ''}`}>
         <div className="mobile-nav-content">
-          <button className="mobile-nav-close" onClick={() => setIsMobileMenuOpen(false)}>
-            <X size={28} />
-          </button>
-          <nav className="mobile-nav-links">
-            <a href="#hero" onClick={(e) => handleNavLinkClick(e, 'hero')}>{t.navHome}</a>
-            <a href="#menu" onClick={(e) => handleNavLinkClick(e, 'menu')}>{t.navMenu}</a>
-            <a href="#contact" onClick={(e) => handleNavLinkClick(e, 'contact')}>{t.navContact}</a>
-          </nav>
-          <div className="mobile-nav-actions">
-            <button className="lang-switcher" onClick={toggleLanguage}>
-              <Globe size={20} />
-              <span>{language.toUpperCase()}</span>
+          <div className="mobile-drawer-header">
+            <div className="mobile-drawer-brand">
+              <span className="mobile-eyebrow">HAUTE JAPANESE DINING</span>
+              <h3>KAIDO</h3>
+            </div>
+            <button className="mobile-nav-close" onClick={() => setIsMobileMenuOpen(false)}>
+              <X size={26} />
             </button>
-            <button className="btn btn-primary w-full" onClick={() => { setIsMobileMenuOpen(false); onOpenReservation(); }}>
-              <CalendarDays size={18} />
+          </div>
+
+          <nav className="mobile-nav-links">
+            <a 
+              href="#hero" 
+              className={activeNav === 'hero' ? 'active' : ''}
+              onClick={(e) => handleNavClick(e, 'hero')}
+            >
+              <span className="mobile-nav-numeral">01</span>
+              <span>{t.navHome}</span>
+            </a>
+            
+            <a 
+              href="#menu" 
+              className={activeNav === 'menu-regular' ? 'active' : ''}
+              onClick={(e) => handleNavClick(e, 'menu', 'regular')}
+            >
+              <span className="mobile-nav-numeral">02</span>
+              <span>{t.navMenu}</span>
+            </a>
+            
+            <a 
+              href="#menu" 
+              className={`mobile-lunch-link ${activeNav === 'menu-lunch' ? 'active' : ''}`}
+              onClick={(e) => handleNavClick(e, 'menu', 'lunch')}
+            >
+              <span className="mobile-nav-numeral">03</span>
+              <span className="mobile-lunch-text">
+                {t.navLunch}
+                <span className="mobile-lunch-tag">11:00 – 14:00</span>
+              </span>
+            </a>
+            
+            <a 
+              href="#contact" 
+              className={activeNav === 'contact' ? 'active' : ''}
+              onClick={(e) => handleNavClick(e, 'contact')}
+            >
+              <span className="mobile-nav-numeral">04</span>
+              <span>{t.navContact}</span>
+            </a>
+          </nav>
+
+          <div className="mobile-nav-actions">
+            <button className="mobile-lang-btn" onClick={toggleLanguage}>
+              <Globe size={16} />
+              <span>{language === 'de' ? 'Sprache: Deutsch (DE)' : 'Language: English (EN)'}</span>
+            </button>
+            <button 
+              className="btn btn-primary w-full" 
+              onClick={() => { setIsMobileMenuOpen(false); onOpenReservation(); }}
+            >
+              <CalendarDays size={16} />
               <span>{t.navBook}</span>
             </button>
           </div>
@@ -115,159 +223,268 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
       </div>
 
       <style>{`
-        .header {
+        /* Floating Island Wrapper */
+        .floating-header-wrapper {
           position: fixed;
-          top: 0;
+          top: 18px;
           left: 0;
           right: 0;
-          height: 80px;
           z-index: 100;
           display: flex;
-          align-items: center;
-          transition: var(--transition-smooth);
-          background: var(--color-teal); /* Same deep teal as logo and footer */
-          border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-          box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
-        }
-        
-        .header.scrolled {
-          height: 70px;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+          justify-content: center;
+          padding: 0 24px;
+          pointer-events: none;
+          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), top 0.4s ease;
         }
 
-        .header-container {
+        .floating-header-wrapper.scrolled {
+          top: 10px;
+        }
+
+        /* Floating Island Navbar Dock */
+        .floating-navbar {
+          pointer-events: auto;
+          width: 100%;
+          max-width: 1180px;
+          height: 66px;
+          padding: 0 20px 0 24px;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          width: 100%;
+          border-radius: var(--radius-full);
+          background: rgba(12, 15, 20, 0.82);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border: 1px solid rgba(212, 175, 55, 0.26);
+          box-shadow: 
+            0 14px 40px rgba(0, 0, 0, 0.65),
+            0 0 20px rgba(212, 175, 55, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.08);
+          transition: var(--transition-smooth);
         }
 
-        .logo {
+        .floating-header-wrapper.scrolled .floating-navbar {
+          background: rgba(9, 11, 15, 0.94);
+          border-color: rgba(212, 175, 55, 0.35);
+          box-shadow: 
+            0 18px 45px rgba(0, 0, 0, 0.8),
+            0 0 25px rgba(212, 175, 55, 0.12);
+        }
+
+        /* Brand Left */
+        .navbar-brand {
           display: flex;
           align-items: center;
-          gap: 10px;
-          font-weight: 800;
-          font-size: 1.6rem;
-          letter-spacing: 0.1em;
-          color: var(--text-primary);
+          gap: 12px;
+          flex-shrink: 0;
         }
 
-        .logo-img {
-          width: 48px;
-          height: 48px;
+        .navbar-logo-ring {
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
-          border: 2px solid var(--accent-gold);
-          object-fit: cover;
-          box-shadow: 0 0 12px rgba(192, 57, 43, 0.25);
-        }
-
-        .logo-text {
-          font-family: var(--font-heading);
-          color: #ffffff;
-          transition: var(--transition-smooth);
-        }
-
-        .desktop-nav {
+          border: 1.5px solid var(--color-gold);
           display: flex;
           align-items: center;
-          gap: 36px;
-        }
-
-        .desktop-nav a {
-          font-size: 0.95rem;
-          font-weight: 600; /* Make it more appearing and legible */
-          letter-spacing: 0.02em;
-          color: rgba(255, 255, 255, 0.85); /* Bright white over dark hero */
+          justify-content: center;
+          padding: 2px;
+          background: rgba(18, 22, 29, 0.9);
+          box-shadow: 0 0 14px rgba(212, 175, 55, 0.25);
           position: relative;
-          padding: 6px 0;
-          transition: var(--transition-smooth);
         }
 
-        .desktop-nav a::after {
-          content: '';
+        .navbar-logo-img {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        .navbar-live-dot {
           position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 2px;
-          background: var(--accent-gold);
-          transform: scaleX(0);
-          transform-origin: right;
-          transition: transform 0.3s ease;
+          bottom: 0px;
+          right: 0px;
+          width: 9px;
+          height: 9px;
+          border-radius: 50%;
+          background: #38bdf8;
+          border: 1.5px solid #0c0f14;
+          box-shadow: 0 0 6px #38bdf8;
         }
 
-        .desktop-nav a:hover {
+        .navbar-title-group {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .navbar-brand-name {
+          font-family: var(--font-serif);
+          font-size: 1.45rem;
+          letter-spacing: 0.2em;
           color: #ffffff;
+          line-height: 1;
         }
 
-        .desktop-nav a:hover::after {
-          transform: scaleX(1);
-          transform-origin: left;
+        .navbar-brand-kanji {
+          font-family: var(--font-eyebrow);
+          font-size: 0.6rem;
+          letter-spacing: 0.22em;
+          color: var(--color-gold-light);
+          margin-top: 2px;
         }
 
-        .header-actions {
+        /* Center Pill Track (4 items) */
+        .navbar-links-track {
           display: flex;
           align-items: center;
-          gap: 16px;
+          gap: 4px;
+          background: rgba(18, 22, 29, 0.5);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          padding: 5px 6px;
+          border-radius: var(--radius-full);
         }
 
-        .lang-switcher {
-          display: flex;
+        .nav-pill-item {
+          display: inline-flex;
           align-items: center;
           gap: 6px;
-          padding: 8px 14px;
+          padding: 7px 18px;
           border-radius: var(--radius-full);
-          border: 1px solid rgba(255, 255, 255, 0.25);
-          background: rgba(255, 255, 255, 0.05);
-          cursor: pointer;
-          font-weight: 600;
-          font-size: 0.85rem;
-          color: rgba(255, 255, 255, 0.85);
+          font-family: var(--font-eyebrow);
+          font-size: 0.78rem;
+          font-weight: 500;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: rgba(247, 245, 240, 0.75);
           transition: var(--transition-smooth);
+          position: relative;
         }
-        
-        .lang-switcher:hover {
-          border-color: #ffffff;
+
+        .nav-pill-item:hover {
           color: #ffffff;
-          background: rgba(255, 255, 255, 0.1);
+          background: rgba(212, 175, 55, 0.1);
         }
 
-        .btn-header {
-          padding: 8px 18px;
-          font-size: 0.85rem;
+        .nav-pill-item.active {
+          color: #0c0d10;
+          background: linear-gradient(135deg, #d4af37 0%, #bfa15f 100%);
+          font-weight: 600;
+          box-shadow: 0 2px 14px rgba(212, 175, 55, 0.35);
         }
 
-        .hamburger {
+        /* Special Mittagsmenü Accent */
+        .nav-pill-lunch {
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          background: rgba(212, 175, 55, 0.05);
+          color: var(--color-gold-light);
+        }
+
+        .nav-pill-lunch:hover {
+          background: rgba(212, 175, 55, 0.16);
+          border-color: var(--color-gold);
+        }
+
+        .lunch-icon {
+          color: var(--color-gold);
+          opacity: 0.85;
+        }
+
+        .lunch-badge {
+          font-family: var(--font-eyebrow);
+          font-size: 0.6rem;
+          letter-spacing: 0.08em;
+          padding: 2px 6px;
+          border-radius: var(--radius-full);
+          background: rgba(212, 175, 55, 0.2);
+          color: var(--color-gold-light);
+          border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .nav-pill-lunch.active .lunch-badge {
+          background: rgba(0, 0, 0, 0.25);
+          color: #0c0d10;
+          border-color: transparent;
+        }
+
+        .nav-pill-lunch.active .lunch-icon {
+          color: #0c0d10;
+        }
+
+        /* Right Actions */
+        .navbar-actions {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .navbar-lang-pill {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          padding: 7px 14px;
+          border-radius: var(--radius-full);
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          background: rgba(18, 22, 29, 0.7);
+          cursor: pointer;
+          font-family: var(--font-eyebrow);
+          font-size: 0.7rem;
+          letter-spacing: 0.12em;
+          color: var(--color-washi-dim);
+          transition: var(--transition-fast);
+        }
+
+        .navbar-lang-pill:hover {
+          border-color: var(--color-gold);
+          color: #ffffff;
+        }
+
+        .lang-globe-icon {
+          color: var(--color-gold);
+        }
+
+        .lang-opt.selected {
+          color: var(--color-gold);
+          font-weight: 700;
+        }
+
+        .lang-slash {
+          opacity: 0.3;
+        }
+
+        .navbar-reserve-btn {
+          padding: 9px 20px;
+          font-size: 0.74rem;
+          border-radius: var(--radius-full);
+          box-shadow: 0 4px 18px rgba(212, 175, 55, 0.28);
+        }
+
+        .reserve-sparkle {
+          opacity: 0.75;
+        }
+
+        .navbar-hamburger {
           display: none;
           background: none;
           border: none;
           color: #ffffff;
           cursor: pointer;
-          padding: 4px;
-          transition: var(--transition-smooth);
+          padding: 6px;
         }
 
-        /* Scrolled Header Overrides */
-        .header.scrolled .lang-switcher:hover {
-          border-color: #ffffff;
-          color: #ffffff;
-          background: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Mobile Menu Drawer */
+        /* Mobile Drawer */
         .mobile-nav-drawer {
           position: fixed;
           top: 0;
           right: -100%;
-          width: 300px;
+          width: 320px;
           height: 100vh;
-          background: var(--bg-glass-heavy);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
+          background: rgba(9, 11, 15, 0.98);
+          backdrop-filter: blur(25px);
+          -webkit-backdrop-filter: blur(25px);
           z-index: 1000;
-          border-left: 1px solid var(--border-color);
+          border-left: 1px solid rgba(212, 175, 55, 0.25);
           transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-          box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+          box-shadow: -20px 0 50px rgba(0, 0, 0, 0.85);
         }
 
         .mobile-nav-drawer.open {
@@ -278,59 +495,120 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
           display: flex;
           flex-direction: column;
           height: 100%;
-          padding: 40px 30px;
+          padding: 32px 28px;
+        }
+
+        .mobile-drawer-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 40px;
+          border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+          padding-bottom: 20px;
+        }
+
+        .mobile-eyebrow {
+          font-family: var(--font-eyebrow);
+          font-size: 0.62rem;
+          letter-spacing: 0.28em;
+          color: var(--color-gold);
+          display: block;
+          margin-bottom: 4px;
+        }
+
+        .mobile-drawer-brand h3 {
+          font-family: var(--font-serif);
+          font-size: 2rem;
+          color: #ffffff;
+          letter-spacing: 0.2em;
         }
 
         .mobile-nav-close {
-          align-self: flex-end;
           background: none;
           border: none;
-          color: var(--text-primary);
+          color: var(--color-washi-dim);
           cursor: pointer;
-          margin-bottom: 40px;
+          padding: 4px;
         }
 
         .mobile-nav-links {
           display: flex;
           flex-direction: column;
-          gap: 24px;
+          gap: 22px;
           margin-bottom: auto;
         }
 
         .mobile-nav-links a {
-          font-size: 1.3rem;
-          font-family: var(--font-heading);
-          font-weight: 500;
-          color: var(--text-secondary);
+          display: flex;
+          align-items: baseline;
+          gap: 16px;
+          font-family: var(--font-serif);
+          font-size: 1.35rem;
+          color: var(--color-washi-dim);
+          letter-spacing: 0.05em;
+          transition: var(--transition-fast);
         }
 
-        .mobile-nav-links a:hover {
-          color: var(--accent-gold);
+        .mobile-nav-links a:hover,
+        .mobile-nav-links a.active {
+          color: var(--color-gold);
           padding-left: 6px;
+        }
+
+        .mobile-nav-numeral {
+          font-family: var(--font-eyebrow);
+          font-size: 0.72rem;
+          color: var(--color-gold);
+          letter-spacing: 0.15em;
+        }
+
+        .mobile-lunch-text {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .mobile-lunch-tag {
+          font-family: var(--font-eyebrow);
+          font-size: 0.65rem;
+          letter-spacing: 0.12em;
+          color: var(--color-gold-light);
+          opacity: 0.8;
         }
 
         .mobile-nav-actions {
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 14px;
         }
 
-        .mobile-nav-actions .lang-switcher {
+        .mobile-lang-btn {
+          display: flex;
+          align-items: center;
           justify-content: center;
+          gap: 8px;
           padding: 12px;
+          border-radius: var(--radius-sm);
+          border: 1px solid rgba(212, 175, 55, 0.2);
+          background: rgba(18, 22, 29, 0.6);
+          color: var(--color-gold-light);
+          font-family: var(--font-eyebrow);
+          font-size: 0.75rem;
+          letter-spacing: 0.12em;
+          cursor: pointer;
         }
 
-        .w-full {
-          width: 100%;
-        }
-
-        @media (max-width: 900px) {
-          .desktop-nav,
-          .btn-header {
+        /* Responsive Breakpoints */
+        @media (max-width: 980px) {
+          .navbar-links-track,
+          .navbar-reserve-btn {
             display: none;
           }
-          .hamburger {
+          .navbar-hamburger {
             display: block;
+          }
+          .floating-navbar {
+            padding: 0 16px 0 20px;
           }
         }
       `}</style>

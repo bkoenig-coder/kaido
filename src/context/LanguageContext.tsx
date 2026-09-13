@@ -5,8 +5,10 @@ type Language = 'de' | 'en';
 interface Translations {
   navHome: string;
   navMenu: string;
+  navLunch: string;
   navContact: string;
   navBook: string;
+  heroEyebrow: string;
   heroTitle: string;
   heroSubtitle: string;
   heroBookBtn: string;
@@ -14,6 +16,19 @@ interface Translations {
   statusOpen: string;
   statusClosed: string;
   statusClosingSoon: string;
+  philosophyEyebrow: string;
+  philosophyTitle: string;
+  philosophySubtitle: string;
+  pillar1Title: string;
+  pillar1Subtitle: string;
+  pillar1Desc: string;
+  pillar2Title: string;
+  pillar2Subtitle: string;
+  pillar2Desc: string;
+  pillar3Title: string;
+  pillar3Subtitle: string;
+  pillar3Desc: string;
+  menuEyebrow: string;
   menuTitle: string;
   menuSubtitle: string;
   menuRegularTab: string;
@@ -29,6 +44,7 @@ interface Translations {
   reserveSubtitle: string;
   reserveFallback: string;
   reserveOpenNewTab: string;
+  contactEyebrow: string;
   contactTitle: string;
   contactAddress: string;
   contactPhone: string;
@@ -62,112 +78,144 @@ const translations: Record<Language, Translations> = {
   de: {
     navHome: 'Startseite',
     navMenu: 'Speisekarte',
-    navContact: 'Kontakt & Öffnungszeiten',
-    navBook: 'Tisch Reservieren',
-    heroTitle: 'Herzlich Willkommen',
-    heroSubtitle: 'Bock auf richtig gutes Sushi und asiatische Speisen? Dann bist du bei uns richtig 😋🍣',
+    navLunch: 'Mittagsmenü',
+    navContact: 'Kontakt',
+    navBook: 'Tisch reservieren',
+    heroEyebrow: 'Haute Japanese Cuisine & Omakase',
+    heroTitle: 'Die Poesie des Meeres.',
+    heroSubtitle: 'Ein intimer Rückzugsort zeitgenössischer japanischer Kulinarik im Herzen von Wien. Wo vollendete Schnittkunst, Saisonalität und bedingungslose Hingabe verschmelzen.',
     heroBookBtn: 'Tisch reservieren',
-    heroMenuBtn: 'Speisekarte ansehen',
-    statusOpen: 'Jetzt geöffnet',
+    heroMenuBtn: 'Menü entdecken',
+    statusOpen: 'Aktuell geöffnet • Plätze verfügbar',
     statusClosed: 'Derzeit geschlossen',
-    statusClosingSoon: 'Schließt bald',
-    menuTitle: 'Unsere Speisekarte',
-    menuSubtitle: 'Frisch zubereitetes Sushi, traditionelle Bento Boxen, wärmende Pho-Suppen und herzhafte asiatische Klassiker.',
+    statusClosingSoon: 'Service endet in Kürze',
+    philosophyEyebrow: 'Das kulinarische Credo',
+    philosophyTitle: 'Drei Säulen purer Vollendung',
+    philosophySubtitle: 'Unsere Küche entspringt dem tiefen Respekt vor der japanischen Gastronomiegeschichte — reduziert auf das Wesentliche, kompromisslos in der Güte.',
+    pillar1Title: 'Omotenashi',
+    pillar1Subtitle: 'Gelebte Achtsamkeit',
+    pillar1Desc: 'Aufrichtige Gastfreundschaft, die Wünsche erahnt, noch bevor sie ausgesprochen werden. Ein stilles Band des Vertrauens zwischen Gast und Meister.',
+    pillar2Title: 'Shyun',
+    pillar2Subtitle: 'Der flüchtige Augenblick',
+    pillar2Desc: 'Nur Zutaten im absoluten Zenit ihrer Saison finden den Weg an unsere Theke — täglich fangfrisch selektiert und in vollendeter Frische zelebriert.',
+    pillar3Title: 'Shokunin',
+    pillar3Subtitle: 'Die Kunst des Handwerks',
+    pillar3Desc: 'Präzise Schnittführung, traditionell gereifter Reisessig und jahrzehntelange Erfahrung lassen jedes Stück Nigiri zu einem unverwechselbaren Kunstwerk werden.',
+    menuEyebrow: 'Gastronomische Auswahl',
+    menuTitle: 'Die Kulinarische Komposition',
+    menuSubtitle: 'Erlesene Spezialitäten, handgerolltes Omakase-Sushi, erhabene Bento-Kreationen und traditionell über Stunden gekochte Brühen.',
     menuRegularTab: 'Hauptkarte',
-    menuLunchTab: 'Mittagsmenü',
-    menuLunchNote: 'Montag bis Freitag, 11:00 - 14:00 Uhr (außer Dienstag). Jedes Mittagsmenü wird mit 1 Stk. Sommerrolle und Miso-Suppe serviert.',
-    menuSearchPlaceholder: 'Nach Speisen, Zutaten oder Nummern suchen (z.B. Lachs, V3, Maki)...',
-    filterAll: 'Alle Gerichte',
+    menuLunchTab: 'Mittags-Kabinett',
+    menuLunchNote: 'Montag bis Freitag, 11:00 – 14:00 Uhr (Dienstag Ruhetag). Serviert mit einer Sommerrolle und frisch gebrühter Miso-Suppe.',
+    menuSearchPlaceholder: 'Gerichte, Zutaten oder Spezialitäten suchen (z.B. Toro, Hamachi, Sake)...',
+    filterAll: 'Alle Kreationen',
     filterVegetarian: 'Vegetarisch',
-    filterVegan: 'Vegan',
-    filterSpicy: 'Scharf',
+    filterVegan: 'Pflanzlich (Vegan)',
+    filterSpicy: 'Feine Schärfe',
     filterGlutenFree: 'Glutenfrei',
-    reserveTitle: 'Einen Tisch reservieren',
-    reserveSubtitle: 'Buchen Sie Ihren gemütlichen Abend bei uns schnell und unkompliziert.',
-    reserveFallback: 'Falls das Formular nicht geladen wird, klicken Sie bitte hier, um direkt bei Gastro.site zu buchen:',
-    reserveOpenNewTab: 'In neuem Fenster öffnen',
-    contactTitle: 'Hier finden Sie uns',
-    contactAddress: 'Adresse',
-    contactPhone: 'Telefon',
-    contactEmail: 'E-Mail',
+    reserveTitle: 'Private Tischreservierung',
+    reserveSubtitle: 'Sichern Sie sich Ihren Abend für ein intimes Genusserlebnis.',
+    reserveFallback: 'Falls die Buchungsmaske nicht sofort lädt, reservieren Sie bequem direkt über Gastro.site:',
+    reserveOpenNewTab: 'Reservierung im neuen Fenster öffnen',
+    contactEyebrow: 'Empfang & Salon',
+    contactTitle: 'Residenz & Öffnungszeiten',
+    contactAddress: 'Atelier Adresse',
+    contactPhone: 'Concierge Telefon',
+    contactEmail: 'Reservierungs-Anfragen',
     hoursTitle: 'Öffnungszeiten',
     hoursRegular: 'Reguläre Öffnungszeiten',
     hoursSummer: 'Sommer-Öffnungszeiten',
     hoursSummerValidity: 'Gültig vom 13. Juli bis 6. September 2026',
-    hoursTuesdayClosed: 'Dienstag: Ruhetag',
+    hoursTuesdayClosed: 'Dienstag: Schließtag (Ruhetag)',
     hoursToday: 'Heute',
-    cookieTitle: 'Cookie-Einstellungen',
-    cookieText: 'Wir verwenden Cookies, um Ihnen die bestmögliche Erfahrung auf unserer Website zu bieten, Zugriffsanalysen durchzuführen und die Benutzerfreundlichkeit zu erhöhen.',
-    cookieAcceptAll: 'Alle akzeptieren',
-    cookieDecline: 'Ablehnen',
-    cookieManage: 'Einstellungen anpassen',
-    cookieSave: 'Einstellungen speichern',
-    cookieNecessary: 'Notwendige Cookies',
-    cookieNecessaryDesc: 'Diese Cookies sind für das Funktionieren der Website erforderlich und können nicht deaktiviert werden.',
-    cookieAnalytics: 'Analytische Cookies',
-    cookieAnalyticsDesc: 'Helfen uns zu verstehen, wie Besucher mit der Website interagieren, indem Informationen anonym gesammelt und gemeldet werden.',
+    cookieTitle: 'Privatsphäre & Diskretion',
+    cookieText: 'Wir verwenden funktionale Technologien zur Gewährleistung unseres Reservierungssystems und zur kontinuierlichen Verfeinerung Ihres Besuchs.',
+    cookieAcceptAll: 'Einverstanden',
+    cookieDecline: 'Nur Essenzielle',
+    cookieManage: 'Individuell anpassen',
+    cookieSave: 'Präferenzen sichern',
+    cookieNecessary: 'Erforderliche Dienste',
+    cookieNecessaryDesc: 'Ermöglichen Kernfunktionen der Tischbuchung und Sitzungsverwaltung.',
+    cookieAnalytics: 'Analytische Messung',
+    cookieAnalyticsDesc: 'Dient der anonymisierten Auswertung und Veredelung des Nutzererlebnisses.',
     legalImprint: 'Impressum',
-    legalPrivacy: 'Datenschutzerklärung',
+    legalPrivacy: 'Datenschutz',
     legalRevocation: 'Widerrufsbelehrung',
     closeBtn: 'Schließen',
     lunchMenuTitle: 'Menü',
-    lunchExtraOption: 'Wahlweise mit Rind, Ente oder Shrimps: +€ 1,50',
-    copyright: '© 2026 Kaido KG. Alle Rechte vorbehalten.'
+    lunchExtraOption: 'Veredelung wahlweise mit Rind, Ente oder Shrimps: +€ 1,50',
+    copyright: '© 2026 KAIDO KG. Alle Rechte vorbehalten. Wien.'
   },
   en: {
     navHome: 'Home',
     navMenu: 'Menu',
-    navContact: 'Contact & Hours',
-    navBook: 'Book Table',
-    heroTitle: 'A Warm Welcome',
-    heroSubtitle: 'In the mood for really good sushi and Asian dishes? Then you\'ve come to the right place! 😋🍣',
-    heroBookBtn: 'Reserve Table',
-    heroMenuBtn: 'View Speisekarte',
-    statusOpen: 'Open Now',
-    statusClosed: 'Closed Now',
-    statusClosingSoon: 'Closing Soon',
-    menuTitle: 'Our Menu',
-    menuSubtitle: 'Freshly rolled sushi, traditional bento boxes, comforting pho soups, and robust Asian classics.',
-    menuRegularTab: 'Regular Menu',
-    menuLunchTab: 'Lunch Menu',
-    menuLunchNote: 'Monday to Friday, 11:00 AM - 2:00 PM (except Tuesday). Each lunch menu includes 1 pc Summer Roll and Miso Soup.',
-    menuSearchPlaceholder: 'Search for dishes, ingredients, or numbers (e.g. salmon, V3, maki)...',
-    filterAll: 'All Dishes',
+    navLunch: 'Lunch Menu',
+    navContact: 'Contact',
+    navBook: 'Reserve Table',
+    heroEyebrow: 'Haute Japanese Cuisine & Omakase',
+    heroTitle: 'The Poetry of the Ocean.',
+    heroSubtitle: 'An intimate sanctuary of contemporary Japanese culinary artistry in the heart of Vienna. Where master blade precision, seasonal purism, and quiet reverence unite.',
+    heroBookBtn: 'Reserve a Table',
+    heroMenuBtn: 'Explore the Menu',
+    statusOpen: 'Currently Open • Seating Available',
+    statusClosed: 'Currently Closed',
+    statusClosingSoon: 'Service Concluding Soon',
+    philosophyEyebrow: 'The Culinary Credo',
+    philosophyTitle: 'Three Pillars of Pure Balance',
+    philosophySubtitle: 'Our kitchen stems from profound reverence for authentic Japanese culinary heritage — stripped of excess, uncompromising in caliber.',
+    pillar1Title: 'Omotenashi',
+    pillar1Subtitle: 'Mindful Hospitality',
+    pillar1Desc: 'Selfless anticipation of every guest’s unspoken desires. An invisible bond of unspoken trust and harmony between patron and chef.',
+    pillar2Title: 'Shyun',
+    pillar2Subtitle: 'The Fleeting Moment',
+    pillar2Desc: 'Only produce captured at the absolute zenith of its seasonal peak enters our counter — hand-selected each dawn with unyielding scrutiny.',
+    pillar3Title: 'Shokunin',
+    pillar3Subtitle: 'The Artisan’s Vow',
+    pillar3Desc: 'Flawless knife discipline, aged akazu sushi rice, and decades of relentless practice elevate every piece of nigiri into an edible sculpture.',
+    menuEyebrow: 'Gastronomic Selection',
+    menuTitle: 'The Culinary Composition',
+    menuSubtitle: 'Exquisite delicacies, hand-sculpted omakase nigiri, delicate bento arrays, and simmering dashi broths brewed with patience.',
+    menuRegularTab: 'Main Carte',
+    menuLunchTab: 'Noon Cabinet',
+    menuLunchNote: 'Monday to Friday, 11:00 AM – 2:00 PM (excluding Tuesday). Accompanied by a fresh summer roll and house-crafted miso soup.',
+    menuSearchPlaceholder: 'Search dishes, ingredients or cuts (e.g., Toro, Hamachi, Sake)...',
+    filterAll: 'All Creations',
     filterVegetarian: 'Vegetarian',
-    filterVegan: 'Vegan',
-    filterSpicy: 'Spicy',
+    filterVegan: 'Plant-Based (Vegan)',
+    filterSpicy: 'Delicate Spice',
     filterGlutenFree: 'Gluten-Free',
-    reserveTitle: 'Reserve a Table',
-    reserveSubtitle: 'Book your cozy sushi experience instantly and securely.',
-    reserveFallback: 'If the form is not loading properly, please click here to book directly on Gastro.site:',
-    reserveOpenNewTab: 'Open in new window',
-    contactTitle: 'Find Us Here',
-    contactAddress: 'Address',
-    contactPhone: 'Phone',
-    contactEmail: 'Email',
+    reserveTitle: 'Private Table Reservation',
+    reserveSubtitle: 'Secure your seating for an intimate dining experience.',
+    reserveFallback: 'If the reservation calendar does not load instantly, book directly through Gastro.site:',
+    reserveOpenNewTab: 'Open reservation in new window',
+    contactEyebrow: 'Reception & Salon',
+    contactTitle: 'Residence & Hours',
+    contactAddress: 'Atelier Address',
+    contactPhone: 'Concierge Telephone',
+    contactEmail: 'Private Enquiries',
     hoursTitle: 'Opening Hours',
     hoursRegular: 'Regular Opening Hours',
     hoursSummer: 'Summer Opening Hours',
-    hoursSummerValidity: 'Valid from July 13th until September 6th, 2026',
-    hoursTuesdayClosed: 'Tuesday: Closed (Ruhetag)',
+    hoursSummerValidity: 'Active from July 13th until September 6th, 2026',
+    hoursTuesdayClosed: 'Tuesday: Rest Day (Closed)',
     hoursToday: 'Today',
-    cookieTitle: 'Cookie Settings',
-    cookieText: 'We use cookies to optimize your browsing experience, perform analysis of website usage, and support basic functionality.',
+    cookieTitle: 'Privacy & Discretion',
+    cookieText: 'We utilize essential technologies to ensure seamless table bookings and to elevate your browsing experience.',
     cookieAcceptAll: 'Accept All',
-    cookieDecline: 'Decline',
-    cookieManage: 'Manage Settings',
-    cookieSave: 'Save Settings',
-    cookieNecessary: 'Necessary Cookies',
-    cookieNecessaryDesc: 'These cookies are required for basic site functions and cannot be switched off.',
-    cookieAnalytics: 'Analytics Cookies',
-    cookieAnalyticsDesc: 'Allow us to measure visitor traffic and analyze behavior to continuously improve user experience.',
+    cookieDecline: 'Essential Only',
+    cookieManage: 'Customize',
+    cookieSave: 'Save Preferences',
+    cookieNecessary: 'Essential Services',
+    cookieNecessaryDesc: 'Required for table reservation system operations and session handling.',
+    cookieAnalytics: 'Discreet Analytics',
+    cookieAnalyticsDesc: 'Used solely for anonymous experience refinements and traffic understanding.',
     legalImprint: 'Imprint',
     legalPrivacy: 'Privacy Policy',
-    legalRevocation: 'Revocation Policy',
+    legalRevocation: 'Revocation Terms',
     closeBtn: 'Close',
     lunchMenuTitle: 'Menu',
-    lunchExtraOption: 'Option with beef, duck, or prawns: +€ 1.50',
-    copyright: '© 2026 Kaido KG. All rights reserved.'
+    lunchExtraOption: 'Accompaniment upgrade with beef, roasted duck, or prawns: +€ 1.50',
+    copyright: '© 2026 KAIDO KG. All rights reserved. Vienna.'
   }
 };
 
@@ -183,7 +231,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [language, setLanguageState] = useState<Language>(() => {
     const saved = localStorage.getItem('kaido_language');
     if (saved === 'de' || saved === 'en') return saved;
-    // Default to German since the restaurant is in Vienna, Austria
     return 'de';
   });
 
