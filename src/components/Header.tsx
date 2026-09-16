@@ -697,7 +697,82 @@ export const Header: React.FC<HeaderProps> = ({ onOpenReservation }) => {
             display: block;
           }
           .floating-navbar {
-            padding: 0 16px 0 20px;
+            padding: 0 16px 0 18px;
+            height: 58px;
+          }
+          .navbar-brand-name {
+            font-size: 1.18rem;
+            letter-spacing: 0.16em;
+          }
+          .navbar-brand-kanji {
+            font-size: 0.54rem;
+            letter-spacing: 0.18em;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .floating-header-wrapper {
+            top: 8px;
+            padding: 0 12px;
+          }
+          .floating-navbar {
+            height: 50px;
+            padding: 0 12px 0 14px;
+          }
+          .navbar-logo-ring {
+            width: 30px;
+            height: 30px;
+          }
+          .navbar-logo-img {
+            width: 24px;
+            height: 24px;
+          }
+          .navbar-brand-name {
+            font-size: 0.98rem;
+            letter-spacing: 0.12em;
+          }
+          .mobile-nav-content {
+            padding: 22px 18px;
+          }
+          .mobile-drawer-header {
+            margin-bottom: 24px;
+            padding-bottom: 14px;
+          }
+          .mobile-drawer-brand h3 {
+            font-size: 1.25rem;
+            letter-spacing: 0.14em;
+          }
+          .mobile-eyebrow {
+            font-size: 0.54rem;
+            letter-spacing: 0.2em;
+          }
+          .mobile-nav-links {
+            gap: 14px;
+          }
+          .mobile-nav-links a {
+            font-size: 0.92rem;
+            letter-spacing: 0.03em;
+            gap: 10px;
+          }
+          .mobile-nav-numeral {
+            font-size: 0.58rem;
+          }
+          .mobile-lunch-tag {
+            font-size: 0.54rem;
+          }
+          .mobile-nav-actions {
+            gap: 8px;
+          }
+          .mobile-theme-btn,
+          .mobile-lang-btn {
+            padding: 9px;
+            font-size: 0.66rem;
+            letter-spacing: 0.08em;
+          }
+          .mobile-nav-actions .btn {
+            padding: 10px 16px;
+            font-size: 0.68rem;
+            letter-spacing: 0.12em;
           }
         }
       `}</style>

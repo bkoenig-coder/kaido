@@ -556,6 +556,77 @@ export const Reviews: React.FC = () => {
           }
         }
 
+        @media (max-width: 768px) {
+          .rating-summary-pill {
+            padding: 5px 12px;
+            font-size: 0.64rem;
+            gap: 7px;
+          }
+          .distinction-card {
+            padding: 18px 14px;
+            gap: 16px;
+            margin-bottom: 28px;
+          }
+          .distinction-tag {
+            font-size: 0.58rem;
+            letter-spacing: 0.14em;
+            margin-bottom: 6px;
+          }
+          .distinction-content h3 {
+            font-size: 1.15rem;
+            margin-bottom: 6px;
+          }
+          .distinction-content p {
+            font-size: 0.76rem;
+            line-height: 1.5;
+            margin-bottom: 14px;
+          }
+          .distinction-link {
+            font-size: 0.62rem;
+          }
+          .distinction-seal-badge {
+            padding: 3px 8px;
+            gap: 5px;
+          }
+          .seal-badge-text {
+            font-size: 0.56rem;
+          }
+          .cert-display-caption {
+            font-size: 0.6rem;
+          }
+          .cert-hover-hint {
+            font-size: 0.56rem;
+            padding: 3px 8px;
+          }
+          .reviews-grid {
+            gap: 14px;
+          }
+          .review-card {
+            padding: 15px 14px;
+          }
+          .review-author-initial {
+            width: 28px;
+            height: 28px;
+            font-size: 0.85rem;
+          }
+          .review-author-name {
+            font-size: 0.72rem;
+          }
+          .review-date {
+            font-size: 0.6rem;
+          }
+          .review-quote {
+            font-size: 0.78rem;
+            line-height: 1.5;
+          }
+          .cert-modal-header {
+            padding: 12px 16px;
+          }
+          .cert-modal-title h3 {
+            font-size: 0.72rem;
+          }
+        }
+
         /* Day Mode Refinements for Reviews & Distinction */
         [data-theme="light"] .distinction-seal-badge {
           background: #f4f0e6;

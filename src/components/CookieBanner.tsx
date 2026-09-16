@@ -236,14 +236,34 @@ export const CookieBanner: React.FC = () => {
             right: 12px;
             left: 12px;
             width: auto;
-            padding: 20px;
+            padding: 18px 16px;
+          }
+          .cookie-header h3 {
+            font-size: 1.05rem;
+          }
+          .cookie-text {
+            font-size: 0.78rem;
+            line-height: 1.5;
+            margin-bottom: 14px;
+          }
+          .btn-xs {
+            font-size: 0.66rem;
+            padding: 7px 12px;
+          }
+          .pref-name {
+            font-size: 0.7rem;
+          }
+          .pref-desc {
+            font-size: 0.68rem;
           }
           .cookie-actions {
             flex-direction: column;
             align-items: stretch;
+            gap: 10px;
           }
           .cookie-main-buttons {
             flex-direction: column;
+            gap: 6px;
           }
         }
       `}</style>

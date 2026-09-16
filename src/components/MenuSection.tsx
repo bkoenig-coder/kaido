@@ -588,6 +588,83 @@ export const MenuSection: React.FC = () => {
           }
         }
 
+        @media (max-width: 768px) {
+          .menu-toggle-btn {
+            font-size: 0.66rem;
+            letter-spacing: 0.1em;
+            padding: 8px 16px;
+          }
+          .lunch-note {
+            font-size: 0.74rem;
+            padding: 10px 14px;
+            line-height: 1.45;
+            margin-bottom: 18px;
+          }
+          .search-filter-bar {
+            padding: 12px;
+            gap: 12px;
+            margin-bottom: 20px;
+          }
+          .search-input {
+            font-size: 0.78rem;
+            padding: 8px 12px 8px 38px;
+          }
+          .filter-tag {
+            font-size: 0.58rem;
+            letter-spacing: 0.06em;
+            padding: 4px 10px;
+          }
+          .category-tabs-container {
+            margin-bottom: 20px;
+          }
+          .category-tab {
+            padding: 6px 11px;
+          }
+          .cat-numeral {
+            font-size: 0.54rem;
+          }
+          .cat-label {
+            font-size: 0.62rem;
+            letter-spacing: 0.06em;
+          }
+          .menu-card {
+            padding: 15px 14px;
+          }
+          .item-code {
+            font-size: 0.58rem;
+            letter-spacing: 0.08em;
+          }
+          .item-title {
+            font-size: 0.95rem;
+          }
+          .item-price {
+            font-size: 0.78rem;
+          }
+          .item-description {
+            font-size: 0.74rem;
+            line-height: 1.48;
+            margin-bottom: 8px;
+          }
+          .badge-subtle,
+          .badge-spice {
+            font-size: 0.56rem;
+            padding: 2px 6px;
+            letter-spacing: 0.06em;
+          }
+          .lunch-upgrade-notice {
+            padding: 14px 16px;
+            margin-top: 20px;
+            gap: 10px;
+          }
+          .notice-crest {
+            font-size: 1.2rem;
+          }
+          .lunch-upgrade-notice p {
+            font-size: 0.74rem;
+            line-height: 1.45;
+          }
+        }
+
         /* Day Mode Refinements */
         [data-theme="light"] .lunch-upgrade-notice {
           background: #ffffff;

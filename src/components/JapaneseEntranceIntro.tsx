@@ -166,6 +166,31 @@ export const JapaneseEntranceIntro: React.FC = () => {
           color: var(--color-washi-dim);
           text-transform: uppercase;
         }
+
+        @media (max-width: 768px) {
+          .crest-gold-ring {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 12px;
+          }
+          .crest-logo {
+            width: 54px;
+            height: 54px;
+          }
+          .crest-eyebrow {
+            font-size: 0.6rem;
+            letter-spacing: 0.25em;
+            margin-bottom: 12px;
+          }
+          .crest-brand {
+            font-size: 1.55rem;
+            letter-spacing: 0.2em;
+          }
+          .crest-sub {
+            font-size: 0.62rem;
+            letter-spacing: 0.2em;
+          }
+        }
       `}</style>
     </div>
   );

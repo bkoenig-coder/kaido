@@ -60,15 +60,27 @@ export const ContactHours: React.FC = () => {
                 </div>
               </a>
 
-              {/* Phone */}
+              {/* Takeaway Telephone */}
+              <a href="tel:+4312126076" className="info-card glass-card">
+                <div className="info-icon-container">
+                  <Phone className="info-icon" size={20} />
+                </div>
+                <div className="info-text">
+                  <span className="info-label">{language === 'de' ? 'Telefon & Vorbestellung' : 'Telephone Takeaway Orders'}</span>
+                  <h3>01 212 60 76</h3>
+                  <span className="card-action-hint">{language === 'de' ? 'Jetzt anrufen' : 'Call takeaway'} →</span>
+                </div>
+              </a>
+
+              {/* Mobile / Concierge */}
               <a href="tel:+436609108818" className="info-card glass-card">
                 <div className="info-icon-container">
                   <Phone className="info-icon" size={20} />
                 </div>
                 <div className="info-text">
-                  <span className="info-label">{t.contactPhone}</span>
+                  <span className="info-label">{language === 'de' ? 'Mobil & Concierge' : 'Mobile & Concierge'}</span>
                   <h3>+43 (0) 660 910 88 18</h3>
-                  <span className="card-action-hint">{language === 'de' ? 'Concierge anrufen' : 'Call Concierge'} →</span>
+                  <span className="card-action-hint">{language === 'de' ? 'Concierge anrufen' : 'Call concierge'} →</span>
                 </div>
               </a>
 
@@ -347,6 +359,72 @@ export const ContactHours: React.FC = () => {
           }
           .contact-hours {
             padding: 28px 20px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .contact-grid {
+            gap: 16px;
+          }
+          .details-cards {
+            gap: 10px;
+          }
+          .info-card {
+            padding: 13px 14px;
+            gap: 12px;
+          }
+          .info-icon-container {
+            width: 32px;
+            height: 32px;
+          }
+          .info-label {
+            font-size: 0.56rem;
+            letter-spacing: 0.12em;
+          }
+          .info-text h3 {
+            font-size: 0.88rem;
+          }
+          .card-action-hint {
+            font-size: 0.56rem;
+          }
+          .contact-hours, .hours-card {
+            padding: 18px 14px;
+          }
+          .hours-header {
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+          }
+          .hours-header-title h3 {
+            font-size: 1.12rem;
+          }
+          .summer-alert-subtitle {
+            font-size: 0.58rem;
+          }
+          .hours-list {
+            gap: 6px;
+            margin-bottom: 14px;
+          }
+          .hours-row {
+            padding: 6px 9px;
+            font-size: 0.72rem;
+          }
+          .today-pill {
+            font-size: 0.52rem;
+            padding: 1px 5px;
+          }
+          .summer-time {
+            font-size: 0.68rem;
+          }
+          .hours-footer {
+            padding-top: 12px;
+            gap: 8px;
+          }
+          .hours-footer-seal {
+            font-size: 1rem;
+          }
+          .hours-footer p {
+            font-size: 0.68rem;
+            line-height: 1.45;
           }
         }
       `}</style>

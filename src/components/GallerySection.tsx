@@ -738,6 +738,73 @@ export const GallerySection: React.FC = () => {
           }
         }
 
+        @media (max-width: 768px) {
+          .slideshow-editorial-panel {
+            padding: 24px 18px;
+          }
+          .slideshow-stage-panel {
+            height: 300px;
+          }
+          .current-slide-num {
+            font-size: 1.25rem;
+          }
+          .total-slides-num {
+            font-size: 0.62rem;
+          }
+          .editorial-tag {
+            font-size: 0.54rem;
+            letter-spacing: 0.16em;
+            margin-bottom: 6px;
+          }
+          .editorial-title {
+            font-size: 1.15rem;
+            line-height: 1.25;
+            margin-bottom: 8px;
+          }
+          .editorial-divider {
+            margin-bottom: 10px;
+          }
+          .editorial-description {
+            font-size: 0.76rem;
+            line-height: 1.55;
+          }
+          .editorial-content-body {
+            padding: 10px 0;
+          }
+          .editorial-selectors {
+            gap: 5px;
+            margin-bottom: 16px;
+          }
+          .selector-chip {
+            font-size: 0.56rem;
+            padding: 3px 8px;
+            letter-spacing: 0.05em;
+          }
+          .modern-arrow-btn {
+            width: 36px;
+            height: 36px;
+          }
+          .modern-lightbox-trigger {
+            font-size: 0.58rem;
+          }
+          .slide-floating-seal {
+            width: 32px;
+            height: 32px;
+            font-size: 0.95rem;
+            bottom: 12px;
+            right: 12px;
+          }
+          .lightbox-info {
+            padding: 14px 18px;
+          }
+          .lightbox-info h4 {
+            font-size: 1.1rem;
+          }
+          .lightbox-tag {
+            font-size: 0.58rem;
+          }
+        }
+
         /* =========================================
            Day Mode (Light Theme) Gallery Refinements
            ========================================= */

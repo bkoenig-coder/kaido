@@ -28,7 +28,7 @@ const AppContent: React.FC = () => {
       
       <Hero onOpenReservation={() => setIsReservationOpen(true)} />
       
-      <PhilosophySection />
+      <PhilosophySection onOpenReservation={() => setIsReservationOpen(true)} />
 
       <GallerySection />
       

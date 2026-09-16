@@ -192,30 +192,6 @@ export const ViewportCarpet: React.FC = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          animation: gentleBreathe 8s ease-in-out infinite alternate;
-        }
-
-        .left-yingyang {
-          animation: gentleRotateLeft 60s linear infinite;
-        }
-
-        .right-yingyang {
-          animation: gentleRotateRight 60s linear infinite;
-        }
-
-        @keyframes gentleRotateLeft {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-
-        @keyframes gentleRotateRight {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(-360deg); }
-        }
-
-        @keyframes gentleBreathe {
-          0% { filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.2)); }
-          100% { filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.45)); }
         }
 
         .yingyang-svg {
@@ -284,12 +260,7 @@ export const ViewportCarpet: React.FC = () => {
           width: 64px;
           height: 64px;
           pointer-events: none;
-          animation: floatYyWatermark 12s ease-in-out infinite alternate;
-        }
-
-        @keyframes floatYyWatermark {
-          0% { transform: translateY(-50%) scale(0.96); opacity: 0.7; }
-          100% { transform: translateY(-55%) scale(1.04); opacity: 1; }
+          opacity: 0.85;
         }
 
         .yingyang-watermark-svg {
@@ -313,7 +284,7 @@ export const ViewportCarpet: React.FC = () => {
           text-transform: uppercase;
         }
 
-        /* Responsive scaling for tablets and mobile viewports */
+        /* Responsive scaling for desktop and hide on tablet/mobile for clean scrolling */
         @media (max-width: 1380px) {
           .viewport-carpet {
             width: 44px;
@@ -345,44 +316,8 @@ export const ViewportCarpet: React.FC = () => {
           }
         }
 
-        @media (max-width: 768px) {
-          .viewport-carpet {
-            width: 28px;
-            padding: 82px 0 16px;
-            opacity: 0.9;
-          }
-          .carpet-left {
-            left: 6px;
-          }
-          .carpet-right {
-            right: 6px;
-          }
-          .yingyang-disc {
-            width: 26px;
-            height: 26px;
-            box-shadow: 0 0 14px rgba(212, 175, 55, 0.45);
-          }
-          .carpet-kanji-label {
-            font-size: 0.72rem;
-            margin-top: 1px;
-          }
-          .carpet-vertical-track {
-            margin: 10px 0;
-          }
-          .carpet-knot {
-            width: 4px;
-            height: 4px;
-            margin: 8px 0;
-          }
-          .carpet-pattern-segment {
-            width: 5px;
-            height: 34px;
-          }
-          .carpet-mid-yingyang {
-            width: 26px;
-            height: 26px;
-          }
-          .carpet-bottom-marker {
+        @media (max-width: 1024px) {
+          .viewport-carpet-system {
             display: none;
           }
         }

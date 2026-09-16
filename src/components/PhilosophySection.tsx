@@ -2,8 +2,28 @@ import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { Utensils, CalendarDays, PhoneCall } from 'lucide-react';
 
-export const PhilosophySection: React.FC = () => {
+interface PhilosophySectionProps {
+  onOpenReservation?: () => void;
+}
+
+export const PhilosophySection: React.FC<PhilosophySectionProps> = ({ onOpenReservation }) => {
   const { t, language } = useLanguage();
+
+  const scrollToLunch = () => {
+    window.dispatchEvent(new CustomEvent('switchMenuTab', { detail: 'lunch' }));
+    const element = document.getElementById('menu');
+    if (element) {
+      const offset = 95;
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   const pillars = [
     {
@@ -50,11 +70,9 @@ export const PhilosophySection: React.FC = () => {
         <div className="pillars-grid">
           {pillars.map((pillar, idx) => (
             <div key={idx} className="pillar-card glass-card animate-slide-up">
-              <div className="pillar-watermark-kanji">{pillar.kanjiChar}</div>
-              
               <div className="pillar-header">
-                <span className="pillar-numeral">{pillar.roman}</span>
-                <span className="pillar-kanji-sub">{pillar.kanji}</span>
+                <span className="pillar-roman">{pillar.roman}</span>
+                <span className="pillar-kanji">{pillar.kanjiChar}</span>
               </div>
 
               <h3 className="pillar-title">{pillar.title}</h3>
@@ -69,7 +87,14 @@ export const PhilosophySection: React.FC = () => {
 
         {/* Functional Fast-Action Service Banner */}
         <div className="service-features-banner glass-card animate-fade-in">
-          <div className="feature-item">
+          <div 
+            className="feature-item interactive"
+            onClick={scrollToLunch}
+            role="button"
+            tabIndex={0}
+            title={language === 'de' ? 'Zum Mittagsmenü scrollen' : 'View Lunch Specials'}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') scrollToLunch(); }}
+          >
             <div className="feature-icon-circle">
               <Utensils size={20} />
             </div>
@@ -81,7 +106,14 @@ export const PhilosophySection: React.FC = () => {
 
           <div className="feature-divider" />
 
-          <div className="feature-item">
+          <div 
+            className="feature-item interactive"
+            onClick={onOpenReservation}
+            role="button"
+            tabIndex={0}
+            title={language === 'de' ? 'Online Tisch reservieren' : 'Book a table online'}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onOpenReservation?.(); }}
+          >
             <div className="feature-icon-circle">
               <CalendarDays size={20} />
             </div>
@@ -93,19 +125,23 @@ export const PhilosophySection: React.FC = () => {
 
           <div className="feature-divider" />
 
-          <div className="feature-item">
+          <a 
+            href="tel:+4312126076" 
+            className="feature-item interactive feature-link"
+            title={language === 'de' ? 'Jetzt anrufen: 01 212 60 76' : 'Call takeaway: 01 212 60 76'}
+          >
             <div className="feature-icon-circle">
               <PhoneCall size={20} />
             </div>
             <div>
               <h4 className="feature-title">{language === 'de' ? 'Telefonische Vorbestellung' : 'Telephone Takeaway Orders'}</h4>
               <p className="feature-subtitle">
-                <a href="tel:+4312126076" className="feature-phone-link">
+                <span className="feature-phone-link">
                   01 212 60 76
-                </a>
+                </span>
               </p>
             </div>
-          </div>
+          </a>
         </div>
       </div>
 
@@ -234,6 +270,26 @@ export const PhilosophySection: React.FC = () => {
           flex: 1;
         }
 
+        .feature-item.interactive {
+          cursor: pointer;
+          border-radius: 12px;
+          padding: 10px 14px;
+          margin: -10px -14px;
+          transition: background-color 0.25s ease, transform 0.25s ease;
+          text-decoration: none;
+        }
+
+        .feature-item.interactive:hover {
+          background: rgba(212, 175, 55, 0.09);
+          transform: translateY(-2px);
+        }
+
+        .feature-item.interactive:hover .feature-icon-circle {
+          border-color: var(--color-gold);
+          box-shadow: 0 0 14px rgba(212, 175, 55, 0.4);
+          background: rgba(212, 175, 55, 0.16);
+        }
+
         .feature-icon-circle {
           width: 46px;
           height: 46px;
@@ -289,12 +345,68 @@ export const PhilosophySection: React.FC = () => {
           .service-features-banner {
             flex-direction: column;
             align-items: flex-start;
-            padding: 28px 20px;
-            gap: 20px;
+            padding: 24px 20px;
+            gap: 18px;
           }
           .feature-divider {
             width: 100%;
             height: 1px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .pillar-card {
+            padding: 22px 18px;
+          }
+          .pillar-watermark-kanji {
+            font-size: 3rem;
+            right: 12px;
+            top: 10px;
+            opacity: 0.04;
+          }
+          .pillar-header {
+            margin-bottom: 12px;
+          }
+          .pillar-numeral {
+            font-size: 0.65rem;
+            letter-spacing: 0.16em;
+          }
+          .pillar-kanji-sub {
+            font-size: 0.72rem;
+          }
+          .pillar-title {
+            font-size: 1.18rem;
+            margin-bottom: 2px;
+          }
+          .pillar-subtitle {
+            font-size: 0.62rem;
+            letter-spacing: 0.12em;
+            margin-bottom: 12px;
+          }
+          .pillar-divider {
+            margin-bottom: 12px;
+          }
+          .pillar-desc {
+            font-size: 0.78rem;
+            line-height: 1.55;
+          }
+          .service-features-banner {
+            padding: 18px 14px;
+            gap: 14px;
+          }
+          .feature-icon-circle {
+            width: 36px;
+            height: 36px;
+          }
+          .feature-title {
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+          }
+          .feature-subtitle {
+            font-size: 0.68rem;
+          }
+          .feature-phone-link {
+            font-size: 0.72rem;
           }
         }
 

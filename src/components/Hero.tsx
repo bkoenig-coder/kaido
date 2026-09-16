@@ -286,7 +286,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
           top: 0;
           left: 0;
           filter: brightness(0.6) contrast(1.1);
-          animation: subtleKenBurns 30s ease-in-out infinite alternate;
         }
 
         .hero-media-controls {
@@ -372,12 +371,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
 
         .hero-yingyang-left {
           left: 4%;
-          animation: floatYyLeft 14s ease-in-out infinite alternate;
         }
 
         .hero-yingyang-right {
           right: 4%;
-          animation: floatYyRight 14s ease-in-out infinite alternate;
         }
 
         .hero-yy-svg {
@@ -560,27 +557,96 @@ export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
 
         @media (max-width: 768px) {
           .hero-section {
-            padding: 120px 0 60px;
+            padding: 100px 0 45px;
+          }
+
+          .hero-seal-wrapper {
+            margin-bottom: 12px;
+          }
+
+          .hero-eyebrow-pill {
+            font-size: 0.58rem;
+            letter-spacing: 0.18em;
+            padding: 4px 12px;
+            margin-bottom: 10px;
+          }
+
+          .hero-title {
+            font-size: clamp(1.4rem, 5.2vw, 1.8rem);
+            line-height: 1.18;
+            letter-spacing: 0.02em;
+            margin-bottom: 8px;
+          }
+
+          .hero-description {
+            font-size: 0.8rem;
+            line-height: 1.55;
+            margin-bottom: 18px;
+            max-width: 95%;
+          }
+
+          .hero-status-row {
+            margin-bottom: 14px;
+          }
+
+          .status-badge-container {
+            padding: 5px 12px;
+            gap: 7px;
+          }
+
+          .status-text {
+            font-size: 0.62rem;
+            letter-spacing: 0.1em;
+          }
+
+          .summer-concierge-notice {
+            font-size: 0.68rem;
+            letter-spacing: 0.02em;
+            margin-bottom: 22px;
           }
 
           .hero-actions {
             flex-direction: column;
             width: 100%;
-            gap: 14px;
+            gap: 8px;
           }
+
           .hero-actions .btn {
             width: 100%;
+            padding: 10px 18px;
+            font-size: 0.68rem;
+            letter-spacing: 0.12em;
           }
 
           .hero-media-controls {
-            bottom: 14px;
-            right: 14px;
-            padding: 5px 10px;
-            gap: 6px;
+            bottom: 12px;
+            right: 12px;
+            padding: 4px 8px;
+            gap: 5px;
           }
 
           .hero-media-btn span {
             display: none;
+          }
+        }
+
+        @media (max-width: 420px) {
+          .hero-title {
+            font-size: clamp(1.28rem, 5vw, 1.55rem);
+          }
+
+          .hero-description {
+            font-size: 0.76rem;
+            line-height: 1.5;
+          }
+
+          .summer-concierge-notice {
+            font-size: 0.64rem;
+          }
+
+          .hero-actions .btn {
+            font-size: 0.64rem;
+            padding: 9px 16px;
           }
         }
       `}</style>

@@ -57,7 +57,8 @@ export const Footer: React.FC = () => {
             <p className="footer-address">Rotensterngasse 3</p>
             <p className="footer-address">A-1020 Wien • Leopoldstadt</p>
             <p className="footer-meta">sushibarkaido@gmail.com</p>
-            <p className="footer-meta">+43 (0) 660 910 88 18</p>
+            <p className="footer-meta">Takeaway: 01 212 60 76</p>
+            <p className="footer-meta">Mobil: +43 (0) 660 910 88 18</p>
           </div>
 
           {/* Legal / Discretion Col */}
@@ -369,6 +370,70 @@ export const Footer: React.FC = () => {
           .footer-container {
             grid-template-columns: 1fr;
             gap: 36px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .footer-section {
+            padding: 40px 0 0;
+          }
+          .footer-container {
+            padding-bottom: 28px;
+            gap: 22px;
+          }
+          .logo-text {
+            font-size: 1.05rem;
+            letter-spacing: 0.14em;
+          }
+          .logo-subtext {
+            font-size: 0.52rem;
+          }
+          .brand-motto {
+            font-size: 0.72rem;
+            line-height: 1.5;
+            margin-bottom: 12px;
+          }
+          .footer-distinction-link {
+            padding: 5px 12px;
+            font-size: 0.6rem;
+          }
+          .footer-contact h4,
+          .footer-links h4 {
+            font-size: 0.62rem;
+            letter-spacing: 0.12em;
+            margin-bottom: 10px;
+          }
+          .footer-address {
+            font-size: 0.82rem;
+          }
+          .footer-meta {
+            font-size: 0.68rem;
+          }
+          .footer-links {
+            gap: 6px;
+          }
+          .footer-links button {
+            font-size: 0.72rem;
+          }
+          .footer-bottom {
+            padding: 14px 0;
+          }
+          .footer-bottom p {
+            font-size: 0.56rem;
+            letter-spacing: 0.06em;
+          }
+          .legal-body {
+            padding: 16px 14px;
+          }
+          .legal-text-block h3 {
+            font-size: 1.1rem;
+          }
+          .legal-text-block h4 {
+            font-size: 0.68rem;
+          }
+          .legal-text-block p {
+            font-size: 0.74rem;
+            line-height: 1.48;
           }
         }
       `}</style>
