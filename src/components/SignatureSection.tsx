@@ -4,23 +4,21 @@ import { regularMenu, type MenuItem } from '../data/menuData';
 import { delay } from '../utils';
 import { Photo } from './Photo';
 import { SplitLines } from './SplitLines';
-import gallery1 from '../assets/gallery/gallery1.jpg';
-import gallery2 from '../assets/gallery/gallery2.jpg';
-import gallery3 from '../assets/gallery/gallery3.jpg';
-import gallery4 from '../assets/gallery/gallery4.jpg';
+import k1 from '../assets/dishes/k1.jpg';
+import k2 from '../assets/dishes/k2.jpg';
+import k3 from '../assets/dishes/k3.jpg';
+import r5 from '../assets/dishes/r5.jpg';
+import sc2 from '../assets/dishes/sc2.jpg';
+import s2 from '../assets/dishes/s2.jpg';
 
-/**
- * Which dishes are featured, and the photo shown for each on hover.
- * Only the Dragon Roll has a real dish photo so far; the rest use room photos
- * until dish photography is added; just swap the `src` here.
- */
+/** Which dishes are featured, and the photo shown for each on hover / scroll. */
 const SIGNATURE: { code: string; src: string }[] = [
-  { code: 'K1', src: gallery1 },
-  { code: 'K2', src: gallery2 },
-  { code: 'K3', src: gallery3 },
-  { code: 'R5', src: gallery4 },
-  { code: 'SC2', src: gallery2 },
-  { code: 'S2', src: gallery1 },
+  { code: 'K1', src: k1 },
+  { code: 'K2', src: k2 },
+  { code: 'K3', src: k3 },
+  { code: 'R5', src: r5 },
+  { code: 'SC2', src: sc2 },
+  { code: 'S2', src: s2 },
 ];
 
 const euro = (n: number) => n.toLocaleString('de-AT', { style: 'currency', currency: 'EUR' });
