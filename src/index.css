@@ -641,3 +641,23 @@ input, select, textarea { font: inherit; color: inherit; }
   .hero__side { justify-self: start; max-width: 380px; padding: 0; animation-delay: .6s; }
   .hero__fish { right: 6%; }
 }
+
+/* Signature on touch / small screens: picture stays closed until the dish
+   scrolls to the middle of the screen, then opens (like the desktop hover). */
+@media (max-width: 680px), (hover: none) {
+  .dishlist__preview { display: none; }
+  .dishlist.has-active .dishrow:not(.is-active) { opacity: 1; }
+  .dishrow.is-active { padding-left: 0; }
+  .dishrow__mobile-photo {
+    display: block; grid-column: 1 / -1; order: 0;
+    height: 0; min-height: 0; margin-top: 0; overflow: hidden;
+    clip-path: inset(50% 0 50% 0);
+    transition: height .9s var(--inout), margin-top .9s var(--inout), clip-path .9s var(--inout);
+  }
+  .dishrow__mobile-photo img { transform: scale(1.18); transition: transform 1.4s var(--out); }
+  .dishrow.is-active .dishrow__mobile-photo { height: clamp(220px, 58vw, 340px); margin-top: 14px; clip-path: inset(0 0 0 0); }
+  .dishrow.is-active .dishrow__mobile-photo img { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dishrow__mobile-photo, .dishrow__mobile-photo img { transition: none; }
+}

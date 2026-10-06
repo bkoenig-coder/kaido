@@ -78,8 +78,8 @@ const AppContent = () => {
       <main id="main">
         <Hero onOpenReservation={open} onOpenMenu={openMenu} />
         <GallerySection />
-        <SignatureSection onOpenMenu={openMenu} />
         <Reviews />
+        <SignatureSection onOpenMenu={openMenu} />
         <ContactHours />
       </main>
       <Footer onOpenReservation={open} />

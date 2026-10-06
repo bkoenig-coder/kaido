@@ -1,4 +1,4 @@
-import { useRef, useState, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { regularMenu, type MenuItem } from '../data/menuData';
 import { delay } from '../utils';
@@ -42,6 +42,28 @@ export function SignatureSection({ onOpenMenu }: SignatureSectionProps) {
     return { ...s, item, category: de ? cat.titleDe : cat.titleEn };
   });
 
+  // Touch / small screens have no hover: the dish crossing the middle of the
+  // screen as you scroll becomes the active one and opens its picture.
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: none), (max-width: 680px)');
+    let io: IntersectionObserver | null = null;
+    const setup = () => {
+      io?.disconnect();
+      io = null;
+      if (!mq.matches || !wrap.current) return;
+      io = new IntersectionObserver(
+        (entries) => entries.forEach((e) => {
+          if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.i));
+        }),
+        { rootMargin: '-40% 0px -40% 0px', threshold: 0 },
+      );
+      wrap.current.querySelectorAll('.dishrow').forEach((el) => io!.observe(el));
+    };
+    setup();
+    mq.addEventListener('change', setup);
+    return () => { mq.removeEventListener('change', setup); io?.disconnect(); };
+  }, []);
+
   const move = (e: MouseEvent) => {
     const r = wrap.current?.getBoundingClientRect();
     if (!r || !preview.current) return;
@@ -61,7 +83,7 @@ export function SignatureSection({ onOpenMenu }: SignatureSectionProps) {
 
           <div className={`dishlist ${active !== null ? 'has-active' : ''}`} ref={wrap} onMouseMove={move} onMouseLeave={() => setActive(null)}>
             {dishes.map((d, i) => (
-              <article key={d.code} className={`dishrow ${active === i ? 'is-active' : ''}`} onMouseEnter={() => setActive(i)} data-reveal style={delay(i)}>
+              <article key={d.code} className={`dishrow ${active === i ? 'is-active' : ''}`} onMouseEnter={() => setActive(i)} data-i={i} data-reveal style={delay(i)}>
                 <h3>{de ? d.item.nameDe : d.item.nameEn}</h3>
                 <p>{de ? d.item.descriptionDe : d.item.descriptionEn}</p>
                 <span className="dishrow__tag">{d.category}</span>
