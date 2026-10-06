@@ -82,7 +82,6 @@ export const useOpenStatus = (lang: Lang) => {
 
 export const RESTAURANT = {
   name: 'Kaido',
-  kanji: 'カイ堂',
   address: 'Rotensterngasse 3, 1020 Wien',
   mapsUrl: 'https://maps.google.com/?q=Rotensterngasse+3,+1020+Wien',
   phone: '01 212 60 76',

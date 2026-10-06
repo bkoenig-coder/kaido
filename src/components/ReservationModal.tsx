@@ -31,7 +31,6 @@ export function ReservationModal({ isOpen, onClose }: ReservationModalProps) {
       <div className="booking" role="dialog" aria-modal="true" aria-label={t.reserveTitle} onClick={(e) => e.stopPropagation()}>
         <header className="booking__head">
           <div>
-            <span className="modal__kanji">席</span>
             <h2>{t.reserveTitle}</h2>
             <p>{de ? 'Echtzeit-Buchung über Gastro.site' : 'Live booking via Gastro.site'}</p>
           </div>
