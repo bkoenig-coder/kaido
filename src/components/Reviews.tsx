@@ -1,671 +1,148 @@
-import React, { useState } from 'react';
+import { useState, type CSSProperties, type MouseEvent } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Star, Award, ExternalLink, Maximize2, X } from 'lucide-react';
-import restaurantGuruImg from '../assets/restaurant-guru.png';
+import { RESTAURANT } from '../lib/hours';
+import { delay } from '../utils';
+import { Lightbox } from './Lightbox';
 import certImg from '../assets/gallery/Certificate.jpeg';
 
-interface Review {
-  id: number;
+/** Public Google Maps listing for Kaido Sushi Bar. */
+const GOOGLE_URL = 'https://www.google.com/maps/place/Kaido+Sushi+Bar,+Rotensterngasse,+Vienna/@48.2179637,16.3814502,17z/data=!4m6!3m5!1s0x476d07c2784dd305:0x3422c30c617d207b!8m2!3d48.2179637!4d16.3814502';
+
+/** Overall rating shown in the Google summary. */
+const RATING = 4.8;
+
+interface GReview {
   name: string;
-  rating: number;
-  textDe: string;
-  textEn: string;
-  dateDe: string;
-  dateEn: string;
+  stars: number;
+  when: { de: string; en: string };
+  de: string;
+  en: string;
+  color: string;
 }
 
-const reviewsData: Review[] = [
-  {
-    id: 1,
-    name: 'Thomas L.',
-    rating: 5,
-    textDe: 'Sensationelle Sushi-Kompositionen. Alles von kompromissloser Frische, handwerklich makellos gerollt und mit vollendeter Ästhetik serviert. Eine Klasse für sich.',
-    textEn: 'Sensational sushi compositions. Everything exhibits uncompromising freshness, rolled with master-level precision and plated with sublime grace.',
-    dateDe: 'Kürzlich',
-    dateEn: 'Recent Patron'
-  },
-  {
-    id: 2,
-    name: 'Sarah M.',
-    rating: 5,
-    textDe: 'Einfühlsamer, hochgradig diskreter Service. Man spürt vom ersten Moment an die gelebte Omotenashi-Tradition. Ein seltener Zufluchtsort des guten Geschmacks.',
-    textEn: 'Attentive, profoundly discreet service. One senses true Omotenashi from the very first moment. A rare sanctuary of refined taste.',
-    dateDe: 'Vergangener Monat',
-    dateEn: 'Last Month'
-  },
-  {
-    id: 3,
-    name: 'David K.',
-    rating: 5,
-    textDe: 'Unglaubliche Klarheit der Aromen. Die Omakase-Auswahl des Meisters war ein kulinarisches Kunstwerk. Hier wird Sushi nicht zubereitet – es wird zelebriert.',
-    textEn: 'Incredible clarity of flavors. The master’s omakase tasting was an edible masterpiece. Here, sushi is not merely prepared — it is reverently celebrated.',
-    dateDe: 'Herbst 2025',
-    dateEn: 'Autumn 2025'
-  },
-  {
-    id: 4,
-    name: 'Yuki S.',
-    rating: 5,
-    textDe: 'Ein authentisches Kleinod im 2. Wiener Bezirk. Frischester Fisch, meisterhafte Messerführung und unaufdringliche Eleganz wie in den besten Häusern Kyotos.',
-    textEn: 'An authentic jewel in Vienna’s 2nd district. Pristine seasonal fish, immaculate blade work, and understated elegance reminiscent of Kyoto’s finest counters.',
-    dateDe: 'Kürzlich',
-    dateEn: 'Recent Patron'
-  }
+const reviews: GReview[] = [
+  { name: 'Thomas L.', stars: 5, color: '#1a73e8', when: { de: 'vor einem Monat', en: 'a month ago' }, de: 'Sensationelle Sushi-Kompositionen. Alles von kompromissloser Frische, handwerklich makellos gerollt und mit vollendeter Ästhetik serviert.', en: 'Sensational sushi compositions. Everything exhibits uncompromising freshness, rolled with master-level precision and plated with sublime grace.' },
+  { name: 'Sarah M.', stars: 5, color: '#e8710a', when: { de: 'vor 2 Monaten', en: '2 months ago' }, de: 'Einfühlsamer, hochgradig diskreter Service. Man spürt vom ersten Moment an die gelebte Omotenashi-Tradition.', en: 'Attentive, profoundly discreet service. One senses true Omotenashi from the very first moment.' },
+  { name: 'David K.', stars: 5, color: '#188038', when: { de: 'vor 3 Monaten', en: '3 months ago' }, de: 'Unglaubliche Klarheit der Aromen. Hier wird Sushi nicht zubereitet – es wird zelebriert.', en: 'Incredible clarity of flavors. Here, sushi is not merely prepared — it is reverently celebrated.' },
+  { name: 'Yuki S.', stars: 5, color: '#a142f4', when: { de: 'vor 4 Monaten', en: '4 months ago' }, de: 'Ein authentisches Kleinod im 2. Wiener Bezirk. Frischester Fisch und unaufdringliche Eleganz wie in den besten Häusern Kyotos.', en: 'An authentic jewel in Vienna’s 2nd district. Pristine fish and understated elegance reminiscent of Kyoto’s finest counters.' },
 ];
 
-export const Reviews: React.FC = () => {
-  const { language } = useLanguage();
-  const [isCertModalOpen, setIsCertModalOpen] = useState(false);
+const STAR = 'M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z';
+
+function Stars({ value, size = 16 }: { value: number; size?: number }) {
+  return (
+    <span className="gstars" role="img" aria-label={`${value} / 5`}>
+      {[0, 1, 2, 3, 4].map((i) => {
+        const fill = Math.max(0, Math.min(1, value - i));
+        return (
+          <svg key={i} width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" style={{ '--s': i } as CSSProperties}>
+            <defs>
+              <linearGradient id={`gs-${size}-${i}-${value}`}>
+                <stop offset={`${fill * 100}%`} stopColor="#fbbc04" />
+                <stop offset={`${fill * 100}%`} stopColor="#dadce0" />
+              </linearGradient>
+            </defs>
+            <path d={STAR} fill={`url(#gs-${size}-${i}-${value})`} />
+          </svg>
+        );
+      })}
+    </span>
+  );
+}
+
+function GoogleG({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
+      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+    </svg>
+  );
+}
+
+/** Cursor-follow spotlight and a slight 3D tilt. */
+const track = (e: MouseEvent<HTMLElement>) => {
+  const el = e.currentTarget;
+  const r = el.getBoundingClientRect();
+  const x = e.clientX - r.left;
+  const y = e.clientY - r.top;
+  el.style.setProperty('--mx', `${x}px`);
+  el.style.setProperty('--my', `${y}px`);
+  el.style.setProperty('--rx', `${((y / r.height) - 0.5) * -6}deg`);
+  el.style.setProperty('--ry', `${((x / r.width) - 0.5) * 6}deg`);
+};
+const untrack = (e: MouseEvent<HTMLElement>) => {
+  e.currentTarget.style.setProperty('--rx', '0deg');
+  e.currentTarget.style.setProperty('--ry', '0deg');
+};
+
+export function Reviews() {
+  const { language, t } = useLanguage();
+  const de = language === 'de';
+  const [cert, setCert] = useState(false);
+  const score = RATING.toLocaleString(de ? 'de-AT' : 'en-GB', { minimumFractionDigits: 1 });
 
   return (
-    <section id="reviews" className="reviews-section section">
-      <div className="container">
-        {/* Header Block with Rating */}
-        <div className="reviews-header-block animate-slide-up">
-          <div className="reviews-title-area">
-            <span className="eyebrow-text">
-              {language === 'de' ? 'Stimmen unserer Gäste' : 'Patron Reflections'}
-            </span>
-            <h2 className="section-title-text">
-              {language === 'de' ? 'Resonanz & Würdigung' : 'Reflections & Accolades'}
-            </h2>
-            <div className="hairline-divider" style={{ margin: '14px 0 24px' }} />
-            
-            {/* Rating Summary */}
-            <div className="rating-summary-pill">
-              <div className="stars-row">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={15} fill="var(--color-gold)" color="var(--color-gold)" />
-                ))}
-              </div>
-              <span className="rating-value">4.8 / 5.0</span>
-              <span className="rating-divider">•</span>
-              <span className="reviews-count">
-                {language === 'de' ? 'Hervorragende Bewertung über 450+ Rezensionen' : 'Exceptional rating across 450+ guest reviews'}
-              </span>
+    <section className="section" id="reviews">
+      <div className="container grid-12">
+        <p className="eyebrow">{de ? 'Stimmen unserer Gäste' : 'Guests'}</p>
+        <div>
+          <div className="greviews" data-reveal>
+            <div className="greviews__summary">
+              <span className="greviews__bar" aria-hidden="true" />
+              <div className="greviews__brand"><GoogleG /><span>{de ? 'Google Rezensionen' : 'Google reviews'}</span></div>
+              <div className="greviews__score">{score}</div>
+              <Stars value={RATING} size={18} />
+              <p className="greviews__count">{de ? '1.000+ Rezensionen' : '1,000+ reviews'}</p>
+              <a className="gbtn" href={GOOGLE_URL} target="_blank" rel="noopener noreferrer">{de ? 'Alle Rezensionen auf Google Maps' : 'See all reviews on Google Maps'}</a>
             </div>
-          </div>
-        </div>
-
-        {/* Official Distinction Showcase - Large Always-Visible Certificate */}
-        <div className="distinction-card glass-card animate-slide-up">
-          <div className="distinction-content">
-            <div className="distinction-tag">
-              <Award size={16} />
-              <span>{language === 'de' ? 'Gastronomische Würdigung' : 'Culinary Distinction'}</span>
-            </div>
-
-            <h3>
-              {language === 'de' ? 'Ausgezeichnet auf Restaurant Guru' : 'Recommended on Restaurant Guru'}
-            </h3>
-
-            <p>
-              {language === 'de' 
-                ? 'Kaido wurde von Restaurant Guru offiziell mit der Auszeichnungs-Urkunde für herausragende kulinarische Qualität und Gastfreundschaft geehrt.' 
-                : 'Kaido was officially honored with the certificate of excellence by Restaurant Guru for superior culinary quality and hospitality.'}
-            </p>
-
-            <div className="distinction-actions">
-              <a 
-                href="https://de.restaurantguru.com/Kaido-Sushi-Bar-Vienna?utm_source=rg_certificate9" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="distinction-link"
-              >
-                <span>Restaurant Guru Profil</span>
-                <ExternalLink size={13} />
-              </a>
-
-              <div className="distinction-seal-badge">
-                <img src={restaurantGuruImg} alt="Restaurant Guru Badge" className="seal-badge-img" />
-                <span className="seal-badge-text">2023 Recommended</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Large Visible Certificate Display */}
-          <div className="distinction-cert-display">
-            <div className="cert-frame-wrapper" onClick={() => setIsCertModalOpen(true)} title={language === 'de' ? 'Klicken für Vollbild' : 'Click for fullscreen'}>
-              <img 
-                src={certImg} 
-                alt="Kaido Restaurant Guru Original Certificate" 
-                className="cert-prominent-image" 
-              />
-              <div className="cert-frame-border" />
-              <div className="cert-hover-hint">
-                <Maximize2 size={15} />
-                <span>{language === 'de' ? 'Vollbild' : 'Fullscreen'}</span>
-              </div>
-            </div>
-            <span className="cert-display-caption">
-              {language === 'de' ? 'Original-Zertifikat • Restaurant Guru 2023' : 'Original Certificate • Restaurant Guru 2023'}
-            </span>
-          </div>
-        </div>
-
-        {/* Reviews Grid */}
-        <div className="reviews-grid">
-          {reviewsData.map((review) => (
-            <div key={review.id} className="review-card glass-card animate-slide-up">
-              <div className="review-card-header">
-                <div className="review-author-group">
-                  <span className="review-author-initial">{review.name.charAt(0)}</span>
-                  <div>
-                    <h4 className="review-author-name">{review.name}</h4>
-                    <span className="review-date">{language === 'de' ? review.dateDe : review.dateEn}</span>
-                  </div>
+            <div className="greviews__list">
+              {reviews.map((r, i) => (
+                <div className="greview-wrap" key={r.name} data-reveal style={delay(i)}>
+                <article className="greview" onMouseMove={track} onMouseLeave={untrack}>
+                  <span className="greview__quote" aria-hidden="true">“</span>
+                  <header>
+                    <span className="greview__avatar" style={{ background: r.color }}>{r.name.charAt(0)}</span>
+                    <div>
+                      <strong>{r.name}</strong>
+                      <span className="greview__meta">Google</span>
+                    </div>
+                  </header>
+                  <div className="greview__row"><Stars value={r.stars} size={14} /><time>{de ? r.when.de : r.when.en}</time></div>
+                  <p>{de ? r.de : r.en}</p>
+                </article>
                 </div>
-                <div className="review-stars">
-                  {[...Array(review.rating)].map((_, i) => (
-                    <Star key={i} size={13} fill="var(--color-gold)" color="var(--color-gold)" />
-                  ))}
-                </div>
-              </div>
-
-              <blockquote className="review-quote">
-                “{language === 'de' ? review.textDe : review.textEn}”
-              </blockquote>
+              ))}
             </div>
-          ))}
+          </div>
+          <div className="guru" data-reveal>
+            <button className="guru__cert" onClick={() => setCert(true)} data-cursor="view" aria-label={de ? 'Urkunde vergrößern' : 'Enlarge certificate'}>
+              <img src={certImg} alt="Restaurant Guru 2023 – Kaido Sushi Bar Recommended" loading="lazy" />
+            </button>
+            <div className="guru__text">
+              <p className="eyebrow">{de ? 'Auszeichnung' : 'Distinction'}</p>
+              <h3>{de ? 'Ausgezeichnet auf Restaurant Guru' : 'Recommended on Restaurant Guru'}</h3>
+              <p className="body">{de
+                ? 'Kaido wurde von Restaurant Guru mit der Urkunde für herausragende kulinarische Qualität und Gastfreundschaft geehrt.'
+                : 'Kaido was honoured by Restaurant Guru with a certificate for outstanding culinary quality and hospitality.'}</p>
+              <p className="guru__links">
+                <a className="text-link" href={RESTAURANT.guruUrl} target="_blank" rel="noopener noreferrer">{de ? 'Restaurant Guru Profil' : 'Restaurant Guru profile'} ↗</a>
+                <button className="text-link" onClick={() => setCert(true)}>{de ? 'Urkunde vergrößern' : 'Enlarge certificate'}</button>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* Certificate Modal */}
-      {isCertModalOpen && (
-        <div className="modal-overlay" onClick={() => setIsCertModalOpen(false)}>
-          <div className="modal-content cert-modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="cert-modal-header">
-              <div className="cert-modal-title">
-                <Award size={18} className="text-gold" />
-                <h3>{language === 'de' ? 'Offizielle Auszeichnung 2023' : 'Official Distinction 2023'}</h3>
-              </div>
-              <button 
-                className="cert-modal-close" 
-                onClick={() => setIsCertModalOpen(false)}
-                aria-label="Schließen"
-              >
-                <X size={22} />
-              </button>
-            </div>
-            <div className="cert-modal-body">
-              <img 
-                src={certImg} 
-                alt="Kaido Restaurant Guru Original Certificate" 
-                className="cert-full-image" 
-              />
-            </div>
-          </div>
-        </div>
+      {cert && (
+        <Lightbox
+          items={[{ id: 'cert', src: certImg, title: 'Restaurant Guru', caption: de ? 'Original-Zertifikat · Restaurant Guru 2023' : 'Original certificate · Restaurant Guru 2023' }]}
+          index={0}
+          onIndex={() => {}}
+          onClose={() => setCert(false)}
+          closeLabel={t.closeBtn}
+        />
       )}
-
-      <style>{`
-        .reviews-section {
-          background: var(--bg-primary);
-          position: relative;
-          transition: background-color 0.35s ease;
-        }
-
-        .reviews-header-block {
-          margin-bottom: 50px;
-        }
-
-        .section-title-text {
-          font-size: clamp(2rem, 3.5vw, 3rem);
-          font-weight: 400;
-          color: var(--text-primary);
-          letter-spacing: 0.02em;
-        }
-
-        .rating-summary-pill {
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          background: var(--bg-secondary);
-          border: 1px solid var(--border-color);
-          padding: 8px 20px;
-          border-radius: var(--radius-full);
-          font-family: var(--font-eyebrow);
-          font-size: 0.78rem;
-          color: var(--text-secondary);
-          letter-spacing: 0.05em;
-        }
-
-        .stars-row {
-          display: flex;
-          gap: 4px;
-        }
-
-        .rating-value {
-          color: var(--color-gold);
-          font-weight: 600;
-        }
-
-        .rating-divider {
-          opacity: 0.3;
-        }
-
-        /* Distinction Showcase Card */
-        .distinction-card {
-          margin-bottom: 60px;
-          padding: 44px 48px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 36px;
-          border: 1px solid var(--border-color);
-          background: var(--bg-secondary);
-        }
-
-        .distinction-content {
-          max-width: 620px;
-        }
-
-        .distinction-tag {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          color: var(--color-gold);
-          font-family: var(--font-eyebrow);
-          font-size: 0.72rem;
-          letter-spacing: 0.22em;
-          text-transform: uppercase;
-          margin-bottom: 12px;
-        }
-
-        .distinction-content h3 {
-          font-family: var(--font-serif);
-          font-size: 2rem;
-          color: var(--text-primary);
-          margin-bottom: 10px;
-          letter-spacing: 0.02em;
-        }
-
-        .distinction-content p {
-          color: var(--text-secondary);
-          font-size: 0.98rem;
-          line-height: 1.7;
-          margin-bottom: 24px;
-        }
-
-        .distinction-actions {
-          display: flex;
-          align-items: center;
-          gap: 20px;
-        }
-
-        .distinction-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-family: var(--font-eyebrow);
-          font-size: 0.75rem;
-          letter-spacing: 0.15em;
-          color: var(--color-gold-light);
-          text-transform: uppercase;
-          opacity: 0.85;
-          transition: var(--transition-fast);
-        }
-
-        .distinction-link:hover {
-          color: #ffffff;
-          opacity: 1;
-        }
-
-        .distinction-seal-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          background: rgba(14, 18, 24, 0.7);
-          border: 1px solid rgba(212, 175, 55, 0.2);
-          padding: 6px 14px;
-          border-radius: var(--radius-full);
-        }
-
-        .seal-badge-img {
-          height: 26px;
-          object-fit: contain;
-        }
-
-        .seal-badge-text {
-          font-family: var(--font-eyebrow);
-          font-size: 0.7rem;
-          color: var(--color-gold-light);
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-        }
-
-        /* Large Prominent Certificate Display */
-        .distinction-cert-display {
-          flex: 0 0 380px;
-          max-width: 420px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .cert-frame-wrapper {
-          position: relative;
-          width: 100%;
-          border-radius: 6px;
-          overflow: hidden;
-          box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 30px rgba(212, 175, 55, 0.15);
-          border: 2px solid rgba(212, 175, 55, 0.45);
-          cursor: pointer;
-          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
-          background: #000000;
-        }
-
-        .cert-frame-wrapper:hover {
-          transform: translateY(-4px) scale(1.02);
-          border-color: var(--color-gold);
-          box-shadow: 0 22px 48px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.35);
-        }
-
-        .cert-prominent-image {
-          width: 100%;
-          height: auto;
-          display: block;
-        }
-
-        .cert-frame-border {
-          position: absolute;
-          inset: 6px;
-          border: 1px solid rgba(212, 175, 55, 0.3);
-          pointer-events: none;
-        }
-
-        .cert-hover-hint {
-          position: absolute;
-          bottom: 12px;
-          right: 12px;
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          background: rgba(10, 12, 16, 0.88);
-          backdrop-filter: blur(8px);
-          border: 1px solid rgba(212, 175, 55, 0.4);
-          color: var(--color-gold-light);
-          padding: 6px 14px;
-          border-radius: var(--radius-full);
-          font-family: var(--font-eyebrow);
-          font-size: 0.68rem;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          opacity: 0.92;
-          transition: opacity 0.2s ease, transform 0.2s ease;
-        }
-
-        .cert-frame-wrapper:hover .cert-hover-hint {
-          opacity: 1;
-          transform: scale(1.05);
-        }
-
-        .cert-display-caption {
-          font-family: var(--font-eyebrow);
-          font-size: 0.72rem;
-          color: var(--color-gold-muted);
-          letter-spacing: 0.16em;
-          text-transform: uppercase;
-          text-align: center;
-          opacity: 0.85;
-        }
-
-        /* Reviews Grid */
-        .reviews-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 28px;
-        }
-
-        .review-card {
-          padding: 36px 32px;
-          background: var(--bg-secondary);
-          border: 1px solid var(--border-color);
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          border-radius: var(--radius-md);
-        }
-
-        .review-card-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 18px;
-        }
-
-        .review-author-group {
-          display: flex;
-          align-items: center;
-          gap: 14px;
-        }
-
-        .review-author-initial {
-          width: 38px;
-          height: 38px;
-          border-radius: 50%;
-          border: 1px solid var(--color-gold);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-family: var(--font-serif);
-          font-size: 1.1rem;
-          color: var(--color-gold);
-          background: rgba(212, 175, 55, 0.08);
-        }
-
-        .review-author-name {
-          font-family: var(--font-eyebrow);
-          font-size: 0.85rem;
-          letter-spacing: 0.12em;
-          color: var(--text-primary);
-        }
-
-        .review-date {
-          font-size: 0.75rem;
-          color: var(--color-text-muted);
-          display: block;
-        }
-
-        .review-stars {
-          display: flex;
-          gap: 3px;
-        }
-
-        .review-quote {
-          font-family: var(--font-serif);
-          font-size: 1.12rem;
-          font-style: italic;
-          color: var(--color-washi-dim);
-          line-height: 1.7;
-          font-weight: 300;
-        }
-
-        /* Cert Modal */
-        .cert-modal-content {
-          max-width: 600px;
-          background: #0b0d11;
-          border: 1px solid rgba(212, 175, 55, 0.35);
-        }
-
-        .cert-modal-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 20px 24px;
-          border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-        }
-
-        .cert-modal-title {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-
-        .cert-modal-title h3 {
-          font-family: var(--font-eyebrow);
-          font-size: 0.9rem;
-          letter-spacing: 0.15em;
-          text-transform: uppercase;
-          color: #ffffff;
-        }
-
-        .cert-modal-close {
-          background: none;
-          border: none;
-          color: var(--color-washi-dim);
-          cursor: pointer;
-        }
-
-        .cert-modal-body {
-          padding: 24px;
-          display: flex;
-          justify-content: center;
-        }
-
-        .cert-full-image {
-          max-width: 100%;
-          max-height: 70vh;
-          object-fit: contain;
-          border-radius: var(--radius-sm);
-        }
-
-        @media (max-width: 900px) {
-          .distinction-card {
-            flex-direction: column;
-            text-align: center;
-            padding: 36px 20px;
-            gap: 30px;
-          }
-          .distinction-content {
-            max-width: 100%;
-          }
-          .distinction-actions {
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 16px;
-          }
-          .distinction-cert-display {
-            flex: 1 1 auto;
-            width: 100%;
-            max-width: 380px;
-          }
-          .reviews-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .rating-summary-pill {
-            padding: 5px 12px;
-            font-size: 0.64rem;
-            gap: 7px;
-          }
-          .distinction-card {
-            padding: 18px 14px;
-            gap: 16px;
-            margin-bottom: 28px;
-          }
-          .distinction-tag {
-            font-size: 0.58rem;
-            letter-spacing: 0.14em;
-            margin-bottom: 6px;
-          }
-          .distinction-content h3 {
-            font-size: 1.15rem;
-            margin-bottom: 6px;
-          }
-          .distinction-content p {
-            font-size: 0.76rem;
-            line-height: 1.5;
-            margin-bottom: 14px;
-          }
-          .distinction-link {
-            font-size: 0.62rem;
-          }
-          .distinction-seal-badge {
-            padding: 3px 8px;
-            gap: 5px;
-          }
-          .seal-badge-text {
-            font-size: 0.56rem;
-          }
-          .cert-display-caption {
-            font-size: 0.6rem;
-          }
-          .cert-hover-hint {
-            font-size: 0.56rem;
-            padding: 3px 8px;
-          }
-          .reviews-grid {
-            gap: 14px;
-          }
-          .review-card {
-            padding: 15px 14px;
-          }
-          .review-author-initial {
-            width: 28px;
-            height: 28px;
-            font-size: 0.85rem;
-          }
-          .review-author-name {
-            font-size: 0.72rem;
-          }
-          .review-date {
-            font-size: 0.6rem;
-          }
-          .review-quote {
-            font-size: 0.78rem;
-            line-height: 1.5;
-          }
-          .cert-modal-header {
-            padding: 12px 16px;
-          }
-          .cert-modal-title h3 {
-            font-size: 0.72rem;
-          }
-        }
-
-        /* Day Mode Refinements for Reviews & Distinction */
-        [data-theme="light"] .distinction-seal-badge {
-          background: #f4f0e6;
-          border-color: rgba(160, 120, 25, 0.28);
-        }
-
-        [data-theme="light"] .seal-badge-text {
-          color: #806216;
-        }
-
-        [data-theme="light"] .distinction-link {
-          color: #806216;
-        }
-
-        [data-theme="light"] .distinction-link:hover {
-          color: #17181a;
-        }
-
-        [data-theme="light"] .cert-display-caption {
-          color: #806216;
-        }
-
-        [data-theme="light"] .review-date {
-          color: #64676e;
-        }
-
-        [data-theme="light"] .cert-modal-header {
-          background: #fbf9f4;
-          border-bottom-color: rgba(160, 120, 25, 0.25);
-        }
-
-        [data-theme="light"] .cert-modal-title h3 {
-          color: #17181a;
-        }
-
-        [data-theme="light"] .cert-modal-close {
-          color: #17181a;
-        }
-      `}</style>
     </section>
   );
-};
+}

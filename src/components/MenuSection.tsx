@@ -1,687 +1,152 @@
-import React, { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { regularMenu, lunchMenu } from '../data/menuData';
-import { Search, Flame, Leaf, Wheat, Info } from 'lucide-react';
+import { regularMenu, lunchMenu, type MenuItem } from '../data/menuData';
+import { SplitLines } from './SplitLines';
 
-export const MenuSection: React.FC = () => {
+const euro = (n: number) => n.toLocaleString('de-AT', { style: 'currency', currency: 'EUR' });
+
+export function MenuSection({ initialTab = 'regular' }: { initialTab?: 'regular' | 'lunch' }) {
   const { t, language } = useLanguage();
-  const [activeMenuType, setActiveMenuType] = useState<'regular' | 'lunch'>('regular');
-  const [activeCategory, setActiveCategory] = useState<string>('starters');
-  const [searchQuery, setSearchQuery] = useState('');
-  
-  // Dietary filter states
-  const [filterVeg, setFilterVeg] = useState(false);
-  const [filterVegan, setFilterVegan] = useState(false);
-  const [filterSpicy, setFilterSpicy] = useState(false);
-  const [filterGlutenFree, setFilterGlutenFree] = useState(false);
+  const de = language === 'de';
+  const [menuType, setMenuType] = useState<'regular' | 'lunch'>(initialTab);
+  const [category, setCategory] = useState('starters');
+  const [query, setQuery] = useState('');
+  const [hover, setHover] = useState<string | null>(null);
+  const [diet, setDiet] = useState({ veg: false, vegan: false, spicy: false, gf: false });
 
-  const resetFilters = () => {
-    setFilterVeg(false);
-    setFilterVegan(false);
-    setFilterSpicy(false);
-    setFilterGlutenFree(false);
-  };
+  const resetFilters = () => setDiet({ veg: false, vegan: false, spicy: false, gf: false });
+  const toggle = (k: keyof typeof diet) => setDiet((d) => ({ ...d, [k]: !d[k] }));
 
-  React.useEffect(() => {
-    const handleSwitch = (e: Event) => {
-      const customEvent = e as CustomEvent<'regular' | 'lunch'>;
-      if (customEvent.detail) {
-        setActiveMenuType(customEvent.detail);
-        resetFilters();
-      }
-    };
-    window.addEventListener('switchMenuTab', handleSwitch);
-    return () => window.removeEventListener('switchMenuTab', handleSwitch);
-  }, []);
+  const q = query.trim().toLowerCase();
 
-  const formatPrice = (price: number) => {
-    return price.toLocaleString('de-AT', { style: 'currency', currency: 'EUR' });
-  };
+  const filteredRegular = useMemo(
+    () =>
+      regularMenu
+        .map((cat) => ({
+          ...cat,
+          items: cat.items.filter((it) => {
+            const hay = `${it.code} ${it.nameDe} ${it.nameEn} ${it.descriptionDe ?? ''} ${it.descriptionEn ?? ''}`.toLowerCase();
+            return (
+              (!q || hay.includes(q)) &&
+              (!diet.veg || it.isVegetarian || it.isVegan) &&
+              (!diet.vegan || it.isVegan) &&
+              (!diet.spicy || it.isSpicy) &&
+              (!diet.gf || it.isGlutenFree)
+            );
+          }),
+        }))
+        .filter((c) => c.items.length > 0),
+    [q, diet],
+  );
 
-  // Filter regular menu items
-  const filteredRegularMenu = useMemo(() => {
-    return regularMenu.map((category) => {
-      const items = category.items.filter((item) => {
-        const matchSearch = searchQuery.trim() === '' || 
-          item.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.nameDe.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.nameEn.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (item.descriptionDe && item.descriptionDe.toLowerCase().includes(searchQuery.toLowerCase())) ||
-          (item.descriptionEn && item.descriptionEn.toLowerCase().includes(searchQuery.toLowerCase()));
+  const filteredLunch = useMemo(
+    () =>
+      lunchMenu.filter((it) => {
+        const hay = `m${it.number} ${it.nameDe} ${it.nameEn} ${it.descriptionDe} ${it.descriptionEn}`.toLowerCase();
+        const veganish = hay.includes('vegan');
+        return (
+          (!q || hay.includes(q)) &&
+          (!diet.veg || veganish || hay.includes('tofu')) &&
+          (!diet.vegan || veganish) &&
+          (!diet.spicy || hay.includes('curry') || hay.includes('spicy')) &&
+          !diet.gf
+        );
+      }),
+    [q, diet],
+  );
 
-        const matchVeg = !filterVeg || item.isVegetarian || item.isVegan;
-        const matchVegan = !filterVegan || item.isVegan;
-        const matchSpicy = !filterSpicy || item.isSpicy;
-        const matchGlutenFree = !filterGlutenFree || item.isGlutenFree;
+  const active = filteredRegular.find((c) => c.id === category) ?? filteredRegular[0];
 
-        return matchSearch && matchVeg && matchVegan && matchSpicy && matchGlutenFree;
-      });
+  const tags = (it: MenuItem) =>
+    [
+      it.isVegan && t.filterVegan,
+      !it.isVegan && it.isVegetarian && t.filterVegetarian,
+      it.isSpicy && t.filterSpicy,
+      it.isGlutenFree && t.filterGlutenFree,
+    ]
+      .filter(Boolean)
+      .join(' · ');
 
-      return {
-        ...category,
-        items
-      };
-    }).filter(category => category.items.length > 0);
-  }, [searchQuery, filterVeg, filterVegan, filterSpicy, filterGlutenFree]);
+  const price = (it: MenuItem) => (it.priceLarge ? `${euro(it.price)} / ${euro(it.priceLarge)}` : euro(it.price));
 
-  // Filter lunch menu items
-  const filteredLunchMenu = useMemo(() => {
-    return lunchMenu.filter((item) => {
-      const matchSearch = searchQuery.trim() === '' || 
-        `M${item.number}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.nameDe.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.nameEn.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.descriptionDe.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.descriptionEn.toLowerCase().includes(searchQuery.toLowerCase());
-
-      const isVeg = item.nameDe.toLowerCase().includes('vegan') || item.descriptionDe.toLowerCase().includes('tofu') || item.descriptionDe.toLowerCase().includes('vegan');
-      const matchVeg = !filterVeg || isVeg;
-      const matchVegan = !filterVegan || item.nameDe.toLowerCase().includes('vegan') || item.descriptionDe.toLowerCase().includes('vegan');
-      const matchSpicy = !filterSpicy || item.nameDe.toLowerCase().includes('curry') || item.descriptionDe.toLowerCase().includes('curry') || item.descriptionDe.toLowerCase().includes('spicy');
-      const matchGlutenFree = !filterGlutenFree || false;
-
-      return matchSearch && matchVeg && matchVegan && matchSpicy && matchGlutenFree;
-    });
-  }, [searchQuery, filterVeg, filterVegan, filterSpicy, filterGlutenFree]);
-
-  const activeCategoryData = useMemo(() => {
-    return filteredRegularMenu.find(cat => cat.id === activeCategory) || filteredRegularMenu[0];
-  }, [filteredRegularMenu, activeCategory]);
+  const dietButtons: [keyof typeof diet, string][] = [
+    ['veg', t.filterVegetarian],
+    ['vegan', t.filterVegan],
+    ['spicy', t.filterSpicy],
+    ['gf', t.filterGlutenFree],
+  ];
 
   return (
-    <section id="menu" className="menu-section section">
-      <div className="container">
-        {/* Haute Gastronomy Title Header */}
-        <div className="section-title animate-slide-up">
-          <span className="eyebrow-text">{t.menuEyebrow}</span>
-          <h2>{t.menuTitle}</h2>
-          <div className="hairline-divider" />
-          <p style={{ marginTop: '16px' }}>{t.menuSubtitle}</p>
-        </div>
-
-        {/* Regular vs Lunch Menu Toggle */}
-        <div className="menu-toggle-container">
-          <button 
-            className={`menu-toggle-btn ${activeMenuType === 'regular' ? 'active' : ''}`}
-            onClick={() => { setActiveMenuType('regular'); resetFilters(); }}
-          >
-            {t.menuRegularTab}
-          </button>
-          <button 
-            className={`menu-toggle-btn ${activeMenuType === 'lunch' ? 'active' : ''}`}
-            onClick={() => { setActiveMenuType('lunch'); resetFilters(); }}
-          >
-            {t.menuLunchTab}
-          </button>
-        </div>
-
-        {/* Lunch Menu Note */}
-        {activeMenuType === 'lunch' && (
-          <div className="lunch-note animate-fade-in glass-card">
-            <Info size={18} className="text-gold" />
-            <p>{t.menuLunchNote}</p>
-          </div>
-        )}
-
-        {/* Search and Filters Bar */}
-        <div className="search-filter-bar glass-card">
-          <div className="search-input-wrapper">
-            <Search className="search-icon" size={16} />
-            <input 
-              type="text" 
-              placeholder={t.menuSearchPlaceholder}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
-            />
+    <section className="section menu">
+      <div className="container grid-12">
+        <p className="eyebrow">{t.menuEyebrow}</p>
+        <div>
+          <div className="section__head">
+            <SplitLines lines={de ? ['Speisekarte &', 'Mittagsmenü'] : ['Menu &', 'lunch specials']} className="h2" onLoad />
+            <p className="body menu__intro">{t.menuSubtitle}</p>
           </div>
 
-          <div className="dietary-filters">
-            <button 
-              className={`filter-tag ${filterVeg ? 'active-veg' : ''}`}
-              onClick={() => setFilterVeg(!filterVeg)}
-            >
-              <Leaf size={13} />
-              <span>{t.filterVegetarian}</span>
-            </button>
-            <button 
-              className={`filter-tag ${filterVegan ? 'active-vegan' : ''}`}
-              onClick={() => setFilterVegan(!filterVegan)}
-            >
-              <Leaf size={13} />
-              <span>{t.filterVegan}</span>
-            </button>
-            <button 
-              className={`filter-tag ${filterSpicy ? 'active-spicy' : ''}`}
-              onClick={() => setFilterSpicy(!filterSpicy)}
-            >
-              <Flame size={13} />
-              <span>{t.filterSpicy}</span>
-            </button>
-            <button 
-              className={`filter-tag ${filterGlutenFree ? 'active-gf' : ''}`}
-              onClick={() => setFilterGlutenFree(!filterGlutenFree)}
-            >
-              <Wheat size={13} />
-              <span>{t.filterGlutenFree}</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Speisekarte Layout */}
-        {activeMenuType === 'regular' ? (
-          <div className="regular-menu-layout">
-            {/* Category Navigation Tabs */}
-            <div className="category-tabs-container">
-              <div className="category-tabs">
-                {regularMenu.map((cat, idx) => {
-                  const isAvailable = filteredRegularMenu.some(fCat => fCat.id === cat.id);
-                  const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-                  return (
-                    <button
-                      key={cat.id}
-                      className={`category-tab ${activeCategory === cat.id ? 'active' : ''} ${!isAvailable ? 'disabled' : ''}`}
-                      onClick={() => isAvailable && setActiveCategory(cat.id)}
-                      disabled={!isAvailable}
-                    >
-                      <span className="cat-numeral">{romanNumerals[idx] || (idx + 1)}</span>
-                      <span className="cat-label">{language === 'de' ? cat.titleDe : cat.titleEn}</span>
-                    </button>
-                  );
-                })}
-              </div>
+          <div className="menu__bar">
+            <div className="segmented" role="tablist">
+              <button role="tab" aria-selected={menuType === 'regular'} className={menuType === 'regular' ? 'is-active' : ''} onClick={() => { setMenuType('regular'); resetFilters(); }}>{t.menuRegularTab}</button>
+              <button role="tab" aria-selected={menuType === 'lunch'} className={menuType === 'lunch' ? 'is-active' : ''} onClick={() => { setMenuType('lunch'); resetFilters(); }}>{t.menuLunchTab}</button>
             </div>
-
-            {/* Menu Items Grid */}
-            {activeCategoryData ? (
-              <div className="menu-grid animate-fade-in">
-                {activeCategoryData.items.map((item) => (
-                  <div key={item.code} className="menu-card glass-card">
-                    <div className="menu-card-header">
-                      <div className="menu-card-code-title">
-                        <span className="item-code">{item.code}</span>
-                        <h3 className="item-title">{language === 'de' ? item.nameDe : item.nameEn}</h3>
-                      </div>
-                      <div className="item-price-container">
-                        {item.priceLarge ? (
-                          <span className="item-price">
-                            {formatPrice(item.price)} <span className="price-divider">/</span> {formatPrice(item.priceLarge)}
-                          </span>
-                        ) : (
-                          <span className="item-price">{formatPrice(item.price)}</span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Description */}
-                    {(item.descriptionDe || item.descriptionEn) && (
-                      <p className="item-description">
-                        {language === 'de' ? item.descriptionDe : item.descriptionEn}
-                      </p>
-                    )}
-
-                    {/* Dietary Badges */}
-                    <div className="item-badges">
-                      {item.isVegan && <span className="badge badge-subtle"><Leaf size={10} /> Vegan</span>}
-                      {!item.isVegan && item.isVegetarian && <span className="badge badge-subtle"><Leaf size={10} /> Veggie</span>}
-                      {item.isSpicy && <span className="badge badge-spice"><Flame size={10} /> Spicy</span>}
-                      {item.isGlutenFree && <span className="badge badge-subtle"><Wheat size={10} /> Gluten-Free</span>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="empty-menu glass-card">
-                <p>{language === 'de' ? 'Keine Gerichte gefunden für Ihre Suchkriterien.' : 'No creations match your selected filters.'}</p>
-                <button className="btn btn-secondary mt-16" onClick={resetFilters}>
-                  {language === 'de' ? 'Filter zurücksetzen' : 'Reset Filters'}
-                </button>
-              </div>
-            )}
+            <div className="input menu__search">
+              <label className="sr-only" htmlFor="menu-search">{t.menuSearchPlaceholder}</label>
+              <input id="menu-search" type="search" value={query} placeholder={de ? 'Gericht oder Zutat suchen' : 'Search dishes or ingredients'} onChange={(e) => setQuery(e.target.value)} />
+            </div>
           </div>
-        ) : (
-          /* Lunch Menu Grid */
-          <div className="lunch-menu-layout">
-            <div className="lunch-selection-grid animate-fade-in">
-              {filteredLunchMenu.map((item) => (
-                <div key={item.number} className="menu-card glass-card">
-                  <div className="menu-card-header">
-                    <div className="menu-card-code-title">
-                      <span className="item-code">M{item.number}</span>
-                      <h3 className="item-title">{language === 'de' ? item.nameDe : item.nameEn}</h3>
-                    </div>
-                    <div className="item-price-container">
-                      <span className="item-price">{formatPrice(item.price)}</span>
-                    </div>
-                  </div>
-                  <p className="item-description">
-                    {language === 'de' ? item.descriptionDe : item.descriptionEn}
-                  </p>
-                </div>
+
+          <div className="filters menu__diet">
+            {dietButtons.map(([k, label]) => (
+              <button key={k} className={`filter ${diet[k] ? 'is-active' : ''}`} aria-pressed={diet[k]} onClick={() => toggle(k)}>{label}</button>
+            ))}
+          </div>
+
+          {menuType === 'regular' && filteredRegular.length > 0 && (
+            <div className="filters menu__cats">
+              {filteredRegular.map((c) => (
+                <button key={c.id} className={`filter ${active?.id === c.id ? 'is-active' : ''}`} onClick={() => setCategory(c.id)}>
+                  {de ? c.titleDe : c.titleEn}
+                </button>
               ))}
             </div>
-            
-            <div className="lunch-upgrade-notice glass-card">
-              <span className="notice-crest">匠</span>
-              <p>{t.lunchExtraOption}</p>
+          )}
+
+          {menuType === 'lunch' && <p className="menu__note">{t.menuLunchNote}</p>}
+
+          <span className="rule" />
+
+          {menuType === 'regular' ? (
+            <div className={`dishlist ${hover ? 'has-active' : ''}`} onMouseLeave={() => setHover(null)} key={`${active?.id}-${language}`}>
+              {active?.items.map((it, i) => (
+                <article key={it.code} className={`dishrow ${hover === it.code ? 'is-active' : ''}`} onMouseEnter={() => setHover(it.code)} style={{ '--i': Math.min(i, 12) } as React.CSSProperties}>
+                  <h3><small className="dishrow__code">{it.code}</small>{de ? it.nameDe : it.nameEn}</h3>
+                  <p>{de ? it.descriptionDe : it.descriptionEn}</p>
+                  <span className="dishrow__tag">{tags(it)}</span>
+                  <span className="dishrow__price">{price(it)}</span>
+                </article>
+              ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <div className={`dishlist ${hover ? 'has-active' : ''}`} onMouseLeave={() => setHover(null)}>
+              {filteredLunch.map((it, i) => (
+                <article key={it.number} className={`dishrow ${hover === `m${it.number}` ? 'is-active' : ''}`} onMouseEnter={() => setHover(`m${it.number}`)} style={{ '--i': i } as React.CSSProperties}>
+                  <h3><small className="dishrow__code">M{it.number}</small>{de ? it.nameDe : it.nameEn}</h3>
+                  <p>{de ? it.descriptionDe : it.descriptionEn}</p>
+                  <span className="dishrow__tag" />
+                  <span className="dishrow__price">{euro(it.price)}</span>
+                </article>
+              ))}
+              <p className="menu__note menu__note--end">{t.lunchExtraOption}</p>
+            </div>
+          )}
+
+          {((menuType === 'regular' && filteredRegular.length === 0) || (menuType === 'lunch' && filteredLunch.length === 0)) && (
+            <p className="empty">{de ? 'Keine Gerichte gefunden.' : 'No dishes found.'}</p>
+          )}
+        </div>
       </div>
-
-      <style>{`
-        .menu-section {
-          background: var(--bg-primary);
-          position: relative;
-          transition: background-color 0.35s ease;
-        }
-
-        .menu-toggle-container {
-          display: flex;
-          justify-content: center;
-          gap: 12px;
-          margin-bottom: 36px;
-        }
-
-        .menu-toggle-btn {
-          font-family: var(--font-eyebrow);
-          font-size: 0.8rem;
-          font-weight: 500;
-          letter-spacing: 0.22em;
-          text-transform: uppercase;
-          padding: 12px 32px;
-          border-radius: var(--radius-sm);
-          background: var(--bg-secondary);
-          border: 1px solid var(--border-color);
-          color: var(--text-secondary);
-          cursor: pointer;
-          transition: var(--transition-smooth);
-        }
-
-        .menu-toggle-btn:hover {
-          border-color: var(--color-gold);
-          color: var(--text-primary);
-        }
-
-        .menu-toggle-btn.active {
-          background: linear-gradient(135deg, rgba(212, 175, 55, 0.22) 0%, rgba(191, 161, 95, 0.1) 100%);
-          border-color: var(--color-gold);
-          color: var(--text-primary);
-          box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
-        }
-
-        .lunch-note {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          max-width: 820px;
-          margin: 0 auto 30px;
-          padding: 16px 24px;
-          border: 1px solid rgba(212, 175, 55, 0.25);
-          color: var(--text-secondary);
-          font-size: 0.92rem;
-        }
-
-        .text-gold {
-          color: var(--color-gold);
-          flex-shrink: 0;
-        }
-
-        .search-filter-bar {
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-          padding: 24px 28px;
-          margin-bottom: 40px;
-          background: var(--bg-secondary);
-          border: 1px solid var(--border-color);
-        }
-
-        .search-input-wrapper {
-          position: relative;
-          width: 100%;
-        }
-
-        .search-icon {
-          position: absolute;
-          left: 18px;
-          top: 50%;
-          transform: translateY(-50%);
-          color: var(--color-gold);
-          opacity: 0.7;
-        }
-
-        .search-input {
-          width: 100%;
-          padding: 14px 18px 14px 48px;
-          border-radius: var(--radius-sm);
-          border: 1px solid var(--border-color);
-          background: var(--bg-primary);
-          color: var(--text-primary);
-          font-size: 0.92rem;
-          transition: var(--transition-smooth);
-        }
-
-        .search-input:focus {
-          border-color: var(--color-gold);
-          box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
-        }
-
-        .dietary-filters {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 10px;
-        }
-
-        .filter-tag {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 7px 16px;
-          border-radius: var(--radius-full);
-          border: 1px solid var(--border-color);
-          background: var(--bg-secondary);
-          font-family: var(--font-eyebrow);
-          font-size: 0.72rem;
-          letter-spacing: 0.15em;
-          text-transform: uppercase;
-          color: var(--text-secondary);
-          cursor: pointer;
-          transition: var(--transition-smooth);
-        }
-
-        .filter-tag:hover {
-          border-color: var(--color-gold);
-          color: var(--text-primary);
-        }
-
-        .filter-tag.active-veg,
-        .filter-tag.active-vegan,
-        .filter-tag.active-gf {
-          background: rgba(212, 175, 55, 0.16);
-          border-color: var(--color-gold);
-          color: var(--color-gold);
-          font-weight: 600;
-        }
-
-        .filter-tag.active-spicy {
-          background: rgba(138, 37, 37, 0.25);
-          border-color: #a12f2f;
-          color: #ff8888;
-        }
-
-        /* Category Tabs */
-        .category-tabs-container {
-          margin-bottom: 40px;
-          overflow-x: auto;
-          padding-bottom: 8px;
-        }
-
-        .category-tabs {
-          display: flex;
-          gap: 10px;
-          min-width: max-content;
-        }
-
-        .category-tab {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          padding: 10px 20px;
-          border-radius: var(--radius-sm);
-          border: 1px solid var(--border-color);
-          background: var(--bg-secondary);
-          color: var(--text-secondary);
-          cursor: pointer;
-          transition: var(--transition-smooth);
-        }
-
-        .category-tab:hover {
-          border-color: var(--color-gold);
-          color: var(--text-primary);
-        }
-
-        .category-tab.active {
-          background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(191, 161, 95, 0.1) 100%);
-          border-color: var(--color-gold);
-          color: var(--text-primary);
-          box-shadow: 0 4px 15px rgba(212, 175, 55, 0.12);
-        }
-
-        .cat-numeral {
-          font-family: var(--font-eyebrow);
-          font-size: 0.68rem;
-          color: var(--color-gold);
-          letter-spacing: 0.2em;
-          margin-bottom: 2px;
-        }
-
-        .cat-label {
-          font-family: var(--font-eyebrow);
-          font-size: 0.78rem;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-        }
-
-        /* Menu Grid */
-        .menu-grid,
-        .lunch-selection-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 24px;
-        }
-
-        .menu-card {
-          padding: 28px 30px;
-          background: var(--bg-secondary);
-          border: 1px solid var(--border-color);
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          border-radius: var(--radius-md);
-        }
-
-        .menu-card-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          gap: 16px;
-          margin-bottom: 12px;
-        }
-
-        .menu-card-code-title {
-          display: flex;
-          align-items: baseline;
-          gap: 10px;
-        }
-
-        .item-code {
-          font-family: var(--font-eyebrow);
-          font-size: 0.72rem;
-          color: var(--color-gold);
-          letter-spacing: 0.15em;
-          opacity: 0.85;
-        }
-
-        .item-title {
-          font-family: var(--font-serif);
-          font-size: 1.35rem;
-          color: var(--text-primary);
-          font-weight: 400;
-          letter-spacing: 0.02em;
-        }
-
-        .item-price-container {
-          flex-shrink: 0;
-        }
-
-        .item-price {
-          font-family: var(--font-eyebrow);
-          font-size: 0.95rem;
-          font-weight: 600;
-          color: var(--color-gold);
-          letter-spacing: 0.05em;
-        }
-
-        .price-divider {
-          opacity: 0.4;
-          margin: 0 4px;
-        }
-
-        .item-description {
-          font-size: 0.92rem;
-          color: var(--text-secondary);
-          line-height: 1.6;
-          margin-bottom: 14px;
-          font-weight: 300;
-        }
-
-        .item-badges {
-          display: flex;
-          gap: 8px;
-        }
-
-        .badge-subtle {
-          font-size: 0.68rem;
-          letter-spacing: 0.12em;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          color: var(--color-washi-dim);
-        }
-
-        .badge-spice {
-          font-size: 0.68rem;
-          letter-spacing: 0.12em;
-          background: rgba(138, 37, 37, 0.15);
-          border: 1px solid rgba(138, 37, 37, 0.3);
-          color: #ff9999;
-        }
-
-        .empty-menu {
-          text-align: center;
-          padding: 60px 20px;
-        }
-
-        .lunch-upgrade-notice {
-          margin-top: 36px;
-          padding: 24px 30px;
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          border: 1px solid rgba(212, 175, 55, 0.25);
-          background: rgba(16, 19, 25, 0.6);
-        }
-
-        .notice-crest {
-          font-family: var(--font-serif);
-          font-size: 1.8rem;
-          color: var(--color-gold);
-        }
-
-        @media (max-width: 900px) {
-          .menu-grid,
-          .lunch-selection-grid {
-            grid-template-columns: 1fr;
-          }
-          .search-filter-bar {
-            padding: 18px;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .menu-toggle-btn {
-            font-size: 0.66rem;
-            letter-spacing: 0.1em;
-            padding: 8px 16px;
-          }
-          .lunch-note {
-            font-size: 0.74rem;
-            padding: 10px 14px;
-            line-height: 1.45;
-            margin-bottom: 18px;
-          }
-          .search-filter-bar {
-            padding: 12px;
-            gap: 12px;
-            margin-bottom: 20px;
-          }
-          .search-input {
-            font-size: 0.78rem;
-            padding: 8px 12px 8px 38px;
-          }
-          .filter-tag {
-            font-size: 0.58rem;
-            letter-spacing: 0.06em;
-            padding: 4px 10px;
-          }
-          .category-tabs-container {
-            margin-bottom: 20px;
-          }
-          .category-tab {
-            padding: 6px 11px;
-          }
-          .cat-numeral {
-            font-size: 0.54rem;
-          }
-          .cat-label {
-            font-size: 0.62rem;
-            letter-spacing: 0.06em;
-          }
-          .menu-card {
-            padding: 15px 14px;
-          }
-          .item-code {
-            font-size: 0.58rem;
-            letter-spacing: 0.08em;
-          }
-          .item-title {
-            font-size: 0.95rem;
-          }
-          .item-price {
-            font-size: 0.78rem;
-          }
-          .item-description {
-            font-size: 0.74rem;
-            line-height: 1.48;
-            margin-bottom: 8px;
-          }
-          .badge-subtle,
-          .badge-spice {
-            font-size: 0.56rem;
-            padding: 2px 6px;
-            letter-spacing: 0.06em;
-          }
-          .lunch-upgrade-notice {
-            padding: 14px 16px;
-            margin-top: 20px;
-            gap: 10px;
-          }
-          .notice-crest {
-            font-size: 1.2rem;
-          }
-          .lunch-upgrade-notice p {
-            font-size: 0.74rem;
-            line-height: 1.45;
-          }
-        }
-
-        /* Day Mode Refinements */
-        [data-theme="light"] .lunch-upgrade-notice {
-          background: #ffffff;
-          border-color: rgba(160, 120, 25, 0.25);
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-        }
-
-        [data-theme="light"] .lunch-upgrade-notice p {
-          color: #3e4148;
-        }
-
-        [data-theme="light"] .badge-subtle {
-          background: #f4f0e6;
-          border-color: rgba(160, 120, 25, 0.2);
-          color: #4a4c52;
-        }
-      `}</style>
     </section>
   );
-};
+}
